@@ -24,3 +24,5 @@ libraryDependencies ++= Seq(
 )
 
 transitiveClassifiers in Global := Seq(Artifact.SourceClassifier)
+
+fork := true
