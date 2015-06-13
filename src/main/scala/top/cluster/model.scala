@@ -1,4 +1,4 @@
-package top
+package top.cluster
 
 case class FlightData(from: String, to: String, distanceMiles: Int, delayMinutes: Int)
 

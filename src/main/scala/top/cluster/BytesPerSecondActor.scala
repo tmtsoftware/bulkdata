@@ -1,6 +1,7 @@
-package top
+package top.cluster
 
 import akka.actor.Actor
+
 import scala.concurrent.duration._
 
 class BytesPerSecondActor extends Actor {
