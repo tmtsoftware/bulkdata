@@ -1,7 +1,9 @@
 package top.protocols
 
-import akka.stream.scaladsl.BidiFlow
+import akka.stream.scaladsl.{Source, BidiFlow, Flow}
 import akka.util.ByteString
+
+import scala.concurrent.duration._
 
 case class Image(id: String) {
   def updated = Image(s"Hello $id")
@@ -11,10 +13,16 @@ object Image {
   import scala.pickling.Defaults._
   import scala.pickling.binary._
 
+  val stream = Source(1.second, 1.second, ())
+    .scan(1)((acc, _) => acc + 1)
+    .map(x => Image(x.toString))
+
   val codec = BidiFlow(Image.toBytes _, Image.fromBytes _)
-  val stack = codec.atop(Framing.value)
+  val stack = codec.atop(Framing.bidi)
+
+  val outbound = Flow[Image].map(Image.toBytes).map(Framing.addLengthHeader)
+  val inbound = Flow[ByteString].transform(() => Framing.frameParser).map(Image.fromBytes)
 
   def toBytes(image: Image) = ByteString(image.pickle.value)
-
   def fromBytes(byteString: ByteString) = toBinaryPickle(byteString.toArray).unpickle[Image]
 }

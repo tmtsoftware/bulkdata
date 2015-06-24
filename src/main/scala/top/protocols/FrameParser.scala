@@ -5,8 +5,7 @@ import java.nio.ByteOrder
 import akka.stream.stage.{Context, PushPullStage, SyncDirective}
 import akka.util.ByteString
 
-class FrameParser extends PushPullStage[ByteString, ByteString] {
-   implicit val order = ByteOrder.LITTLE_ENDIAN
+class FrameParser(implicit order: ByteOrder) extends PushPullStage[ByteString, ByteString] {
 
    // this holds the received but not yet parsed bytes
    var stash = ByteString.empty

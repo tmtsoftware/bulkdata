@@ -7,18 +7,18 @@ import akka.stream.scaladsl.{BidiFlow, Flow}
 import akka.util.ByteString
 
 object Framing {
-  val value = BidiFlow() { b =>
+  implicit val order: ByteOrder = ByteOrder.LITTLE_ENDIAN
 
-    implicit val order = ByteOrder.LITTLE_ENDIAN
+  val frameParser = new FrameParser
 
-    def addLengthHeader(bytes: ByteString) = {
-      val len = bytes.length
-      ByteString.newBuilder.putInt(len).append(bytes).result()
-    }
-
+  val bidi = BidiFlow() { b =>
     val outbound = b.add(Flow[ByteString].map(addLengthHeader))
-    val inbound = b.add(Flow[ByteString].transform(() => new FrameParser))
+    val inbound = b.add(Flow[ByteString].transform(() => frameParser))
     BidiShape(outbound, inbound)
   }
-}
 
+  def addLengthHeader(bytes: ByteString) = {
+    val len = bytes.length
+    ByteString.newBuilder.putInt(len).append(bytes).result()
+  }
+}
