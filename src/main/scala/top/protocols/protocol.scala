@@ -7,7 +7,7 @@ import akka.util.ByteString
 import scala.concurrent.Future
 
 trait ServerProtocol {
-  def connectionFlow: Flow[ByteString, ByteString, Unit]
+  def connectionFlow: Flow[ByteString, ByteString, Any]
 }
 
 trait ClientProtocol {

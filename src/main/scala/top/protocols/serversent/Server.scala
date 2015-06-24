@@ -10,7 +10,7 @@ object ServerSentServer extends App {
   // Use parameters `host port` to start server listening on host:port.
   val Array(host, port) = args
 
-  implicit val system = ActorSystem("SeverSend-Server")
+  implicit val system = ActorSystem("SeverSent-Server")
   new Server(host, port.toInt, ServerSentServerProtocol).run()
 }
 

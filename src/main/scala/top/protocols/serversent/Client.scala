@@ -15,7 +15,7 @@ object ServerSentClient extends App {
    */
   val Array(host, port) = args
 
-  implicit val system = ActorSystem("Client")
+  implicit val system = ActorSystem("ServerSent-Client")
   new Client(host, port.toInt, ServerSentClientProtocol).run()
 }
 

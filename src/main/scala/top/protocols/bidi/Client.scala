@@ -15,7 +15,7 @@ object BidiClient extends App {
    */
   val Array(host, port) = args
 
-  implicit val system = ActorSystem("Client")
+  implicit val system = ActorSystem("Bidi-Client")
   new Client(host, port.toInt, BidiClientProtocol).run()
 }
 
