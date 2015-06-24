@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.stream.scaladsl.Tcp.OutgoingConnection
 import akka.stream.scaladsl._
 import akka.util.ByteString
-import top.protocols.{Client, Image, ClientProtocol}
+import top.protocols.{Client, ClientProtocol, Image}
 
 import scala.concurrent.Future
 

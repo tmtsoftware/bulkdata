@@ -5,11 +5,11 @@ import akka.actor.{Actor, ActorSystem, PoisonPill, Props}
 import akka.contrib.pattern.ClusterSingletonManager
 import akka.stream.ActorFlowMaterializer
 import akka.stream.actor.ActorSubscriber
-import akka.stream.scaladsl.{Tcp, Source, Sink}
-import top.cluster.{ParseLinesStage, LogLargestDelay, FlightData, Reactive}
-import top.cluster.complete.ReceiverComplete.ReceiverClusterNode
-import Reactive._
+import akka.stream.scaladsl.{Sink, Source, Tcp}
 import com.typesafe.config.ConfigFactory
+import top.cluster.Reactive._
+import top.cluster.complete.ReceiverComplete.ReceiverClusterNode
+import top.cluster.{FlightData, LogLargestDelay, ParseLinesStage, Reactive}
 
 import scala.concurrent.duration._
 

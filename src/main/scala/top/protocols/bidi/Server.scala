@@ -1,11 +1,8 @@
 package top.protocols.bidi
 
 import akka.actor.ActorSystem
-import akka.stream.ActorFlowMaterializer
 import akka.stream.scaladsl._
-import top.protocols.{ServerProtocol, Server, Image}
-
-import scala.util.{Failure, Success}
+import top.protocols.{Image, Server, ServerProtocol}
 
 object BidiServer extends App {
 

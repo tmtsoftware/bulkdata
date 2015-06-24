@@ -5,7 +5,7 @@ import akka.stream.ActorFlowMaterializer
 import akka.stream.scaladsl._
 import akka.util.ByteString
 import top.cluster.Reactive
-import Reactive._
+import top.cluster.Reactive._
 
 import scala.concurrent.duration._
 

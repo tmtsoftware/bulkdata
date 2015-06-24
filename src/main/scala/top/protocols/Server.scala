@@ -2,8 +2,7 @@ package top.protocols
 
 import akka.actor.ActorSystem
 import akka.stream.ActorFlowMaterializer
-import akka.stream.scaladsl.{Flow, Sink, Tcp}
-import akka.util.ByteString
+import akka.stream.scaladsl.{Sink, Tcp}
 
 import scala.util.{Failure, Success}
 

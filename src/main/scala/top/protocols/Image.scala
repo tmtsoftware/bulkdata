@@ -1,6 +1,6 @@
 package top.protocols
 
-import akka.stream.scaladsl.{Source, BidiFlow, Flow}
+import akka.stream.scaladsl.{BidiFlow, Flow, Source}
 import akka.util.ByteString
 
 import scala.concurrent.duration._
@@ -13,7 +13,7 @@ object Image {
   import scala.pickling.Defaults._
   import scala.pickling.binary._
 
-  val stream = Source(1.second, 1.second, ())
+  val stream = Source(1.milli, 1.milli, ())
     .scan(1)((acc, _) => acc + 1)
     .map(x => Image(x.toString))
 

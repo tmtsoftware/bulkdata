@@ -3,7 +3,7 @@ package top.protocols.serversent
 import akka.actor.ActorSystem
 import akka.stream.scaladsl._
 import akka.util.ByteString
-import top.protocols.{ServerProtocol, Image, Server}
+import top.protocols.{Image, Server, ServerProtocol}
 
 object ServerSentServer extends App {
 

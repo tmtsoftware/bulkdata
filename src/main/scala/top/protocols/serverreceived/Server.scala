@@ -1,12 +1,9 @@
 package top.protocols.serverreceived
 
 import akka.actor.ActorSystem
-import akka.actor.Status.Success
 import akka.stream.scaladsl._
 import akka.util.ByteString
-import top.protocols.{ServerProtocol, Image, Server}
-
-import scala.util.Try
+import top.protocols.{Image, Server, ServerProtocol}
 
 object ServerReceivedServer extends App {
 
