@@ -6,8 +6,10 @@ import akka.stream.scaladsl.{Sink, Tcp}
 
 import scala.util.{Failure, Success}
 
-class Client(address: String, port: Int, images: ClientProtocol)(implicit system: ActorSystem) {
+class Client(address: String, port: Int, clientProtocol: ClientProtocol)(implicit system: ActorSystem) {
   implicit val materializer = ActorFlowMaterializer()
+
+  def run(): Unit = clientProtocol.transform(connectionFlow).runWith(handler)
 
   val connectionFlow = Tcp().outgoingConnection(address, port)
 
@@ -20,6 +22,4 @@ class Client(address: String, port: Int, images: ClientProtocol)(implicit system
       e.printStackTrace()
       system.shutdown()
   }
-
-  def run(): Unit = images.imageSource(connectionFlow).runWith(handler)
 }

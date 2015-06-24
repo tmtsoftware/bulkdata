@@ -10,6 +10,14 @@ class Server(address: String, port: Int, serverProtocol: ServerProtocol)(implici
   import system.dispatcher
   implicit val materializer = ActorFlowMaterializer()
 
+  def run(): Unit = binding.onComplete {
+    case Success(b) =>
+      println("Server started, listening on: " + b.localAddress)
+    case Failure(e) =>
+      println(s"Server could not bind to $address:$port: ${e.getMessage}")
+      system.shutdown()
+  }
+
   val handler = Sink.foreach[Tcp.IncomingConnection] { conn =>
     println("Client connected from: " + conn.remoteAddress)
     conn handleWith serverProtocol.connectionFlow
@@ -18,12 +26,4 @@ class Server(address: String, port: Int, serverProtocol: ServerProtocol)(implici
   val connections = Tcp().bind(address, port)
 
   val binding = connections.to(handler).run()
-
-  def run(): Unit = binding.onComplete {
-    case Success(b) =>
-      println("Server started, listening on: " + b.localAddress)
-    case Failure(e) =>
-      println(s"Server could not bind to $address:$port: ${e.getMessage}")
-      system.shutdown()
-  }
 }

@@ -13,9 +13,12 @@ object Image {
   import scala.pickling.Defaults._
   import scala.pickling.binary._
 
-  val stream = Source(1.milli, 1.milli, ())
+  val stream = Source(1.second, 1.second, ())
     .scan(1)((acc, _) => acc + 1)
     .map(x => Image(x.toString))
+
+  val single = Source.single(Image(""))
+  val lazyEmpty = Source.lazyEmpty[Image]
 
   val codec = BidiFlow(Image.toBytes _, Image.fromBytes _)
   val stack = codec.atop(Framing.bidi)
