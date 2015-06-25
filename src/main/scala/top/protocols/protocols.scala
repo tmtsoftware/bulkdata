@@ -22,42 +22,44 @@ trait ServerProtocol {
   def connectionFlow = Image.stack.reversed.join(transformation)
 }
 
-object BidiProtocol extends ServerProtocol {
-  protected val transformation = Flow[Image].log("RECEIVED").map(_.updated)
-}
+object ServerProtocol {
+  class Get(images: Source[Image, Any]) extends ServerProtocol {
 
-class ServerSentProtocol(images: Source[Image, Any]) extends ServerProtocol {
+    protected val transformation = Flow() { implicit b =>
+      import FlowGraph.Implicits._
 
-  protected val transformation = Flow() { implicit b =>
-    import FlowGraph.Implicits._
+      val mainFlow = b.add(Flow[Image])
+      val ignoredFlow = b.add(Flow[Image].log("RECEIVED"))
+      val ignore = b.add(Sink.ignore)
 
-    val mainFlow = b.add(Flow[Image])
-    val ignoredFlow = b.add(Flow[Image].log("RECEIVED"))
-    val ignore = b.add(Sink.ignore)
+      images ~> mainFlow.inlet
+      ignoredFlow.outlet ~> ignore
 
-    images ~> mainFlow.inlet
-    ignoredFlow.outlet ~> ignore
-
-    (ignoredFlow.inlet, mainFlow.outlet)
-  }
-}
-
-object ServerReceivedProtocol extends ServerProtocol {
-
-  val flow = Flow[Image].log("RECEIVED")
-  val sink = flow.toMat(Sink.foreach(_ => ()))(Keep.right)
-
-  protected val transformation = Flow(Image.lazyEmpty, sink)((_, _)) { implicit b => (src, snk) =>
-    import FlowGraph.Implicits._
-
-    val fulfilledPromise = b.materializedValue.map { case (p, f) =>
-      p.completeWith(f)
+      (ignoredFlow.inlet, mainFlow.outlet)
     }
+  }
 
-    val ignore = b.add(Sink.ignore)
+  object Post extends ServerProtocol {
 
-    fulfilledPromise.outlet ~> ignore.inlet
+    val flow = Flow[Image].log("RECEIVED")
+    val sink = flow.toMat(Sink.foreach(_ => ()))(Keep.right)
 
-    (snk.inlet, src.outlet)
+    protected val transformation = Flow(Image.lazyEmpty, sink)((_, _)) { implicit b => (src, snk) =>
+      import FlowGraph.Implicits._
+
+      val fulfilledPromise = b.materializedValue.map { case (p, f) =>
+        p.completeWith(f)
+      }
+
+      val ignore = b.add(Sink.ignore)
+
+      fulfilledPromise.outlet ~> ignore.inlet
+
+      (snk.inlet, src.outlet)
+    }
+  }
+
+  object Bidi extends ServerProtocol {
+    protected val transformation = Flow[Image].log("RECEIVED").map(_.updated)
   }
 }
