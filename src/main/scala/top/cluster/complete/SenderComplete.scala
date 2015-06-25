@@ -1,10 +1,9 @@
 package top.cluster.complete
 
 import akka.actor.ActorSystem
-import akka.stream.ActorFlowMaterializer
+import akka.stream.ActorMaterializer
 import akka.stream.scaladsl._
 import akka.util.ByteString
-import top.cluster.Reactive
 import top.cluster.Reactive._
 
 import scala.concurrent.duration._
@@ -33,6 +32,6 @@ object SenderComplete extends App with Logging {
                    broadcast ~> logWindowFlow     ~> Sink.ignore
   }
 
-  implicit val mat = ActorFlowMaterializer()
+  implicit val mat = ActorMaterializer()
   graph.run()
 }

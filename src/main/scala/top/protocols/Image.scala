@@ -23,10 +23,10 @@ object Image {
   val lazyEmpty = Source.lazyEmpty[Image]
 
   val codec = BidiFlow(Image.toBytes _, Image.fromBytes _)
-  val stack = codec.atop(Framing.bidi)
+  val stack = codec.atop(Framer.codec)
 
-  val outbound = Flow[Image].map(Image.toBytes).map(Framing.addLengthHeader)
-  val inbound = Flow[ByteString].transform(() => Framing.frameParser).map(Image.fromBytes)
+  val outbound = Flow[Image].map(Image.toBytes).via(Framer.encoder)
+  val inbound = Flow[ByteString].via(Framer.decoder).map(Image.fromBytes)
 
   def toBytes(image: Image) = ByteString(image.pickle.value)
   def fromBytes(byteString: ByteString) = toBinaryPickle(byteString.toArray).unpickle[Image]

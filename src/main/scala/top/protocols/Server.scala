@@ -1,14 +1,14 @@
 package top.protocols
 
 import akka.actor.ActorSystem
-import akka.stream.ActorFlowMaterializer
+import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Tcp}
 
 import scala.util.{Failure, Success}
 
 class Server(address: String, port: Int, serverProtocol: ServerProtocol)(implicit system: ActorSystem) {
   import system.dispatcher
-  implicit val materializer = ActorFlowMaterializer()
+  implicit val materializer = ActorMaterializer()
 
   def run(): Unit = binding.onComplete {
     case Success(b) =>

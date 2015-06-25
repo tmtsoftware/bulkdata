@@ -3,7 +3,7 @@ package top.cluster.complete
 import akka.actor.Actor.emptyBehavior
 import akka.actor.{Actor, ActorSystem, PoisonPill, Props}
 import akka.contrib.pattern.ClusterSingletonManager
-import akka.stream.ActorFlowMaterializer
+import akka.stream.{ActorMaterializer}
 import akka.stream.actor.ActorSubscriber
 import akka.stream.scaladsl.{Sink, Source, Tcp}
 import com.typesafe.config.ConfigFactory
@@ -18,7 +18,8 @@ object ReceiverComplete {
   class Receiver(host: String, port: Int)(implicit val system: ActorSystem) extends Logging {
 
     def run(): Unit = {
-      implicit val mat = ActorFlowMaterializer()
+
+      implicit val mat = ActorMaterializer()
 
       val largestDelayActor = system.actorOf(Props[LargestDelayActorComplete])
 

@@ -1,13 +1,13 @@
 package top.protocols
 
 import akka.actor.ActorSystem
-import akka.stream.ActorFlowMaterializer
+import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Tcp}
 
 import scala.util.{Failure, Success}
 
 class Client(address: String, port: Int, clientProtocol: ClientProtocol)(implicit system: ActorSystem) {
-  implicit val materializer = ActorFlowMaterializer()
+  implicit val materializer = ActorMaterializer()
 
   def run(): Unit = clientProtocol.transform(connectionFlow).runWith(handler)
 
