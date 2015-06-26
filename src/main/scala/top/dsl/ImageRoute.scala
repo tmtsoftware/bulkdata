@@ -7,7 +7,7 @@ import top.common.Image
 
 class ImageRoute(imageService: ImageService) extends ImageMarshalling {
 
-  val route: Route =
+  val route: Route = {
     pathPrefix("images") {
       pathEnd {
         get {
@@ -35,4 +35,6 @@ class ImageRoute(imageService: ImageService) extends ImageMarshalling {
         }
       }
     }
+
+  }
 }
