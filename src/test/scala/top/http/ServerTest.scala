@@ -2,9 +2,8 @@ package top.http
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.{Sink, Source}
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import top.common.Image
@@ -25,8 +24,9 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   test("get") {
     val binding = await(server.runnableGraph.run())
+
     val response = await(Http().singleRequest(HttpRequest(uri = s"http://$host:$port/images")))
-    val images = response.entity.dataBytes.map(Image.fromBytes).log("RECEIVED*********")
+    val images = response.entity.dataBytes.map(Image.fromBytes).log("Client-Received")
 
     images.runWith(TestSink.probe())
       .request(10)
@@ -35,6 +35,33 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
     binding.unbind()
   }
+
+  test("post") {
+    val binding = await(server.runnableGraph.run())
+    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Image.ten.map(Image.toBytes))
+
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$host:$port/images", entity = chunked)))
+
+    response.status mustEqual StatusCodes.OK
+
+    binding.unbind()
+  }
+
+  test("bidi") {
+    val binding = await(server.runnableGraph.run())
+    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Image.ten.map(Image.toBytes))
+
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$host:$port/bidi/images", entity = chunked)))
+    val images = response.entity.dataBytes.map(Image.fromBytes).log("Client-Received")
+
+    images.runWith(TestSink.probe())
+      .request(10)
+      .expectNextN((1 to 10).map(x => Image(x.toString).updated))
+      .expectComplete()
+
+    binding.unbind()
+  }
+
 
   override protected def afterAll() = {
     system.shutdown()

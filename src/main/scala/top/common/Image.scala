@@ -13,7 +13,10 @@ object Image {
   import scala.pickling.Defaults._
   import scala.pickling.binary._
 
-  val stream = Source(1.second, 1.second, ())
+  val delay = 1.milli
+//  val delay = 1.second
+
+  val stream = Source(delay, delay, ())
     .scan(1)((acc, _) => acc + 1)
     .map(x => Image(x.toString))
 
