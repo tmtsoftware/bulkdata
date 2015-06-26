@@ -18,7 +18,7 @@ class Server(address: String, port: Int)(implicit system: ActorSystem) {
 
   val requestHandler: HttpRequest => Future[HttpResponse] = {
 
-    case HttpRequest(HttpMethods.GET, Uri.Path("/images"), _, _, _)  =>
+    case HttpRequest(HttpMethods.GET, Uri.Path("/images"), _, _, _) =>
       val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Image.ten.map(Image.toBytes))
       Future.successful(HttpResponse(entity = chunked))
 
@@ -26,12 +26,12 @@ class Server(address: String, port: Int)(implicit system: ActorSystem) {
       val images = entity.dataBytes.map(Image.fromBytes).log("Server-Received")
       images.runWith(Sink.ignore).map(_ => HttpResponse(entity = "saved"))
 
-    case HttpRequest(HttpMethods.POST, Uri.Path("/bidi/images"), _, entity, _)    =>
+    case HttpRequest(HttpMethods.POST, Uri.Path("/images/bidi"), _, entity, _) =>
       val images = entity.dataBytes.map(Image.fromBytes).log("Server-Received").map(_.updated)
       val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, images.map(Image.toBytes))
       Future.successful(HttpResponse(entity = chunked))
 
-    case _: HttpRequest                                              =>
+    case _: HttpRequest =>
       Future.successful(HttpResponse(StatusCodes.NotFound, entity = "error"))
   }
 

@@ -51,7 +51,7 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
     val binding = await(server.runnableGraph.run())
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Image.ten.map(Image.toBytes))
 
-    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$host:$port/bidi/images", entity = chunked)))
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$host:$port/images/bidi", entity = chunked)))
     val images = response.entity.dataBytes.map(Image.fromBytes).log("Client-Received")
 
     images.runWith(TestSink.probe())

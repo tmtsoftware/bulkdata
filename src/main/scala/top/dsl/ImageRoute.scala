@@ -8,19 +8,16 @@ import top.common.Image
 class ImageRoute(imageService: ImageService) extends ImageMarshalling {
 
   val route: Route = {
+
     pathPrefix("images") {
       pathEnd {
         get {
-          complete {
-            imageService.read
-          }
+          complete(imageService.read)
         } ~
         post {
           entity(as[Source[Image, Any]]) { images =>
             onSuccess(imageService.copy(images)) {
-              complete {
-                "saved"
-              }
+              complete("saved")
             }
           }
         }
@@ -28,9 +25,7 @@ class ImageRoute(imageService: ImageService) extends ImageMarshalling {
       path("bidi") {
         post {
           entity(as[Source[Image, Any]]) { images =>
-            complete {
-              imageService.transform(images)
-            }
+            complete(imageService.transform(images))
           }
         }
       }

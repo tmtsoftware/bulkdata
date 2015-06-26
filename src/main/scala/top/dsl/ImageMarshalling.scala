@@ -10,7 +10,7 @@ trait ImageMarshalling {
 
   implicit val imageMarshaller = Marshaller.opaque { images: Source[Image, Any] =>
     val byteStrings = images.map(Image.toBytes)
-    HttpEntity.Chunked.fromData(ContentTypes.NoContentType, byteStrings)
+    HttpEntity.Chunked.fromData(ContentTypes.`application/octet-stream`, byteStrings)
   }
 
   implicit val imageUnmarshaller = Unmarshaller.strict { entity: HttpEntity =>

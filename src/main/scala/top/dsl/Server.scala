@@ -3,36 +3,39 @@ package top.dsl
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
-import akka.stream.ActorMaterializer
+import akka.stream.{Materializer, ActorMaterializer}
 import akka.stream.scaladsl.Sink
 
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class Server(address: String, port: Int, route: Route)(implicit system: ActorSystem) {
-  implicit val mat = ActorMaterializer()
-  import system.dispatcher
+class Server(address: String, port: Int, route: Route)(implicit system: ActorSystem, mat: Materializer, executor: ExecutionContext) {
 
-  val connections = Http().bind(address, port)
+  private val runnableGraph = {
+    val connections = Http().bind(address, port)
 
-  val runnableGraph = connections.to(Sink.foreach { connection =>
-    println(s"Accepted new connection from: ${connection.remoteAddress}")
-    connection.handleWith(route)
-  })
+    connections.to(Sink.foreach { connection =>
+      println(s"Accepted new connection from: ${connection.remoteAddress}")
+      connection.handleWith(route)
+    })
+  }
+
+  def run() = {
+    val binding = runnableGraph.run()
+
+    binding.onComplete {
+      case Success(b) => println(s"Server started, listening on: ${b.localAddress}")
+      case Failure(e) => println(s"Server could not bind to $address:$port: ${e.getMessage}"); system.shutdown()
+    }
+  }
 }
 
 object Server extends App {
   implicit val system = ActorSystem("TMT")
-  import system.dispatcher
   implicit val mat = ActorMaterializer()
+  import system.dispatcher
 
-  val address = "localhost"
-  val port    = 6001
-  val server  = new Server(address, port, new ImageRoute(new ImageService).route)
+  val server  = new Server("localhost", 6001, new ImageRoute(new ImageService).route)
 
-  val eventualBinding = server.runnableGraph.run()
-
-  eventualBinding.onComplete {
-    case Success(b) => println(s"Server started, listening on: ${b.localAddress}")
-    case Failure(e) => println(s"Server could not bind to $address:$port: ${e.getMessage}"); system.shutdown()
-  }
+  server.run()
 }
