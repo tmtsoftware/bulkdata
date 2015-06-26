@@ -3,13 +3,13 @@ package top.cluster.complete
 import akka.actor.Actor.emptyBehavior
 import akka.actor.{Actor, ActorSystem, PoisonPill, Props}
 import akka.contrib.pattern.ClusterSingletonManager
-import akka.stream.{ActorMaterializer}
+import akka.stream.ActorMaterializer
 import akka.stream.actor.ActorSubscriber
 import akka.stream.scaladsl.{Sink, Source, Tcp}
 import com.typesafe.config.ConfigFactory
 import top.cluster.Reactive._
 import top.cluster.complete.ReceiverComplete.ReceiverClusterNode
-import top.cluster.{FlightData, LogLargestDelay, ParseLinesStage, Reactive}
+import top.cluster.{FlightData, LogLargestDelay, ParseLinesStage}
 
 import scala.concurrent.duration._
 

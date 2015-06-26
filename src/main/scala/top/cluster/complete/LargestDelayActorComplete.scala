@@ -4,7 +4,7 @@ import akka.persistence.PersistentActor
 import akka.stream.actor.ActorSubscriberMessage.OnNext
 import akka.stream.actor.{ActorSubscriber, MaxInFlightRequestStrategy}
 import top.cluster.Reactive.Logging
-import top.cluster.{FlightData, FlightWithDelayPerMile, LogLargestDelay, Reactive}
+import top.cluster.{FlightData, FlightWithDelayPerMile, LogLargestDelay}
 
 class LargestDelayActorComplete extends PersistentActor with ActorSubscriber with Logging {
   private var largestDelay: Option[FlightWithDelayPerMile] = None

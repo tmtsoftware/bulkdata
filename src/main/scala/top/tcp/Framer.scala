@@ -3,7 +3,7 @@ package top.tcp
 import java.nio.ByteOrder
 
 import akka.stream.io.Framing
-import akka.stream.scaladsl.{BidiFlow, Keep, Flow}
+import akka.stream.scaladsl.{BidiFlow, Flow, Keep}
 import akka.util.ByteString
 
 object Framer {
