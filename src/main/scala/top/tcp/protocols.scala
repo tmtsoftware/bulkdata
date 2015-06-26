@@ -3,15 +3,16 @@ package top.tcp
 import akka.stream.scaladsl.Tcp.OutgoingConnection
 import akka.stream.scaladsl._
 import akka.util.ByteString
+import top.common.Image
 
 import scala.concurrent.Future
 
 class ClientProtocol(images: Source[Image, Any]) {
   def transform(connectionFlow: Flow[ByteString, ByteString, Future[OutgoingConnection]]): Source[Image, Any] = images
     .log("sent") //next 3 lines are equivalent to .via(Image.stack.join(connectionFlow))
-    .via(Image.outbound)
+    .via(ImageProtocols.outbound)
     .via(connectionFlow)
-    .via(Image.inbound)
+    .via(ImageProtocols.inbound)
     .log("RECEIVED")
 }
 
@@ -19,7 +20,7 @@ trait ServerProtocol {
   protected def transformation: Flow[Image, Image, Any]
 
   // same as Image.inbound.via(transformation).via(Image.outbound)
-  def connectionFlow = Image.stack.reversed.join(transformation)
+  def connectionFlow = ImageProtocols.stack.reversed.join(transformation)
 }
 
 object ServerProtocol {

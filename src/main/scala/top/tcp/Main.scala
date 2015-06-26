@@ -1,6 +1,7 @@
 package top.tcp
 
 import akka.actor.ActorSystem
+import top.common.Image
 
 import scala.util.Try
 

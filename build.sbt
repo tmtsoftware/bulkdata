@@ -15,6 +15,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
   "com.typesafe.akka" %% "akka-contrib" % akkaVersion,
   "com.typesafe.akka" %% "akka-stream-experimental" % "1.0-RC4",
+  "com.typesafe.akka" %% "akka-http-core-experimental" % "1.0-RC4",
+  "com.typesafe.akka" %% "akka-stream-testkit-experimental" % "1.0-RC4",
   // util
   "com.typesafe.scala-logging" %% "scala-logging-slf4j" % "2.1.2",
   "ch.qos.logback" % "logback-classic" % "1.1.3",
