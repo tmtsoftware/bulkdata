@@ -43,7 +43,7 @@ object ServerProtocol {
   object Post extends ServerProtocol {
 
     val flow = Flow[Image].log("RECEIVED")
-    val sink = flow.toMat(Sink.foreach(_ => ()))(Keep.right)
+    val sink = flow.toMat(Sink.ignore)(Keep.right)
 
     protected val transformation = Flow(Image.lazyEmpty, sink)((_, _)) { implicit b => (src, snk) =>
       import FlowGraph.Implicits._

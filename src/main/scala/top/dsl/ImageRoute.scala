@@ -9,24 +9,22 @@ class ImageRoute(imageService: ImageService) extends ImageMarshalling {
 
   val route: Route = {
 
-    pathPrefix("images") {
-      pathEnd {
-        get {
-          complete(imageService.read)
-        } ~
-        post {
-          entity(as[Source[Image, Any]]) { images =>
-            onSuccess(imageService.copy(images)) {
-              complete("copied")
-            }
+    path("images") {
+      get {
+        complete(imageService.read)
+      } ~
+      post {
+        entity(as[Source[Image, Any]]) { images =>
+          onSuccess(imageService.copy(images)) {
+            complete("copied")
           }
         }
-      } ~
-      path("bidi") {
-        post {
-          entity(as[Source[Image, Any]]) { images =>
-            complete(imageService.transform(images))
-          }
+      }
+    } ~
+    path("images" / "bidi") {
+      post {
+        entity(as[Source[Image, Any]]) { images =>
+          complete(imageService.transform(images))
         }
       }
     }
