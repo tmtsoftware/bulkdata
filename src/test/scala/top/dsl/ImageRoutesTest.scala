@@ -5,7 +5,7 @@ import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import akka.stream.scaladsl.Source
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{FunSuite, MustMatchers}
-import top.common.Image
+import top.common.{ImageData, Image}
 
 import scala.concurrent.duration._
 
@@ -27,7 +27,7 @@ class ImageRoutesTest extends FunSuite with MustMatchers with ScalatestRouteTest
 
   test("post") {
 
-    Post("/images", Image.ten) ~> imageRoute.route ~> check {
+    Post("/images", ImageData.ten) ~> imageRoute.route ~> check {
       status mustEqual StatusCodes.OK
     }
 
@@ -35,7 +35,7 @@ class ImageRoutesTest extends FunSuite with MustMatchers with ScalatestRouteTest
 
   test("bidi") {
 
-    Post("/images/bidi", Image.ten) ~> imageRoute.route ~> check {
+    Post("/images/bidi", ImageData.ten) ~> imageRoute.route ~> check {
       entityAs[Source[Image, Any]].runWith(TestSink.probe())
         .request(10)
         .expectNextN((1 to 10).map(x => Image(x.toString).updated))

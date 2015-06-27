@@ -3,7 +3,7 @@ package top.tcp
 import akka.stream.scaladsl.Tcp.OutgoingConnection
 import akka.stream.scaladsl._
 import akka.util.ByteString
-import top.common.Image
+import top.common.{ImageData, Image}
 
 import scala.concurrent.Future
 
@@ -45,7 +45,7 @@ object ServerProtocol {
     val flow = Flow[Image].log("RECEIVED")
     val sink = flow.toMat(Sink.ignore)(Keep.right)
 
-    protected val transformation = Flow(Image.lazyEmpty, sink)((_, _)) { implicit b => (src, snk) =>
+    protected val transformation = Flow(ImageData.lazyEmpty, sink)((_, _)) { implicit b => (src, snk) =>
       import FlowGraph.Implicits._
 
       val fulfilledPromise = b.materializedValue.map { case (p, f) =>

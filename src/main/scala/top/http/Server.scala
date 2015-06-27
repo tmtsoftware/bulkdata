@@ -5,7 +5,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.Sink
-import top.common.Image
+import top.common.{ImageData, Image}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -19,7 +19,7 @@ class Server(address: String, port: Int)(implicit system: ActorSystem) {
   val requestHandler: HttpRequest => Future[HttpResponse] = {
 
     case HttpRequest(HttpMethods.GET, Uri.Path("/images"), _, _, _) =>
-      val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Image.ten.map(Image.toBytes))
+      val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, ImageData.ten.map(Image.toBytes))
       Future.successful(HttpResponse(entity = chunked))
 
     case HttpRequest(HttpMethods.POST, Uri.Path("/images"), _, entity, _) =>

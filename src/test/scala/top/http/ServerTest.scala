@@ -6,7 +6,7 @@ import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
-import top.common.Image
+import top.common.{ImageData, Image}
 import top.dsl.{ImageService, ImageRoute}
 
 import scala.concurrent.duration.DurationInt
@@ -41,7 +41,7 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   test("post") {
     val binding = await(server.runnableGraph.run())
-    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Image.ten.map(Image.toBytes))
+    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, ImageData.ten.map(Image.toBytes))
 
     val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$host:$port/images", entity = chunked)))
 
@@ -52,7 +52,7 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   test("bidi") {
     val binding = await(server.runnableGraph.run())
-    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Image.ten.map(Image.toBytes))
+    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, ImageData.ten.map(Image.toBytes))
 
     val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$host:$port/images/bidi", entity = chunked)))
     val images = response.entity.dataBytes.map(Image.fromBytes).log("Client-Received")
