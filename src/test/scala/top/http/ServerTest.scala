@@ -7,6 +7,7 @@ import akka.stream.ActorMaterializer
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import top.common.Image
+import top.dsl.{ImageService, ImageRoute}
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
@@ -15,10 +16,12 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   implicit val system = ActorSystem("Test")
   implicit val mat = ActorMaterializer()
+  import system.dispatcher
 
   val host = "localhost"
   val port = 7001
   val server  = new Server(host, port)
+//  val server  = new top.dsl.Server(host, port, new ImageRoute(new ImageService).route)
 
   def await[T](f: Future[T]) = Await.result(f, 20.seconds)
 

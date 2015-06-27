@@ -11,7 +11,7 @@ import scala.util.{Failure, Success}
 
 class Server(address: String, port: Int, route: Route)(implicit system: ActorSystem, mat: Materializer, executor: ExecutionContext) {
 
-  private val runnableGraph = {
+  val runnableGraph = {
     val connections = Http().bind(address, port)
 
     connections.to(Sink.foreach { connection =>
