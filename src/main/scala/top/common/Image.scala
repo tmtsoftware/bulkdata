@@ -7,9 +7,8 @@ case class Image(id: String) {
 }
 
 object Image {
-  import scala.pickling.Defaults._
-  import scala.pickling.binary._
+  import boopickle._
 
-  def toBytes(image: Image) = ByteString(image.pickle.value)
-  def fromBytes(byteString: ByteString) = toBinaryPickle(byteString.toArray).unpickle[Image]
+  def toBytes(image: Image) = ByteString(Pickle.intoBytes(image))
+  def fromBytes(byteString: ByteString) =  Unpickle[Image].fromBytes(byteString.toByteBuffer)
 }
