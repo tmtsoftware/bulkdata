@@ -1,29 +1,29 @@
 package top.tcp
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.{Materializer, ActorMaterializer}
 import akka.stream.scaladsl.{Sink, Tcp}
 
+import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class Server(address: String, port: Int, serverProtocol: ServerProtocol)(implicit system: ActorSystem) {
-  import system.dispatcher
-  implicit val materializer = ActorMaterializer()
+class Server(address: String, port: Int, serverProtocol: ServerProtocol)(implicit system: ActorSystem, mat: Materializer, executor: ExecutionContext) {
 
-  def run(): Unit = binding.onComplete {
-    case Success(b) =>
-      println("Server started, listening on: " + b.localAddress)
-    case Failure(e) =>
-      println(s"Server could not bind to $address:$port: ${e.getMessage}")
-      system.shutdown()
+  val runnableGraph = {
+    val connections = Tcp().bind(address, port)
+
+    connections.to(Sink.foreach { connection =>
+      println(s"Accepted new connection from: ${connection.remoteAddress}")
+      connection.handleWith(serverProtocol.connectionFlow)
+    })
   }
 
-  val handler = Sink.foreach[Tcp.IncomingConnection] { conn =>
-    println("Client connected from: " + conn.remoteAddress)
-    conn handleWith serverProtocol.connectionFlow
+  def run() = {
+    val binding = runnableGraph.run()
+
+    binding.onComplete {
+      case Success(b) => println(s"Server started, listening on: ${b.localAddress}")
+      case Failure(e) => println(s"Server could not bind to $address:$port: ${e.getMessage}"); system.shutdown()
+    }
   }
-
-  val connections = Tcp().bind(address, port)
-
-  val binding = connections.to(handler).run()
 }

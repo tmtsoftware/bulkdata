@@ -1,6 +1,7 @@
 package top.tcp
 
 import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import top.common.{ImageData, Image}
 
 import scala.util.Try
@@ -8,6 +9,8 @@ import scala.util.Try
 object Main extends App {
 
   implicit val system = ActorSystem("TMT")
+  implicit val mat = ActorMaterializer()
+  import system.dispatcher
 
   args match {
     case Array("get", "server", host, Int(port))  => new Server(host, port, new ServerProtocol.Get(ImageData.ten)).run()

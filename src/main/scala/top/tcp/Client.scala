@@ -1,17 +1,18 @@
 package top.tcp
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, Tcp}
 
 import scala.util.{Failure, Success}
 
-class Client(address: String, port: Int, clientProtocol: ClientProtocol)(implicit system: ActorSystem) {
-  implicit val materializer = ActorMaterializer()
+class Client(address: String, port: Int, clientProtocol: ClientProtocol)(implicit system: ActorSystem, mat: Materializer) {
+  def run(): Unit = imagesFromServer.runWith(handler)
 
-  def run(): Unit = clientProtocol.transform(connectionFlow).runWith(handler)
-
-  val connectionFlow = Tcp().outgoingConnection(address, port)
+  val imagesFromServer = {
+    val connectionFlow = Tcp().outgoingConnection(address, port)
+    clientProtocol.transform(connectionFlow)
+  }
 
   val handler = Sink.onComplete {
     case Success(_) =>
