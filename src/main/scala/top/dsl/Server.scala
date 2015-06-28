@@ -28,6 +28,7 @@ class Server(address: String, port: Int, route: Route)(implicit system: ActorSys
       case Failure(e) => println(s"Server could not bind to $address:$port: ${e.getMessage}"); system.shutdown()
     }
   }
+
 }
 
 object Server extends App {

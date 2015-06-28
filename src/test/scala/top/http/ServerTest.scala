@@ -20,7 +20,7 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   val host = "localhost"
   val port = 7001
-  val server  = new Server(host, port)
+  val server  = new Server(host, port, new Handler().requestHandler)
 //  val server  = new top.dsl.Server(host, port, new ImageRoute(new ImageService).route)
 
   def await[T](f: Future[T]) = Await.result(f, 20.seconds)

@@ -1,7 +1,7 @@
 package top.tcp
 
 import akka.actor.ActorSystem
-import akka.stream.{Materializer, ActorMaterializer}
+import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, Tcp}
 
 import scala.concurrent.ExecutionContext

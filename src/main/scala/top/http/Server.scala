@@ -3,57 +3,41 @@ package top.http
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
-import akka.stream.ActorMaterializer
+import akka.stream.{Materializer, ActorMaterializer}
 import akka.stream.scaladsl.Sink
 import top.common.{ImageData, Image}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-class Server(address: String, port: Int)(implicit system: ActorSystem) {
-  implicit val mat = ActorMaterializer()
-  import system.dispatcher
+class Server(address: String, port: Int, handler: HttpRequest => Future[HttpResponse])(implicit system: ActorSystem, mat: Materializer, executor: ExecutionContext) {
 
-  val connections = Http().bind(address, port)
+  val runnableGraph = {
+    val connections = Http().bind(address, port)
 
-  val requestHandler: HttpRequest => Future[HttpResponse] = {
-
-    case HttpRequest(HttpMethods.GET, Uri.Path("/images"), _, _, _) =>
-      val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, ImageData.ten.map(Image.toBytes))
-      Future.successful(HttpResponse(entity = chunked))
-
-    case HttpRequest(HttpMethods.POST, Uri.Path("/images"), _, entity, _) =>
-      val images = entity.dataBytes.map(Image.fromBytes).log("Server-Received")
-      images.runWith(Sink.ignore).map(_ => HttpResponse(entity = "saved"))
-
-    case HttpRequest(HttpMethods.POST, Uri.Path("/images/bidi"), _, entity, _) =>
-      val images = entity.dataBytes.map(Image.fromBytes).log("Server-Received").map(_.updated)
-      val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, images.map(Image.toBytes))
-      Future.successful(HttpResponse(entity = chunked))
-
-    case _: HttpRequest =>
-      Future.successful(HttpResponse(StatusCodes.NotFound, entity = "error"))
+    connections.to(Sink.foreach { connection =>
+      println(s"Accepted new connection from: ${connection.remoteAddress}")
+      connection.handleWithAsyncHandler(handler)
+    })
   }
 
-  val runnableGraph = connections.to(Sink.foreach { connection =>
-    println(s"Accepted new connection from: ${connection.remoteAddress}")
-    connection.handleWithAsyncHandler(requestHandler)
-  })
+  def run() = {
+    val binding = runnableGraph.run()
+
+    binding.onComplete {
+      case Success(b) => println(s"Server started, listening on: ${b.localAddress}")
+      case Failure(e) => println(s"Server could not bind to $address:$port: ${e.getMessage}"); system.shutdown()
+    }
+  }
+
 }
 
 object Server extends App {
   implicit val system = ActorSystem("TMT")
-  import system.dispatcher
   implicit val mat = ActorMaterializer()
+  import system.dispatcher
 
-  val address = "localhost"
-  val port    = 6001
-  val server  = new Server(address, port)
+  val server  = new Server("localhost", 6001, new Handler().requestHandler)
 
-  val eventualBinding = server.runnableGraph.run()
-
-  eventualBinding.onComplete {
-    case Success(b) => println(s"Server started, listening on: ${b.localAddress}")
-    case Failure(e) => println(s"Server could not bind to $address:$port: ${e.getMessage}"); system.shutdown()
-  }
+  server.run()
 }
