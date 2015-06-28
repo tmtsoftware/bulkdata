@@ -5,12 +5,12 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.unmarshalling.Unmarshaller
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
-import top.common.Image
+import top.common.{ImageConversions, Image}
 
 trait CustomMarshallers {
 
-  implicit val imageMarshaller = marshaller[Image](Image.toBytes)
-  implicit val imageUnmarshaller = unmarshaller[Image](Image.fromBytes)
+  implicit val imageMarshaller = marshaller[Image](ImageConversions.toBytes)
+  implicit val imageUnmarshaller = unmarshaller[Image](ImageConversions.fromBytes)
 
   def marshaller[T](toBytes: T => ByteString) = Marshaller.opaque { source: Source[T, Any] =>
     val byteStrings = source.map(toBytes)

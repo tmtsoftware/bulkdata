@@ -13,7 +13,7 @@ class ImageService(implicit mat: Materializer) {
   def transform(images: Source[Image, Any]) = images.log("receiving").map(_.updated).log("sending")
 
   val join = Flow[Message].collect {
-    case TextMessage.Strict("join") => read.map(Image.toBytes).map(BinaryMessage.Strict)
+    case TextMessage.Strict("join") => read.map(ImageConversions.toBytes).map(BinaryMessage.Strict)
   }.flatten(FlattenStrategy.concat)
 
 }
