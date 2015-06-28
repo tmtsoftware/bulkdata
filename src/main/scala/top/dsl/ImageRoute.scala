@@ -5,12 +5,16 @@ import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
 import top.common.Image
 
-class ImageRoute(imageService: ImageService) extends ImageMarshalling {
+class ImageRoute(imageService: ImageService) extends CustomMarshallers {
 
   val route: Route = {
 
+    pathSingleSlash {
+      complete("home")
+    } ~
     path("images") {
       get {
+        handleWebsocketMessages(imageService.join) ~
         complete(imageService.read)
       } ~
       post {
@@ -28,6 +32,5 @@ class ImageRoute(imageService: ImageService) extends ImageMarshalling {
         }
       }
     }
-
   }
 }
