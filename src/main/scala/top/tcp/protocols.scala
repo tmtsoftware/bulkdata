@@ -3,7 +3,7 @@ package top.tcp
 import akka.stream.scaladsl.Tcp.OutgoingConnection
 import akka.stream.scaladsl._
 import akka.util.ByteString
-import top.common.{ImageData, Image}
+import top.common.Image
 
 import scala.concurrent.Future
 
@@ -19,48 +19,22 @@ class ClientProtocol(images: Source[Image, Any]) {
 trait ServerProtocol {
   protected def transformation: Flow[Image, Image, Any]
 
-  // same as Image.inbound.via(transformation).via(Image.outbound)
-  def connectionFlow = ImageProtocols.stack.reversed.join(transformation)
+  // same as Image.inbound.log("RECEIVED").via(transformation).via(Image.outbound)
+  def connectionFlow = ImageProtocols.stack.reversed.join(
+    Flow[Image].log("RECEIVED").via(transformation)
+  )
 }
 
 object ServerProtocol {
   class Get(images: Source[Image, Any]) extends ServerProtocol {
-
-    protected val transformation = Flow() { implicit b =>
-      import FlowGraph.Implicits._
-
-      val mainFlow = b.add(Flow[Image])
-      val ignoredFlow = b.add(Flow[Image].log("RECEIVED"))
-      val ignore = b.add(Sink.ignore)
-
-      images ~> mainFlow.inlet
-      ignoredFlow.outlet ~> ignore
-
-      (ignoredFlow.inlet, mainFlow.outlet)
-    }
+    protected val transformation = Flow[Image].map(_ => images).flatten(FlattenStrategy.concat)
   }
 
   object Post extends ServerProtocol {
-
-    val flow = Flow[Image].log("RECEIVED")
-    val sink = flow.toMat(Sink.ignore)(Keep.right)
-
-    protected val transformation = Flow(ImageData.lazyEmpty, sink)((_, _)) { implicit b => (src, snk) =>
-      import FlowGraph.Implicits._
-
-      val fulfilledPromise = b.materializedValue.map { case (p, f) =>
-        p.completeWith(f)
-      }
-
-      val ignore = b.add(Sink.ignore)
-
-      fulfilledPromise.outlet ~> ignore.inlet
-
-      (snk.inlet, src.outlet)
-    }
+    protected val transformation = Flow[Image].filter(_ => false)
   }
 
   object Bidi extends ServerProtocol {
-    protected val transformation = Flow[Image].log("RECEIVED").map(_.updated)
+    protected val transformation = Flow[Image].map(_.updated)
   }
 }
