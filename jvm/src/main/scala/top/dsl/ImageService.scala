@@ -8,26 +8,16 @@ import akka.stream.scaladsl.{FlattenStrategy, Flow, Sink, Source}
 import top.common._
 
 class ImageService(implicit mat: Materializer) {
-  //  val images = ImageData.stream
-  def images = SourceFactory.from(Producer.images())
-  def readImages = images.log("sending")
+  def images = SourceFactory.from(Producer.images()).take(10).log("sending")
   def copy(images: Source[Image, Any]) = images.log("receiving").runWith(Sink.ignore)
   def transform(images: Source[Image, Any]) = images.log("receiving").map(_.updated).log("sending")
 
-  def sendImages = Flow[Message].collect {
-    case TextMessage.Strict("join") => readImages.map(ImageConversions.toBytes).map(BinaryMessage.Strict)
-  }.flatten(FlattenStrategy.concat)
-
   def sendRealImages = Flow[Message].collect {
-    case TextMessage.Strict("join") =>
-      val s = "/Users/mushtaq/tmt/data-transfer/jvm/src/main/resources/image-11111.jpeg"
-      val image = RealImage.fromFile(new File(s))
-      val dd = Seq(image)
-      Source(() => dd.iterator).map(RealImageConversions.toBytes).map(BinaryMessage.Strict)
+    case TextMessage.Strict("join") => realImages.map(RealImageConversions.toBytes).map(BinaryMessage.Strict)
   }.flatten(FlattenStrategy.concat)
 
   def realImages = {
     def files = new File("/Users/mushtaq/videos/frames").listFiles().iterator
-    Source(() => files).map(x => {Thread.sleep(1000); x}).map(RealImage.fromFile)
+    Source(() => files).map(x => {Thread.sleep(42); x}).map(RealImage.fromFile)
   }
 }
