@@ -12,6 +12,11 @@ class ImageRoute(imageService: ImageService) extends CustomMarshallers {
     pathSingleSlash {
       complete("home")
     } ~
+    path("photo") {
+      get {
+        getFromResource("image-11111.jpeg")
+      }
+    } ~
     path("realimages") {
       get {
         handleWebsocketMessages(imageService.sendRealImages)

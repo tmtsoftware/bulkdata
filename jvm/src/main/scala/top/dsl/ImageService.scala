@@ -19,7 +19,11 @@ class ImageService(implicit mat: Materializer) {
   }.flatten(FlattenStrategy.concat)
 
   def sendRealImages = Flow[Message].collect {
-    case TextMessage.Strict("join") => realImages.map(RealImageConversions.toBytes).map(BinaryMessage.Strict)
+    case TextMessage.Strict("join") =>
+      val s = "/Users/mushtaq/tmt/data-transfer/jvm/src/main/resources/image-11111.jpeg"
+      val image = RealImage.fromFile(new File(s))
+      val dd = Seq(image)
+      Source(() => dd.iterator).map(RealImageConversions.toBytes).map(BinaryMessage.Strict)
   }.flatten(FlattenStrategy.concat)
 
   def realImages = {
