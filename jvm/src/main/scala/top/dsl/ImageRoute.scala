@@ -12,10 +12,15 @@ class ImageRoute(imageService: ImageService) extends CustomMarshallers {
     pathSingleSlash {
       complete("home")
     } ~
+    path("realimages") {
+      get {
+        handleWebsocketMessages(imageService.sendRealImages)
+      }
+    } ~
     path("images") {
       get {
-        handleWebsocketMessages(imageService.join) ~
-        complete(imageService.read)
+        handleWebsocketMessages(imageService.sendImages) ~
+        complete(imageService.readImages)
       } ~
       post {
         entity(as[Source[Image, Any]]) { images =>

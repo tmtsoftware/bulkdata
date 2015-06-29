@@ -28,7 +28,4 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-http-testkit-experimental" % "1.0-RC4" % "test"
   )
 
-  val jsLibs = Seq(
-  )
-
 }
