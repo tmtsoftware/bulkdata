@@ -1,8 +1,7 @@
 package top.common
 
-import java.io.File
 import java.nio.ByteBuffer
-import java.nio.file.Files
+
 import boopickle._
 
 case class Image(id: String) {
@@ -10,18 +9,22 @@ case class Image(id: String) {
 }
 
 object Image {
-  def toBytes(image: Image): ByteBuffer = Pickle.intoBytes(image)
-  def fromBytes(bytes: ByteBuffer) =  Unpickle[Image].fromBytes(bytes)
+  def toByteBuffer(image: Image): ByteBuffer = Pickle.intoBytes(image)
+  def fromByteBuffer(bytes: ByteBuffer) =  Unpickle[Image].fromBytes(bytes)
 }
 
-case class RealImage(name: String, encoding: String, bytes: Array[Byte])
+case class RealImage(
+  name: String,
+  mimeType: String,
+  width: Int,
+  height: Int,
+  bytes: Array[Byte]
+) {
+  def aspect = width.toDouble / height
+  def scaledHeight(w: Int) = (w/aspect).toInt
+}
 
 object RealImage {
-  def fromFile(file: File) = RealImage(
-    file.getName,
-    "image/jpeg",
-    Files.readAllBytes(file.toPath)
-  )
-  def toBytes(image: RealImage): ByteBuffer = Pickle.intoBytes(image)
-  def fromBytes(bytes: ByteBuffer) =  Unpickle[RealImage].fromBytes(bytes)
+  def toByteBuffer(image: RealImage): ByteBuffer = Pickle.intoBytes(image)
+  def fromByteBuffer(bytes: ByteBuffer) =  Unpickle[RealImage].fromBytes(bytes)
 }

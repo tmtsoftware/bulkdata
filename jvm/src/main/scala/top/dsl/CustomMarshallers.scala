@@ -9,8 +9,8 @@ import top.common.{ImageConversions, Image}
 
 trait CustomMarshallers {
 
-  implicit val imageMarshaller = marshaller[Image](ImageConversions.toBytes)
-  implicit val imageUnmarshaller = unmarshaller[Image](ImageConversions.fromBytes)
+  implicit val imageMarshaller = marshaller[Image](ImageConversions.toByteString)
+  implicit val imageUnmarshaller = unmarshaller[Image](ImageConversions.fromByteString)
 
   def marshaller[T](toBytes: T => ByteString) = Marshaller.opaque { source: Source[T, Any] =>
     val byteStrings = source.map(toBytes)

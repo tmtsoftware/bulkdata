@@ -12,12 +12,12 @@ object RealImageConversions {
 
   def fromArrayBuffer(arrayBuffer: ArrayBuffer) = {
     val byteBuffer = TypedArrayBuffer.wrap(arrayBuffer)
-    RealImage.fromBytes(byteBuffer)
+    RealImage.fromByteBuffer(byteBuffer)
   }
 
   def toBlob(image: RealImage) = {
     val uint8Array = new Uint8Array(image.bytes.toJSArray)
-    val properties = js.Dynamic.literal("type" -> image.encoding).asInstanceOf[BlobPropertyBag]
+    val properties = js.Dynamic.literal("type" -> image.mimeType).asInstanceOf[BlobPropertyBag]
     new Blob(js.Array(uint8Array), properties)
   }
 }

@@ -5,8 +5,8 @@ import akka.util.ByteString
 import top.common.{ImageConversions, Image}
 
 object ImageProtocols {
-  val codec = BidiFlow(ImageConversions.toBytes _, ImageConversions.fromBytes _)
+  val codec = BidiFlow(ImageConversions.toByteString _, ImageConversions.fromByteString _)
   val stack = codec.atop(Framer.codec)
-  val outbound = Flow[Image].map(ImageConversions.toBytes).via(Framer.encoder)
-  val inbound = Flow[ByteString].via(Framer.decoder).map(ImageConversions.fromBytes)
+  val outbound = Flow[Image].map(ImageConversions.toByteString).via(Framer.encoder)
+  val inbound = Flow[ByteString].via(Framer.decoder).map(ImageConversions.fromByteString)
 }

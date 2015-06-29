@@ -13,11 +13,11 @@ class ImageService(implicit mat: Materializer) {
   def transform(images: Source[Image, Any]) = images.log("receiving").map(_.updated).log("sending")
 
   def sendRealImages = Flow[Message].collect {
-    case TextMessage.Strict("join") => realImages.map(RealImageConversions.toBytes).map(BinaryMessage.Strict)
+    case TextMessage.Strict("join") => realImages.map(RealImageConversions.toByteString).map(BinaryMessage.Strict)
   }.flatten(FlattenStrategy.concat)
 
   def realImages = {
     def files = new File("/Users/mushtaq/videos/frames").listFiles().iterator
-    Source(() => files).map(x => {Thread.sleep(42); x}).map(RealImage.fromFile)
+    Source(() => files).map(RealImageConversions.fromFile).map(x => {Thread.sleep(42); x})
   }
 }

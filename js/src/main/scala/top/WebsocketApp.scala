@@ -26,11 +26,13 @@ object WebsocketApp extends JSApp {
     socket.onmessage = { message: MessageEvent =>
       val arrayBuffer = message.data.asInstanceOf[ArrayBuffer]
       val image = RealImageConversions.fromArrayBuffer(arrayBuffer)
+      canvas.width = 1024
+      canvas.height = image.scaledHeight(canvas.width)
       val blob = RealImageConversions.toBlob(image)
       val url = URL.createObjectURL(blob)
       img.onload = { () =>
         console.log("image loaded")
-        ctx.drawImage(img, 50, 50)
+        ctx.drawImage(img, 0, 0)
         URL.revokeObjectURL(img.src)
       }
       img.src = url

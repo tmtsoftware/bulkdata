@@ -1,13 +1,29 @@
 package top.common
 
+import java.io.File
+import java.nio.file.Files
+import javax.activation.MimetypesFileTypeMap
+import javax.imageio.ImageIO
+
 import akka.util.ByteString
 
 object ImageConversions {
-  def toBytes(image: Image) = ByteString(Image.toBytes(image))
-  def fromBytes(byteString: ByteString) =  Image.fromBytes(byteString.toByteBuffer)
+  def toByteString(image: Image) = ByteString(Image.toByteBuffer(image))
+  def fromByteString(byteString: ByteString) =  Image.fromByteBuffer(byteString.toByteBuffer)
 }
 
 object RealImageConversions {
-  def toBytes(image: RealImage) = ByteString(RealImage.toBytes(image))
-  def fromBytes(byteString: ByteString) =  RealImage.fromBytes(byteString.toByteBuffer)
+  def fromFile(file: File) = {
+    val bufferedImage = ImageIO.read(file)
+    RealImage(
+      file.getName,
+      new MimetypesFileTypeMap().getContentType(file),
+      bufferedImage.getWidth,
+      bufferedImage.getHeight,
+      Files.readAllBytes(file.toPath)
+    )
+  }
+
+  def toByteString(image: RealImage) = ByteString(RealImage.toByteBuffer(image))
+  def fromByteString(byteString: ByteString) =  RealImage.fromByteBuffer(byteString.toByteBuffer)
 }
