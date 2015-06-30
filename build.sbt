@@ -23,7 +23,10 @@ lazy val dataTransfer = crossProject.in(file("."))
   .jvmSettings(Revolver.settings: _*)
   .jsSettings(
     scalaJSStage in Global := FastOptStage,
-    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.8.0"
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % "0.8.0",
+      "org.monifu" %%% "monifu" % "1.0-M1"
+    )
   )
 
 lazy val dtJvm = dataTransfer.jvm
