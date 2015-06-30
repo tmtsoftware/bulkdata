@@ -18,6 +18,6 @@ class ImageService(implicit mat: Materializer) {
 
   def realImages = {
     def files = new File("/Users/mushtaq/videos/frames").listFiles().iterator
-    Source(() => files).map(RealImageConversions.fromFile).map(x => {Thread.sleep(42); x})
+    Source(() => files).map(RealImageConversions.fromFile)
   }
 }

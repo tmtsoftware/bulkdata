@@ -1,6 +1,7 @@
 package top.common
 
-import java.io.File
+import java.awt.image.DataBufferByte
+import java.io.{ByteArrayInputStream, File}
 import java.nio.file.Files
 import javax.activation.MimetypesFileTypeMap
 import javax.imageio.ImageIO
@@ -14,13 +15,14 @@ object ImageConversions {
 
 object RealImageConversions {
   def fromFile(file: File) = {
-    val bufferedImage = ImageIO.read(file)
+    val bytes = Files.readAllBytes(file.toPath)
+    val bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes))
     RealImage(
       file.getName,
       new MimetypesFileTypeMap().getContentType(file),
       bufferedImage.getWidth,
       bufferedImage.getHeight,
-      Files.readAllBytes(file.toPath)
+      bytes
     )
   }
 
