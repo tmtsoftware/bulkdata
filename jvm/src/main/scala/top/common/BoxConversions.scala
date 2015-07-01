@@ -6,10 +6,11 @@ import javax.activation.MimetypesFileTypeMap
 import javax.imageio.ImageIO
 
 import akka.util.ByteString
+import boopickle.{Unpickle, Pickle}
 
 object BoxConversions {
-  def toByteString(box: Box) = ByteString(Box.toByteBuffer(box))
-  def fromByteString(byteString: ByteString) =  Box.fromByteBuffer(byteString.toByteBuffer)
+  def toByteString(box: Box) = ByteString(Pickle.intoBytes(box))
+  def fromByteString(byteString: ByteString) = Unpickle[Box].fromBytes(byteString.toByteBuffer)
 }
 
 object ImageConversions {
@@ -25,6 +26,6 @@ object ImageConversions {
     )
   }
 
-  def toByteString(image: Image) = ByteString(Image.toByteBuffer(image))
-  def fromByteString(byteString: ByteString) = Image.fromByteBuffer(byteString.toByteBuffer)
+  def toByteString(image: Image) = ByteString(Pickle.intoBytes(image))
+  def fromByteString(byteString: ByteString) = Unpickle[Image].fromBytes(byteString.toByteBuffer)
 }

@@ -1,5 +1,6 @@
 package top
 
+import boopickle.Unpickle
 import top.common.Image
 import org.scalajs.dom._
 import org.scalajs.dom.raw.Blob
@@ -12,7 +13,7 @@ object ImageConversions {
 
   def fromArrayBuffer(arrayBuffer: ArrayBuffer) = {
     val byteBuffer = TypedArrayBuffer.wrap(arrayBuffer)
-    Image.fromByteBuffer(byteBuffer)
+    Unpickle[Image].fromBytes(byteBuffer)
   }
 
   def toBlob(image: Image) = {
