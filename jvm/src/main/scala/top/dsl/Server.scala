@@ -5,6 +5,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Sink
 import akka.stream.{ActorMaterializer, Materializer}
+import top.common.Config
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
@@ -36,7 +37,7 @@ object Server extends App {
   implicit val mat = ActorMaterializer()
   import system.dispatcher
 
-  val server  = new Server("localhost", 6001, new AppRoute(new BoxService, new ImageService).route)
+  val server  = new Server(Config.interface, 6001, new AppRoute(new BoxService, new ImageService).route)
 
   server.run()
 }

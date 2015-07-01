@@ -1,5 +1,7 @@
 package top
 
+import java.nio.ByteBuffer
+
 import boopickle.Unpickle
 import top.common.Image
 import org.scalajs.dom._
