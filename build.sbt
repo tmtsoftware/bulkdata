@@ -16,12 +16,10 @@ lazy val dataTransfer = crossProject.in(file("."))
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
     libraryDependencies += "me.chrons" %%% "boopickle" % "1.0.0"
   )
-  .jvmSettings(
-    fork := true,
-    libraryDependencies ++= Dependencies.jvmLibs
-  )
   .jvmSettings(Revolver.settings: _*)
   .jvmSettings(
+    fork := true,
+    libraryDependencies ++= Dependencies.jvmLibs,
     mainClass in Revolver.reStart := Some("top.dsl.Server")
   )
   .jsSettings(
@@ -36,8 +34,7 @@ lazy val dataTransfer = crossProject.in(file("."))
 
 lazy val dtJvm = dataTransfer.jvm.settings(
   (resourceGenerators in Compile) <+=
-    (fastOptJS in Compile in dtJs, packageScalaJSLauncher in Compile in dtJs)
-      .map((f1, f2) => Seq(f1.data, f2.data)),
+    (fastOptJS in Compile in dtJs, packageScalaJSLauncher in Compile in dtJs).map((f1, f2) => Seq(f1.data, f2.data)),
   watchSources <++= (watchSources in dtJs)
 )
 
