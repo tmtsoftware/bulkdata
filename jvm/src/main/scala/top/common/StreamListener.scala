@@ -2,12 +2,7 @@ package top.common
 
 import akka.actor.Status.{Failure, Success}
 import akka.stream.{Materializer, OverflowStrategy}
-
-trait Listener[T] {
-  def onEvent(event: T): Unit
-  def onError(ex: Throwable): Unit
-  def onComplete(): Unit
-}
+import top.camera.Listener
 
 class StreamListener[T](implicit mat: Materializer) extends Listener[T] {
   val (source, actorRef) = SourceFactory.pair[T](1000, OverflowStrategy.dropHead)

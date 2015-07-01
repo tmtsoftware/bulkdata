@@ -36,7 +36,7 @@ object Server extends App {
   implicit val mat = ActorMaterializer()
   import system.dispatcher
 
-  val server  = new Server("localhost", 6001, new ImageRoute(new ImageService, new FrameService).route)
+  val server  = new Server("localhost", 6001, new AppRoute(new BoxService, new ImageService).route)
 
   server.run()
 }

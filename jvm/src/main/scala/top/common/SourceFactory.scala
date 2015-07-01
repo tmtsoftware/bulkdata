@@ -2,6 +2,7 @@ package top.common
 
 import akka.stream.scaladsl._
 import akka.stream.{Materializer, OverflowStrategy}
+import top.camera.Simulator
 
 object SourceFactory {
 

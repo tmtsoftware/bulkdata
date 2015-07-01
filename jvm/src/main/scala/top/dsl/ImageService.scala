@@ -1,11 +1,17 @@
 package top.dsl
 
+import java.io.File
+
+import akka.http.scaladsl.model.ws.BinaryMessage
 import akka.stream.Materializer
-import akka.stream.scaladsl.{Sink, Source}
+import akka.stream.scaladsl.Source
 import top.common._
 
 class ImageService(implicit mat: Materializer) {
-  def send = SourceFactory.from(Producer.images()).take(10).log("sending")
-  def copy(images: Source[Image, Any]) = images.log("receiving").runWith(Sink.ignore)
-  def transform(images: Source[Image, Any]) = images.log("receiving").map(_.updated).log("sending")
+  def send = images.map(ImageConversions.toByteString).map(BinaryMessage.Strict)
+
+  def images = {
+    def files = new File("/Users/mushtaq/videos/frames").listFiles().iterator.take(100)
+    Source(() => files).map(ImageConversions.fromFile)
+  }
 }

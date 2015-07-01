@@ -1,6 +1,5 @@
 package top.common
 
-import java.awt.image.DataBufferByte
 import java.io.{ByteArrayInputStream, File}
 import java.nio.file.Files
 import javax.activation.MimetypesFileTypeMap
@@ -8,16 +7,16 @@ import javax.imageio.ImageIO
 
 import akka.util.ByteString
 
-object ImageConversions {
-  def toByteString(image: Image) = ByteString(Image.toByteBuffer(image))
-  def fromByteString(byteString: ByteString) =  Image.fromByteBuffer(byteString.toByteBuffer)
+object BoxConversions {
+  def toByteString(box: Box) = ByteString(Box.toByteBuffer(box))
+  def fromByteString(byteString: ByteString) =  Box.fromByteBuffer(byteString.toByteBuffer)
 }
 
-object RealImageConversions {
+object ImageConversions {
   def fromFile(file: File) = {
     val bytes = Files.readAllBytes(file.toPath)
     val bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes))
-    RealImage(
+    Image(
       file.getName,
       new MimetypesFileTypeMap().getContentType(file),
       bufferedImage.getWidth,
@@ -26,6 +25,6 @@ object RealImageConversions {
     )
   }
 
-  def toByteString(image: RealImage) = ByteString(RealImage.toByteBuffer(image))
-  def fromByteString(byteString: ByteString) =  RealImage.fromByteBuffer(byteString.toByteBuffer)
+  def toByteString(image: Image) = ByteString(Image.toByteBuffer(image))
+  def fromByteString(byteString: ByteString) =  Image.fromByteBuffer(byteString.toByteBuffer)
 }

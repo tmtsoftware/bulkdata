@@ -6,8 +6,7 @@ import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
-import top.common.{ImageConversions, ImageData, Image}
-import top.dsl.{ImageService, ImageRoute}
+import top.common.{BoxConversions, Boxes, Box}
 
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
@@ -29,11 +28,11 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
     val binding = await(server.runnableGraph.run())
 
     val response = await(Http().singleRequest(HttpRequest(uri = s"http://$host:$port/images")))
-    val images = response.entity.dataBytes.map(ImageConversions.fromByteString).log("Client-Received")
+    val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
     images.runWith(TestSink.probe())
       .request(10)
-      .expectNextN((1 to 10).map(x => Image(x.toString)))
+      .expectNextN((1 to 10).map(x => Box(x.toString)))
       .expectComplete()
 
     binding.unbind()
@@ -41,7 +40,7 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   test("post") {
     val binding = await(server.runnableGraph.run())
-    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, ImageData.ten.map(ImageConversions.toByteString))
+    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
     val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$host:$port/images", entity = chunked)))
 
@@ -52,14 +51,14 @@ class ServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   test("bidi") {
     val binding = await(server.runnableGraph.run())
-    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, ImageData.ten.map(ImageConversions.toByteString))
+    val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
     val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$host:$port/images/bidi", entity = chunked)))
-    val images = response.entity.dataBytes.map(ImageConversions.fromByteString).log("Client-Received")
+    val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
     images.runWith(TestSink.probe())
       .request(10)
-      .expectNextN((1 to 10).map(x => Image(x.toString).updated))
+      .expectNextN((1 to 10).map(x => Box(x.toString).updated))
       .expectComplete()
 
     binding.unbind()

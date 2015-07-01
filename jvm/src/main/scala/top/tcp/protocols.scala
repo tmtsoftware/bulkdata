@@ -3,38 +3,38 @@ package top.tcp
 import akka.stream.scaladsl.Tcp.OutgoingConnection
 import akka.stream.scaladsl._
 import akka.util.ByteString
-import top.common.Image
+import top.common.Box
 
 import scala.concurrent.Future
 
-class ClientProtocol(images: Source[Image, Any]) {
-  def transform(connectionFlow: Flow[ByteString, ByteString, Future[OutgoingConnection]]): Source[Image, Any] = images
+class ClientProtocol(images: Source[Box, Any]) {
+  def transform(connectionFlow: Flow[ByteString, ByteString, Future[OutgoingConnection]]): Source[Box, Any] = images
     .log("sent") //next 3 lines are equivalent to .via(Image.stack.join(connectionFlow))
-    .via(ImageProtocols.outbound)
+    .via(BoxProtocols.outbound)
     .via(connectionFlow)
-    .via(ImageProtocols.inbound)
+    .via(BoxProtocols.inbound)
     .log("RECEIVED")
 }
 
 trait ServerProtocol {
-  protected def transformation: Flow[Image, Image, Any]
+  protected def transformation: Flow[Box, Box, Any]
 
   // same as Image.inbound.log("RECEIVED").via(transformation).via(Image.outbound)
-  def connectionFlow = ImageProtocols.stack.reversed.join(
-    Flow[Image].log("RECEIVED").via(transformation)
+  def connectionFlow = BoxProtocols.stack.reversed.join(
+    Flow[Box].log("RECEIVED").via(transformation)
   )
 }
 
 object ServerProtocol {
-  class Get(images: Source[Image, Any]) extends ServerProtocol {
-    protected val transformation = Flow[Image].map(_ => images).flatten(FlattenStrategy.concat)
+  class Get(boxes: Source[Box, Any]) extends ServerProtocol {
+    protected val transformation = Flow[Box].map(_ => boxes).flatten(FlattenStrategy.concat)
   }
 
   object Post extends ServerProtocol {
-    protected val transformation = Flow[Image].filter(_ => false)
+    protected val transformation = Flow[Box].filter(_ => false)
   }
 
   object Bidi extends ServerProtocol {
-    protected val transformation = Flow[Image].map(_.updated)
+    protected val transformation = Flow[Box].map(_.updated)
   }
 }

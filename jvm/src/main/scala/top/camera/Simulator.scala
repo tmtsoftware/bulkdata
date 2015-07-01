@@ -1,6 +1,8 @@
-package top.common
+package top.camera
 
 import java.util.concurrent.Executors
+
+import top.common.Config
 
 import scala.util.control.NonFatal
 

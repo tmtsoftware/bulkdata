@@ -2,5 +2,5 @@ package top.common
 
 object Producer {
   def numbers() = Iterator.from(1)
-  def images() = numbers().map(x => Image(x.toString))
+  def boxes() = numbers().map(x => Box(x.toString))
 }
