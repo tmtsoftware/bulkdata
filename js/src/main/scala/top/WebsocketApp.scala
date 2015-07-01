@@ -12,14 +12,18 @@ object WebsocketApp extends JSApp {
 
   @JSExport
   override def main() = {
+
     UiControls.button.onclick = { e: Event =>
+
       val socket = new WebSocket("ws://localhost:6001/images")
       socket.binaryType = "arraybuffer"
+
       Stream.from(socket)
         .map(RenderingData.fromMessage)
-        .buffer(500).concatMap(Observable.fromIterable)
+//        .buffer(50).take(1).doOnStart(_ => socket.close()).concatMap(Observable.fromIterable)
         .zip(Observable.interval(24.millis)).map(_._1)
         .foreach(_.render())
+
     }
   }
 }

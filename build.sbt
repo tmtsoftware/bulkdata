@@ -21,6 +21,9 @@ lazy val dataTransfer = crossProject.in(file("."))
     libraryDependencies ++= Dependencies.jvmLibs
   )
   .jvmSettings(Revolver.settings: _*)
+  .jvmSettings(
+    mainClass in Revolver.reStart := Some("top.dsl.Server")
+  )
   .jsSettings(
     persistLauncher in Compile := true,
     persistLauncher in Test := false,
