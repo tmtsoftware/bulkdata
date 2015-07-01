@@ -5,7 +5,6 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.{Materializer, ActorMaterializer}
 import akka.stream.scaladsl.Sink
-import top.common.{Boxes, Box$}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}

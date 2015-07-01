@@ -2,7 +2,7 @@ package top.tcp
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import top.common.{Boxes, Box$}
+import top.common.Boxes
 
 import scala.util.Try
 

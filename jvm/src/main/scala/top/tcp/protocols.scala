@@ -9,11 +9,11 @@ import scala.concurrent.Future
 
 class ClientProtocol(images: Source[Box, Any]) {
   def transform(connectionFlow: Flow[ByteString, ByteString, Future[OutgoingConnection]]): Source[Box, Any] = images
-    .log("sent") //next 3 lines are equivalent to .via(Box.stack.join(connectionFlow))
+    .log("client-sent") //next 3 lines are equivalent to .via(Box.stack.join(connectionFlow))
     .via(BoxProtocols.outbound)
     .via(connectionFlow)
     .via(BoxProtocols.inbound)
-    .log("RECEIVED")
+    .log("CLIENT-RECEIVED")
 }
 
 trait ServerProtocol {
@@ -21,7 +21,7 @@ trait ServerProtocol {
 
   // same as Box.inbound.log("RECEIVED").via(transformation).via(Box.outbound)
   def connectionFlow = BoxProtocols.stack.reversed.join(
-    Flow[Box].log("RECEIVED").via(transformation)
+    Flow[Box].log("SERVER-RECEIVED").via(transformation)
   )
 }
 
