@@ -26,5 +26,5 @@ object ImageConversions {
   }
 
   def toByteString(image: Image) = ByteString(Image.toByteBuffer(image))
-  def fromByteString(byteString: ByteString) =  Image.fromByteBuffer(byteString.toByteBuffer)
+  def fromByteString(byteString: ByteString) = Image.fromByteBuffer(byteString.toByteBuffer)
 }

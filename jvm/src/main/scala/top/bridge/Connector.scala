@@ -1,4 +1,4 @@
-package top.common
+package top.bridge
 
 import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.stream.{Materializer, OverflowStrategy}

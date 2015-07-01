@@ -1,4 +1,4 @@
-package top.common
+package top.bridge
 
 import akka.actor.Status.{Failure, Success}
 import akka.stream.{Materializer, OverflowStrategy}

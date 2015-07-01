@@ -3,6 +3,7 @@ package top.dsl
 import akka.http.scaladsl.model.ws.BinaryMessage
 import akka.stream.Materializer
 import akka.stream.scaladsl.Source
+import top.bridge.SourceSimulator
 import top.common._
 
 class ImageService(implicit mat: Materializer) {
