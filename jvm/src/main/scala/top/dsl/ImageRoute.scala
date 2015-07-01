@@ -2,10 +2,10 @@ package top.dsl
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import akka.stream.scaladsl.Source
+import akka.stream.scaladsl.{Sink, Source}
 import top.common.Image
 
-class ImageRoute(imageService: ImageService) extends CustomMarshallers {
+class ImageRoute(imageService: ImageService, frameService: FrameService) extends CustomMarshallers with CustomDirectives {
 
   val route: Route = {
 
@@ -14,8 +14,8 @@ class ImageRoute(imageService: ImageService) extends CustomMarshallers {
     } ~
     path("images") {
       get {
-        handleWebsocketMessages(imageService.sendRealImages) ~
-        complete(imageService.images)
+        handleWebsocketMessages(Sink.ignore, frameService.send) ~
+        complete(imageService.send)
       } ~
       post {
         entity(as[Source[Image, Any]]) { images =>

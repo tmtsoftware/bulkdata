@@ -12,7 +12,7 @@ import scala.concurrent.duration._
 class ImageRoutesTest extends FunSuite with MustMatchers with ScalatestRouteTest with CustomMarshallers {
 
   implicit val routeTestTimeout = RouteTestTimeout(20.seconds)
-  val imageRoute = new ImageRoute(new ImageService)
+  val imageRoute = new ImageRoute(new ImageService, new FrameService)
 
   test("get") {
 
