@@ -22,6 +22,8 @@ lazy val dataTransfer = crossProject.in(file("."))
   )
   .jvmSettings(Revolver.settings: _*)
   .jsSettings(
+    persistLauncher in Compile := true,
+    persistLauncher in Test := false,
     scalaJSStage in Global := FastOptStage,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.8.0",
@@ -29,6 +31,11 @@ lazy val dataTransfer = crossProject.in(file("."))
     )
   )
 
-lazy val dtJvm = dataTransfer.jvm
+lazy val dtJvm = dataTransfer.jvm.settings(
+  (resourceGenerators in Compile) <+=
+    (fastOptJS in Compile in dtJs, packageScalaJSLauncher in Compile in dtJs)
+      .map((f1, f2) => Seq(f1.data, f2.data)),
+  watchSources <++= (watchSources in dtJs)
+)
 
 lazy val dtJs = dataTransfer.js

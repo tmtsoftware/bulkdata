@@ -9,12 +9,12 @@ import top.common.{Box, BoxConversions}
 
 trait CustomMarshallers {
 
-  implicit val imageMarshaller = marshaller[Box](BoxConversions.toByteString)
-  implicit val imageUnmarshaller = unmarshaller[Box](BoxConversions.fromByteString)
+  implicit val boxMarshaller = marshaller[Box](BoxConversions.toByteString)
+  implicit val boxUnmarshaller = unmarshaller[Box](BoxConversions.fromByteString)
 
   def marshaller[T](toBytes: T => ByteString) = Marshaller.opaque { source: Source[T, Any] =>
     val byteStrings = source.map(toBytes)
-    HttpEntity.Chunked.fromData(ContentTypes.`application/octet-stream`, byteStrings)
+    HttpEntity.Chunked.fromData(ContentTypes.NoContentType, byteStrings)
   }
 
   def unmarshaller[T](fromBytes: ByteString => T) = Unmarshaller.strict { entity: HttpEntity =>

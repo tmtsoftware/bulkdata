@@ -10,7 +10,13 @@ class AppRoute(boxService: BoxService, imageService: ImageService) extends Custo
   val route: Route = {
 
     pathSingleSlash {
-      complete("home")
+      getFromResource("web/index.html")
+    } ~
+    path("data-transfer-launcher.js") {
+      getFromResource("data-transfer-launcher.js")
+    } ~
+    path("data-transfer-fastopt.js") {
+      getFromResource("data-transfer-fastopt.js")
     } ~
     path("images") {
       get {
