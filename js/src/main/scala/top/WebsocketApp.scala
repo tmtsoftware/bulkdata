@@ -12,13 +12,14 @@ object WebsocketApp extends JSApp {
 
   @JSExport
   override def main() = {
-    val socket = new WebSocket("ws://localhost:6001/images")
-    socket.binaryType = "arraybuffer"
-    Stream.from(socket)
-      .map(RenderingData.fromMessage)
-      .buffer(100).concatMap(Observable.fromIterable)
-      .asyncBoundary()
-      .zip(Observable.interval(24.millis)).map(_._1)
-      .foreach(_.render())
+    UiControls.button.onclick = { e: Event =>
+      val socket = new WebSocket("ws://localhost:6001/images")
+      socket.binaryType = "arraybuffer"
+      Stream.from(socket)
+        .map(RenderingData.fromMessage)
+        .buffer(500).concatMap(Observable.fromIterable)
+        .zip(Observable.interval(24.millis)).map(_._1)
+        .foreach(_.render())
+    }
   }
 }

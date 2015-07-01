@@ -11,7 +11,7 @@ class ImageService(implicit mat: Materializer) {
   def send = images.map(ImageConversions.toByteString).map(BinaryMessage.Strict)
 
   def images = {
-    def files = new File("/Users/mushtaq/videos/frames").listFiles().iterator.take(100)
+    def files = new File("/Users/mushtaq/videos/frames").listFiles().iterator.take(500)
     Source(() => files).map(ImageConversions.fromFile)
   }
 }
