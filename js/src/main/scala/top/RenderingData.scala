@@ -1,26 +1,17 @@
 package top
 
-import top.common.Image
 import org.scalajs.dom._
 
-case class RenderingData(url: String, image: Image) {
+case class RenderingData(url: String, width: Int, height: Int) {
   val img = document.createElement("img").asInstanceOf[CustomImage]
   def render() = {
     img.onload = { () =>
+      UiControls.canvas.width = width
+      UiControls.canvas.height = height
       console.log("image loaded")
-      UiControls.ctx.drawImage(img, 0, 0, image.width/3, image.height/3)
+      UiControls.ctx.drawImage(img, 0, 0, width, height)
       UiControls.URL.revokeObjectURL(img.src)
     }
     img.src = url
-  }
-}
-
-object RenderingData {
-  def fromImage(image: Image) = {
-    UiControls.canvas.width = image.width/3
-    UiControls.canvas.height = image.height/3
-    val blob = ImageConversions.toBlob(image)
-    val url = UiControls.URL.createObjectURL(blob)
-    RenderingData(url, image)
   }
 }
