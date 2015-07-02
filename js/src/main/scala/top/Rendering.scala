@@ -2,7 +2,7 @@ package top
 
 import org.scalajs.dom._
 
-case class RenderingData(url: String, width: Int, height: Int) {
+class Rendering(url: String, width: Int, height: Int) {
   val img = document.createElement("img").asInstanceOf[CustomImage]
   def render() = {
     img.onload = { () =>

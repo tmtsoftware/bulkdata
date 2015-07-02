@@ -18,9 +18,6 @@ class AppRoute(boxService: BoxService, imageService: ImageService) extends Custo
     path("data-transfer-fastopt.js") {
       getFromResource("data-transfer-fastopt.js")
     } ~
-    path("worker.js") {
-      getFromResource("web/worker.js")
-    } ~
     path("images") {
       get {
         handleWebsocketMessages(Sink.ignore, imageService.send) ~
