@@ -12,7 +12,7 @@ object Stream {
         println("***********open")
       }
       socket.onmessage = { e: MessageEvent =>
-        println("***********message")
+        println("message arrived")
         obs.onNext(e)
       }
       socket.onclose = { e: Event =>
