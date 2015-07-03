@@ -6,8 +6,8 @@ import org.scalajs.dom.html.Image
 
 import scala.scalajs.js
 
-trait Onload extends js.Object {
+trait OnLoad extends js.Object {
   var onload: js.Function1[Event, _] = js.native
 }
 
-class CustomImage extends Image with Onload
+class CustomImage extends Image with OnLoad

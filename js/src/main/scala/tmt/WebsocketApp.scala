@@ -16,13 +16,15 @@ object WebsocketApp extends JSApp {
   override def main() = UiControls.button.onclick = { e: Event =>
     val socket = new WebSocket(s"ws://${Config.interface}:${Config.port}/images")
     socket.binaryType = "arraybuffer"
-    Stream.from(socket)
-      .map(makeUrl)
-      .map(new Rendering(_))
-      .flatMap(_.loadedRendering)
-      .map(_.render())
-      .bufferTimed(1.second).map(_.size).foreach(println)
+    drain(socket)
   }
+
+  def drain(socket: WebSocket) = Stream.socket(socket)
+    .map(makeUrl)
+    .map(new Rendering(_))
+    .flatMap(_.loaded)
+    .map(_.render())
+    .bufferTimed(1.second).map(_.size).foreach(println)
 
   def makeUrl(messageEvent: MessageEvent) = {
     val arrayBuffer = messageEvent.data.asInstanceOf[ArrayBuffer]

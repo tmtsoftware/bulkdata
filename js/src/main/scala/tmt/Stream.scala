@@ -1,29 +1,26 @@
 package tmt
 
 import monifu.reactive.Observable
-import org.scalajs.dom.raw.ErrorEvent
-import org.scalajs.dom.{Event, MessageEvent, WebSocket}
+import org.scalajs.dom.{ErrorEvent, Event, MessageEvent, WebSocket}
 
 import scala.scalajs.js
 
 object Stream {
-  def from(socket: WebSocket) = {
-    Observable.create[MessageEvent] { subscriber =>
-      val obs = subscriber.observer
-      socket.onopen = { e: Event =>
-        println("***********open")
-      }
-      socket.onmessage = { e: MessageEvent =>
-        obs.onNext(e)
-      }
-      socket.onclose = { e: Event =>
-        println("**************closed")
-        obs.onComplete()
-      }
-      socket.onerror = { e: ErrorEvent =>
-        println("**************error")
-        obs.onError(throw new RuntimeException(e.message))
-      }
+  def socket(socket: WebSocket) = Observable.create[MessageEvent] { subscriber =>
+    val obs = subscriber.observer
+    socket.onopen = { e: Event =>
+      println("***********open")
+    }
+    socket.onmessage = { e: MessageEvent =>
+      obs.onNext(e)
+    }
+    socket.onclose = { e: Event =>
+      println("**************closed")
+      obs.onComplete()
+    }
+    socket.onerror = { e: ErrorEvent =>
+      println("**************error")
+      obs.onError(throw new RuntimeException(e.message))
     }
   }
 

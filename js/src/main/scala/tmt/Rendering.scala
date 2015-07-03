@@ -7,7 +7,7 @@ class Rendering(url: String) {
 
   val img = document.createElement("img").asInstanceOf[CustomImage]
   
-  def loadedRendering = {
+  def loaded = {
     val rendering = Stream.event(img.onload_=).map(_ => this)
     img.src = url
     rendering
