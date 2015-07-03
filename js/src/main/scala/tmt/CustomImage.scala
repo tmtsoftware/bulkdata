@@ -1,10 +1,13 @@
 package tmt
 
 
+import org.scalajs.dom.Event
 import org.scalajs.dom.html.Image
 
 import scala.scalajs.js
 
-class CustomImage extends Image {
-  var onload: js.Function0[ _] = js.native
+trait Onload extends js.Object {
+  var onload: js.Function1[Event, _] = js.native
 }
+
+class CustomImage extends Image with Onload

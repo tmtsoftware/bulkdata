@@ -8,6 +8,7 @@ import scala.scalajs.js
 
 object UiControls {
   val button = document.getElementById("click-me-button").asInstanceOf[Button]
+
   val canvas = document.getElementById("canvas").asInstanceOf[Canvas]
   canvas.width = Config.imageWidth
   canvas.height = Config.imageHeight

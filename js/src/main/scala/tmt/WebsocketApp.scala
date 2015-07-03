@@ -16,16 +16,18 @@ object WebsocketApp extends JSApp {
   override def main() = UiControls.button.onclick = { e: Event =>
     val socket = new WebSocket(s"ws://${Config.interface}:${Config.port}/images")
     socket.binaryType = "arraybuffer"
-    val renderings = Stream.from(socket).map(makeRendering)
-//    renderings.bufferTimed(1.second).map(_.size).foreach(println)
-    renderings.foreach(_.render())
+    Stream.from(socket).asyncBoundary()
+      .map(makeUrl)
+      .map(new Rendering(_))
+      .flatMap(_.loadedRendering)
+      .map(_.render())
+      .bufferTimed(1.second).map(_.size).foreach(println)
   }
 
-  def makeRendering(messageEvent: MessageEvent) = {
+  def makeUrl(messageEvent: MessageEvent) = {
     val arrayBuffer = messageEvent.data.asInstanceOf[ArrayBuffer]
     val properties = js.Dynamic.literal("type" -> "image/jpeg").asInstanceOf[BlobPropertyBag]
     val blob = new Blob(js.Array(arrayBuffer), properties)
-    val url = UiControls.URL.createObjectURL(blob)
-    new Rendering(url)
+    UiControls.URL.createObjectURL(blob)
   }
 }

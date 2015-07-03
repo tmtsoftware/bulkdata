@@ -4,6 +4,8 @@ import monifu.reactive.Observable
 import org.scalajs.dom.raw.ErrorEvent
 import org.scalajs.dom.{Event, MessageEvent, WebSocket}
 
+import scala.scalajs.js
+
 object Stream {
   def from(socket: WebSocket) = {
     Observable.create[MessageEvent] { subscriber =>
@@ -12,7 +14,6 @@ object Stream {
         println("***********open")
       }
       socket.onmessage = { e: MessageEvent =>
-        println("message arrived")
         obs.onNext(e)
       }
       socket.onclose = { e: Event =>
@@ -23,6 +24,14 @@ object Stream {
         println("**************error")
         obs.onError(throw new RuntimeException(e.message))
       }
+    }
+  }
+
+  def event[T <: Event](listener: js.Function1[T, _] => Unit) = Observable.create[T] { subscriber =>
+    val obs = subscriber.observer
+    listener { e: T =>
+      obs.onNext(e)
+      obs.onComplete()
     }
   }
 }
