@@ -16,7 +16,7 @@ object WebsocketApp extends JSApp {
   override def main() = UiControls.button.onclick = { e: Event =>
     val socket = new WebSocket(s"ws://${Config.interface}:${Config.port}/images")
     socket.binaryType = "arraybuffer"
-    Stream.from(socket).asyncBoundary()
+    Stream.from(socket)
       .map(makeUrl)
       .map(new Rendering(_))
       .flatMap(_.loadedRendering)
