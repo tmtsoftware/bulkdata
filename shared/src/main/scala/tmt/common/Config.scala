@@ -8,4 +8,6 @@ object Config {
   val framesDir = "/Users/mushtaq/videos/frames"
   val interface = "localhost"
   val port = 6001
+  val imageWidth = 1920/2
+  val imageHeight = 1080/2
 }

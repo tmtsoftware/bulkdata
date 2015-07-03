@@ -16,16 +16,15 @@ object BoxConversions {
 object ImageConversions {
   def fromFile(file: File) = {
     val bytes = Files.readAllBytes(file.toPath)
-    val bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes))
     Image(
-      file.getName,
-      new MimetypesFileTypeMap().getContentType(file),
-      bufferedImage.getWidth,
-      bufferedImage.getHeight,
+      "",
+      "image/jpeg",
+      Config.imageWidth,
+      Config.imageHeight,
       bytes
     )
   }
 
-  def toByteString(image: Image) = ByteString(Pickle.intoBytes(image))
+  def toByteString(image: Image) = ByteString(image.bytes)
   def fromByteString(byteString: ByteString) = Unpickle[Image].fromBytes(byteString.toByteBuffer)
 }
