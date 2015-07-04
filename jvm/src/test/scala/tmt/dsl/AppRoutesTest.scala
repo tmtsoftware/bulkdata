@@ -14,16 +14,16 @@ class AppRoutesTest extends FunSuite with MustMatchers with ScalatestRouteTest w
   implicit val routeTestTimeout = RouteTestTimeout(20.seconds)
   val appRoute = new AppRoute(new BoxService, new ImageService)
 
-  test("get") {
-
-    Get("/images") ~> appRoute.route ~> check {
-      entityAs[Source[Box, Any]].runWith(TestSink.probe())
-        .request(10)
-        .expectNextN((1 to 10).map(x => Box(x.toString)))
-        .expectComplete()
-    }
-
-  }
+//  test("get") {
+//
+//    Get("/images") ~> appRoute.route ~> check {
+//      entityAs[Source[Box, Any]].runWith(TestSink.probe())
+//        .request(10)
+//        .expectNextN((1 to 10).map(x => Box(x.toString)))
+//        .expectComplete()
+//    }
+//
+//  }
 
   test("post") {
 

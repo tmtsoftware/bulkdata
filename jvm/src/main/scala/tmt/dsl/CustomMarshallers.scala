@@ -9,6 +9,8 @@ import tmt.common.{Box, BoxConversions}
 
 trait CustomMarshallers {
 
+  implicit val bytesMarshaller = marshaller[Array[Byte]](ByteString.apply)
+
   implicit val boxMarshaller = marshaller[Box](BoxConversions.toByteString)
   implicit val boxUnmarshaller = unmarshaller[Box](BoxConversions.fromByteString)
 

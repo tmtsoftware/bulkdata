@@ -20,8 +20,8 @@ class AppRoute(boxService: BoxService, imageService: ImageService) extends Custo
     } ~
     path("images") {
       get {
-        handleWebsocketMessages(Sink.ignore, imageService.send) ~
-        complete(boxService.send)
+        handleWebsocketMessages(Sink.ignore, imageService.sendMessages) ~
+        complete(imageService.sendBytes)
       } ~
       post {
         entity(as[Source[Box, Any]]) { images =>
