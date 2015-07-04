@@ -3,13 +3,14 @@ package tmt.http
 import akka.http.scaladsl.model._
 import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
+import tmt.common.Types.RequestHandler
 import tmt.common.{BoxConversions, Boxes}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class Handler(implicit mat: Materializer, executor: ExecutionContext) {
 
-  val requestHandler: HttpRequest => Future[HttpResponse] = {
+  val requestHandler: RequestHandler = {
 
     case HttpRequest(HttpMethods.GET, Uri.Path("/images"), _, _, _) =>
       val chunked = HttpEntity.Chunked.fromData(ContentTypes.`application/octet-stream`, Boxes.ten.map(BoxConversions.toByteString))

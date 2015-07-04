@@ -1,23 +1,21 @@
-package tmt.dsl
+package tmt.common
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Route
+import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
-import akka.stream.{ActorMaterializer, Materializer}
-import tmt.common.Config
 
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class Server(address: String, port: Int, route: Route)(implicit system: ActorSystem, mat: Materializer, executor: ExecutionContext) {
+class Server(address: String, port: Int, connectionFlow: Types.ConnectionFlow)(implicit system: ActorSystem, mat: Materializer, executor: ExecutionContext) {
 
   val runnableGraph = {
     val connections = Http().bind(address, port)
 
     connections.to(Sink.foreach { connection =>
       println(s"Accepted new connection from: ${connection.remoteAddress}")
-      connection.handleWith(route)
+      connection.handleWith(connectionFlow)
     })
   }
 
@@ -29,15 +27,4 @@ class Server(address: String, port: Int, route: Route)(implicit system: ActorSys
       case Failure(e) => println(s"Server could not bind to $address:$port: ${e.getMessage}"); system.shutdown()
     }
   }
-
-}
-
-object Server extends App {
-  implicit val system = ActorSystem("TMT")
-  implicit val mat = ActorMaterializer()
-  import system.dispatcher
-
-  val server  = new Server(Config.interface, 6001, new AppRoute(new BoxService, new ImageService).route)
-
-  server.run()
 }
