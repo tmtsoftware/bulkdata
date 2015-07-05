@@ -1,29 +1,25 @@
 package tmt.dsl
 
+import java.io.File
 import java.nio.file.Files
 
+import akka.actor.ActorSystem
 import akka.http.scaladsl.model.ws.BinaryMessage
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
-import akka.stream.Materializer
 import akka.stream.io.SynchronousFileSource
 import akka.stream.scaladsl.Source
-import akka.util.ByteString
 import tmt.common._
 
-class ImageService(implicit mat: Materializer) {
+import scala.concurrent.Future
+
+class ImageService(implicit system: ActorSystem) {
+
+  val fileIoDispatcher = system.dispatchers.lookup("akka.stream.default-file-io-dispatcher")
 
   def files = Source(() => Producer.files)
 
-  def sendResponses = files.map(SynchronousFileSource(_))
-    .map(HttpEntity.Chunked.fromData(ContentTypes.NoContentType, _))
-    .map(chunked => HttpResponse(entity = chunked))
-  
-  def sendBytes = files.map(file => Files.readAllBytes(file.toPath))
+  def sendBytes = files.mapAsync(1)(readFile)
 
-  def sendStrictMessages = sendBytes.map(ByteString.apply)
-    .map(BinaryMessage.Strict)
+  def sendMessages = files.map(SynchronousFileSource(_)).map(BinaryMessage.apply)
 
-  def sendMessages = files.map(SynchronousFileSource(_))
-    .map(BinaryMessage.apply)
-
+  def readFile(file: File) = Future(Files.readAllBytes(file.toPath))(fileIoDispatcher)
 }

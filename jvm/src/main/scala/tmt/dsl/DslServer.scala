@@ -15,7 +15,7 @@ class DslServer(val interface: String, val port: Int) {
   val server = new Server(
     interface,
     port,
-    new Pipeline(imageService, new AppRoute(new BoxService, imageService).route).connectionFlow
+    new AppRoute(new BoxService, imageService).route
   )
 }
 

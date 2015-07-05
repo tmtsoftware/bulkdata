@@ -16,7 +16,7 @@ trait CustomMarshallers {
 
   def marshaller[T](toBytes: T => ByteString) = Marshaller.opaque { source: Source[T, Any] =>
     val byteStrings = source.map(toBytes)
-    HttpEntity.Chunked.fromData(ContentTypes.NoContentType, byteStrings)
+    HttpEntity.Chunked.fromData(ContentTypes.`application/octet-stream`, byteStrings)
   }
 
   def unmarshaller[T](fromBytes: ByteString => T) = Unmarshaller.strict { entity: HttpEntity =>
