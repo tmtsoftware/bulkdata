@@ -14,7 +14,7 @@ object WebsocketApp extends JSApp {
 
   @JSExport
   override def main() = UiControls.button.onclick = { e: Event =>
-    val socket = new WebSocket(s"ws://${Config.interface}:${Config.port}/images")
+    val socket = new WebSocket(s"ws://${Config.interface}:${Config.port}/images/bytes")
     socket.binaryType = "arraybuffer"
     drain(socket)
   }

@@ -24,6 +24,7 @@ class DslServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
     val getRequest = HttpRequest(uri = uri)
     val getResponse = Http().singleRequest(getRequest)
+
     val getEntity = await(getResponse).entity.asInstanceOf[Chunked]
 
     val postRequest = getRequest.copy(method = HttpMethods.POST, entity = getEntity)
