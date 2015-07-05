@@ -3,9 +3,8 @@ package tmt.dsl
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.{Sink, Source}
-import tmt.common.Box
 
-class AppRoute(boxService: BoxService, imageService: ImageService) extends CustomMarshallers with CustomDirectives {
+class MediaRoute(mediaService: MediaService) extends CustomMarshallers with CustomDirectives {
 
   val route: Route = {
 
@@ -20,21 +19,14 @@ class AppRoute(boxService: BoxService, imageService: ImageService) extends Custo
     } ~
     path("images") {
       get {
-        handleWebsocketMessages(Sink.ignore, imageService.sendMessages) ~
-        complete(imageService.sendBytes)
+        handleWebsocketMessages(Sink.ignore, mediaService.sendMessages) ~
+        complete(mediaService.sendBytes)
       } ~
       post {
-        entity(as[Source[Box, Any]]) { images =>
-          onSuccess(boxService.copy(images)) {
+        entity(as[Source[Array[Byte], Any]]) { byteArrays =>
+          onSuccess(mediaService.copy(byteArrays)) {
             complete("copied")
           }
-        }
-      }
-    } ~
-    path("images" / "bidi") {
-      post {
-        entity(as[Source[Box, Any]]) { images =>
-          complete(boxService.transform(images))
         }
       }
     }

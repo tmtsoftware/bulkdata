@@ -10,12 +10,12 @@ class DslServer(val interface: String, val port: Int) {
 
   import system.dispatcher
 
-  val imageService = new ImageService
+  val imageService = new MediaService
 
   val server = new Server(
     interface,
     port,
-    new AppRoute(new BoxService, imageService).route
+    new MediaRoute(imageService).route
   )
 }
 

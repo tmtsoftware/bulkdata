@@ -9,25 +9,25 @@ import tmt.common.{Boxes, Box}
 
 import scala.concurrent.duration._
 
-class AppRoutesTest extends FunSuite with MustMatchers with ScalatestRouteTest with CustomMarshallers {
+class BoxRouteTest extends FunSuite with MustMatchers with ScalatestRouteTest with CustomMarshallers {
 
   implicit val routeTestTimeout = RouteTestTimeout(20.seconds)
-  val appRoute = new AppRoute(new BoxService, new ImageService)
+  val boxRoute = new BoxRoute(new BoxService)
 
-//  test("get") {
-//
-//    Get("/images") ~> appRoute.route ~> check {
-//      entityAs[Source[Box, Any]].runWith(TestSink.probe())
-//        .request(10)
-//        .expectNextN((1 to 10).map(x => Box(x.toString)))
-//        .expectComplete()
-//    }
-//
-//  }
+  test("get") {
+
+    Get("/boxes") ~> boxRoute.route ~> check {
+      entityAs[Source[Box, Any]].runWith(TestSink.probe())
+        .request(10)
+        .expectNextN((1 to 10).map(x => Box(x.toString)))
+        .expectComplete()
+    }
+
+  }
 
   test("post") {
 
-    Post("/images", Boxes.ten) ~> appRoute.route ~> check {
+    Post("/boxes", Boxes.ten) ~> boxRoute.route ~> check {
       status mustEqual StatusCodes.OK
     }
 
@@ -35,7 +35,7 @@ class AppRoutesTest extends FunSuite with MustMatchers with ScalatestRouteTest w
 
   test("bidi") {
 
-    Post("/images/bidi", Boxes.ten) ~> appRoute.route ~> check {
+    Post("/boxes/bidi", Boxes.ten) ~> boxRoute.route ~> check {
       entityAs[Source[Box, Any]].runWith(TestSink.probe())
         .request(10)
         .expectNextN((1 to 10).map(x => Box(x.toString).updated))

@@ -12,15 +12,15 @@ class Handler(implicit mat: Materializer, executor: ExecutionContext) {
 
   val requestHandler: RequestHandler = {
 
-    case HttpRequest(HttpMethods.GET, Uri.Path("/images"), _, _, _) =>
+    case HttpRequest(HttpMethods.GET, Uri.Path("/boxes"), _, _, _) =>
       val chunked = HttpEntity.Chunked.fromData(ContentTypes.`application/octet-stream`, Boxes.ten.map(BoxConversions.toByteString))
       Future.successful(HttpResponse(entity = chunked))
 
-    case HttpRequest(HttpMethods.POST, Uri.Path("/images"), _, entity, _) =>
+    case HttpRequest(HttpMethods.POST, Uri.Path("/boxes"), _, entity, _) =>
       val images = entity.dataBytes.map(BoxConversions.fromByteString).log("Server-Received")
       images.runWith(Sink.ignore).map(_ => HttpResponse(entity = "saved"))
 
-    case HttpRequest(HttpMethods.POST, Uri.Path("/images/bidi"), _, entity, _) =>
+    case HttpRequest(HttpMethods.POST, Uri.Path("/boxes/bidi"), _, entity, _) =>
       val images = entity.dataBytes.map(BoxConversions.fromByteString).log("Server-Received").map(_.updated)
       val chunked = HttpEntity.Chunked.fromData(ContentTypes.`application/octet-stream`, images.map(BoxConversions.toByteString))
       Future.successful(HttpResponse(entity = chunked))

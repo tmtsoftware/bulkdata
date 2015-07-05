@@ -16,7 +16,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
   test("get") {
     val binding = await(server.runnableGraph.run())
 
-    val response = await(Http().singleRequest(HttpRequest(uri = s"http://$interface:$port/images")))
+    val response = await(Http().singleRequest(HttpRequest(uri = s"http://$interface:$port/boxes")))
     val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
     images.runWith(TestSink.probe())
@@ -31,7 +31,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
     val binding = await(server.runnableGraph.run())
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
-    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$interface:$port/images", entity = chunked)))
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$interface:$port/boxes", entity = chunked)))
 
     response.status mustEqual StatusCodes.OK
 
@@ -42,7 +42,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
     val binding = await(server.runnableGraph.run())
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
-    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$interface:$port/images/bidi", entity = chunked)))
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$interface:$port/boxes/bidi", entity = chunked)))
     val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
     images.runWith(TestSink.probe())

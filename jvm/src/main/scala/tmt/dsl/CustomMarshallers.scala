@@ -10,9 +10,10 @@ import tmt.common.{Box, BoxConversions}
 trait CustomMarshallers {
 
   implicit val bytesMarshaller = marshaller[Array[Byte]](ByteString.apply)
+  implicit val bytesUnmarshaller = unmarshaller[Array[Byte]](_.toByteBuffer.array())
 
-  implicit val boxMarshaller = marshaller[Box](BoxConversions.toByteString)
-  implicit val boxUnmarshaller = unmarshaller[Box](BoxConversions.fromByteString)
+  implicit val boxMarshaller = marshaller(BoxConversions.toByteString)
+  implicit val boxUnmarshaller = unmarshaller(BoxConversions.fromByteString)
 
   def marshaller[T](toBytes: T => ByteString) = Marshaller.opaque { source: Source[T, Any] =>
     val byteStrings = source.map(toBytes)
