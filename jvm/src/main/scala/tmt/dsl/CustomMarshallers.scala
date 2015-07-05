@@ -5,9 +5,13 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.unmarshalling.Unmarshaller
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
-import tmt.common.{Box, BoxConversions}
+import boopickle.{Pickle, Unpickle}
+import tmt.common.{BoxConversions, Image}
 
 trait CustomMarshallers {
+
+  implicit val imageMarshaller = marshaller[Image](x => ByteString(Pickle.intoBytes(x)))
+  implicit val imageUnmarshaller = unmarshaller[Image](x => Unpickle[Image].fromBytes(x.toByteBuffer))
 
   implicit val bytesMarshaller = marshaller[Array[Byte]](ByteString.apply)
   implicit val bytesUnmarshaller = unmarshaller[Array[Byte]](_.toByteBuffer.array())
