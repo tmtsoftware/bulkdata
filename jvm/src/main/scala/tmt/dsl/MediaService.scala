@@ -6,14 +6,16 @@ import java.nio.file.Files
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.ws.BinaryMessage
 import akka.stream.Materializer
-import akka.stream.io.SynchronousFileSource
+import akka.stream.io.{SynchronousFileSink, SynchronousFileSource}
 import akka.stream.scaladsl.{Sink, Source}
+import akka.util.ByteString
 import tmt.common._
 import tmt.library.SourceExtensions.RichSource
 
 import scala.concurrent.Future
 
 class MediaService(implicit system: ActorSystem, mat: Materializer) {
+  import system.dispatcher
 
   val fileIoDispatcher = system.dispatchers.lookup("akka.stream.default-file-io-dispatcher")
 
@@ -21,15 +23,25 @@ class MediaService(implicit system: ActorSystem, mat: Materializer) {
 
   val parallelism = 1
 
-  def sendBytes = files.mapAsync(parallelism)(readFile)
+  def sendBytes = files.mapAsync(parallelism)(readFile).map(ByteString.apply)
   def sendImages = files.mapAsync(parallelism)(readImage)
   def sendMessages = files.map(SynchronousFileSource(_)).map(BinaryMessage.apply)
 
-  def copyBytes(byteArrays: Source[Array[Byte], Any]) = byteArrays.zip(fileNamesToWrite)
-    .mapAsync(parallelism) { case (data, file) => copyFile(file, data) }
+  def copyBytes(byteArrays: Source[ByteString, Any]) = byteArrays.zip(fileNamesToWrite)
+    .mapAsync(parallelism) { case (data, file) => copyFile(file, data.toArray) }
     .runWith(Sink.ignore)
 
+  def copyMovie(name: String, byteArrays: Source[ByteString, Any]) =  {
+    val file = new File(s"${Config.moviesOutputDir}/$name")
+    println(s"writing to $file")
+    byteArrays.runWith(SynchronousFileSink(file)).map(_ => ())
+  }
+
   def copyImages(images: Source[Image, Any]) = images.mapAsync(parallelism)(copyImage).runWith(Sink.ignore)
+
+  def listMovies = Source(() => new File(Config.moviesInputDir).list().iterator)
+
+  def sendMovie(name: String) = SynchronousFileSource(new File(s"${Config.moviesInputDir}/$name"))
 
   private def readFile(file: File) = Future(Files.readAllBytes(file.toPath))(fileIoDispatcher)
   private def readImage(file: File) = readFile(file).map(data => Image(file.getName, data))(fileIoDispatcher)
@@ -37,7 +49,7 @@ class MediaService(implicit system: ActorSystem, mat: Materializer) {
   private def fileNamesToWrite = Source(() => Producer.numbers()).map(index => f"out-image-$index%05d.jpg")
 
   private def copyFile(name: String, data: Array[Byte]) = Future {
-    val file = new File(f"${Config.outputDir}/$name")
+    val file = new File(s"${Config.framesOutputDir}/$name")
     println(s"writing to $file")
     Files.write(file.toPath, data)
   }(fileIoDispatcher)
