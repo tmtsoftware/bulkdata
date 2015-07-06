@@ -25,14 +25,11 @@ class MediaRoute(mediaService: MediaService) extends CustomMarshallers with Cust
       }
     } ~
     pathPrefix("movies") {
+      getFromDirectory(Config.moviesInputDir) ~
       path(Rest) { name =>
-        get {
-//          getFromDirectory(Config.moviesInputDir)
-          complete(mediaService.sendMovie(name).log(s"sending bytes for $name", _.size))
-        } ~
         post {
           entity(as[Source[ByteString, Any]]) { byteStrings =>
-            onSuccess(mediaService.copyMovie(name, byteStrings.log(s"receiving bytes for $name", _.size))) {
+            onSuccess(mediaService.copyMovie(name, byteStrings)) {
               complete("copied")
             }
           }

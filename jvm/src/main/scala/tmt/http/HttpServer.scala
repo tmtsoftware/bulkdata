@@ -12,8 +12,8 @@ import scala.util.{Failure, Success}
 
 class HttpServer(val interface: String, val port: Int) {
   implicit val system = ActorSystem("TMT")
-  implicit val mat = ActorMaterializer()
-  import system.dispatcher
+  implicit val mat    = ActorMaterializer()
+  implicit val ec     = system.dispatcher
 
   val connectionFlow = Flow[HttpRequest].mapAsync(1)(new Handler().requestHandler)
   val server  = new Server(interface, port, connectionFlow)

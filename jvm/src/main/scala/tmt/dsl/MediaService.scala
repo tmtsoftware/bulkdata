@@ -41,8 +41,6 @@ class MediaService(implicit system: ActorSystem, mat: Materializer) {
 
   def listMovies = Source(() => new File(Config.moviesInputDir).list().iterator)
 
-  def sendMovie(name: String) = SynchronousFileSource(new File(s"${Config.moviesInputDir}/$name"))
-
   private def readFile(file: File) = Future(Files.readAllBytes(file.toPath))(fileIoDispatcher)
   private def readImage(file: File) = readFile(file).map(data => Image(file.getName, data))(fileIoDispatcher)
 

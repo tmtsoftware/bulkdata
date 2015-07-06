@@ -7,8 +7,7 @@ import tmt.common.{Server, Config}
 class DslServer(val interface: String, val port: Int) {
   implicit val system = ActorSystem("TMT")
   implicit val mat    = ActorMaterializer()
-
-  import system.dispatcher
+  implicit val ec     = system.dispatcher
 
   val imageService = new MediaService
 

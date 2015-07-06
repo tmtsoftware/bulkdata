@@ -10,7 +10,7 @@ import scala.util.{Failure, Success}
 
 class Server(address: String, port: Int, connectionFlow: Types.ConnectionFlow)(implicit system: ActorSystem, mat: Materializer, executor: ExecutionContext) {
 
-  val runnableGraph = {
+  private val runnableGraph = {
     val connections = Http().bind(address, port)
 
     connections.to(Sink.foreach { connection =>
@@ -26,5 +26,7 @@ class Server(address: String, port: Int, connectionFlow: Types.ConnectionFlow)(i
       case Success(b) => println(s"Server started, listening on: ${b.localAddress}")
       case Failure(e) => println(s"Server could not bind to $address:$port: ${e.getMessage}"); system.shutdown()
     }
+
+    binding
   }
 }

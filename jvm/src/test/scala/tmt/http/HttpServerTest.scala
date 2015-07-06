@@ -12,10 +12,9 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   import Utils._
   import httpServer._
+  val binding = await(server.run())
 
   test("get") {
-    val binding = await(server.runnableGraph.run())
-
     val response = await(Http().singleRequest(HttpRequest(uri = s"http://$interface:$port/boxes")))
     val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
@@ -23,23 +22,17 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
       .request(10)
       .expectNextN((1 to 10).map(x => Box(x.toString)))
       .expectComplete()
-
-    binding.unbind()
   }
 
   test("post") {
-    val binding = await(server.runnableGraph.run())
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
     val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$interface:$port/boxes", entity = chunked)))
 
     response.status mustEqual StatusCodes.OK
-
-    binding.unbind()
   }
 
   test("bidi") {
-    val binding = await(server.runnableGraph.run())
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
     val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$interface:$port/boxes/bidi", entity = chunked)))
@@ -50,10 +43,10 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
       .expectNextN((1 to 10).map(x => Box(x.toString).updated))
       .expectComplete()
 
-    binding.unbind()
   }
 
   override protected def afterAll() = {
+    await(binding.unbind())
     system.shutdown()
   }
 }

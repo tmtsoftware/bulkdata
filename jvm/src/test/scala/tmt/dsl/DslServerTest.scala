@@ -1,8 +1,9 @@
 package tmt.dsl
 
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpEntity.{Default, Chunked}
+import akka.http.scaladsl.model.HttpEntity.Chunked
 import akka.http.scaladsl.model._
+import akka.stream.scaladsl.Sink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 
 import scala.concurrent.duration.DurationInt
@@ -12,37 +13,28 @@ class DslServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   import dslServer._
   import tmt.common.Utils._
+  val binding = await(server.run())
 
-  import system.dispatcher
-
-  ignore("chunked bidi bytes") {
-    val binding = await(server.runnableGraph.run())
+  test("chunked bidi bytes") {
     await(bidi(s"http://$interface:$port/images/bytes"))
-    binding.unbind()
   }
 
   test("chunked bidi images") {
-    val binding = await(server.runnableGraph.run())
     await(bidi(s"http://$interface:$port/images/objects"))
-    binding.unbind()
   }
 
   test("bulk") {
-    val binding = await(server.runnableGraph.run())
-
     val listRequest = HttpRequest(uri = s"http://$interface:$port/movies/list")
     val listResponse = Http().singleRequest(listRequest)
 
     val listEntity = await(listResponse).entity.asInstanceOf[Chunked]
-    val movieNames = listEntity.dataBytes.map(_.utf8String).drop(2).take(3)
+    val movieNames = listEntity.dataBytes.map(_.utf8String).drop(2).take(4)
 
     val result = movieNames.mapAsync(1) { name =>
-      println("processing movie--------------------->", name)
       bidi(s"http://$interface:$port/movies/$name")
-    }.runForeach(x => println(x.status))
+    }.runWith(Sink.ignore)
 
-    await(result, 2.minute)
-    binding.unbind()
+    await(result, 3.minute)
   }
 
   def bidi(uri: String) = {
@@ -50,13 +42,17 @@ class DslServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
     val getResponse = Http().singleRequest(getRequest)
 
     getResponse.flatMap { resp =>
-      val getEntity = resp.entity.asInstanceOf[Chunked]
+      val getEntity = resp.entity.asInstanceOf[MessageEntity]
       val postRequest = getRequest.copy(method = HttpMethods.POST, entity = getEntity)
-      Http().singleRequest(postRequest)
+      Http().singleRequest(postRequest) map { finalResponse =>
+        finalResponse.status mustEqual StatusCodes.OK
+        await(finalResponse.entity.toStrict(1.seconds)).data.utf8String mustEqual "copied"
+      }
     }
   }
 
   override protected def afterAll() = {
+    await(binding.unbind())
     system.shutdown()
   }
 }
