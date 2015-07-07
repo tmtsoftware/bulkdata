@@ -4,15 +4,20 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
-import tmt.common.{Box, BoxConversions, Boxes, Utils}
+import tmt.common._
 
 class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
-  private val httpServer = new HttpServer("localhost", 7001)
+  private val interface  = "localhost"
+  private val port          = 7001
+
+  val actorConfigs = new ActorConfigs("TMT-CLient")
+  import actorConfigs._
+
+  private val httpServer = new HttpServer(interface, port)
 
   import Utils._
-  import httpServer._
-  val binding = await(server.run())
+  val binding = await(httpServer.server.run())
 
   test("get") {
     val response = await(Http().singleRequest(HttpRequest(uri = s"http://$interface:$port/boxes")))
@@ -47,6 +52,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   override protected def afterAll() = {
     await(binding.unbind())
+    httpServer.actorConfigs.system.shutdown()
     system.shutdown()
   }
 }

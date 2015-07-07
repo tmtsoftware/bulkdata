@@ -1,22 +1,14 @@
 package tmt.http
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
-import akka.stream.{Materializer, ActorMaterializer}
-import akka.stream.scaladsl.{Flow, Sink}
-import tmt.common.{Config, Server, Types}
-
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import tmt.common.{ActorConfigs, Config, Server}
+import tmt.library.RequestHandlerExtensions.RichRequestHandler
 
 class HttpServer(val interface: String, val port: Int) {
-  implicit val system = ActorSystem("TMT")
-  implicit val mat    = ActorMaterializer()
-  implicit val ec     = system.dispatcher
+  val actorConfigs = new ActorConfigs("TMT")
+  import actorConfigs._
 
-  val connectionFlow = Flow[HttpRequest].mapAsync(1)(new Handler().requestHandler)
-  val server  = new Server(interface, port, connectionFlow)
+  val handler = new Handler()
+  val server  = new Server(interface, port, handler.requestHandler.toFlow)
 }
 
 object HttpServer extends HttpServer(Config.interface, Config.port) with App {

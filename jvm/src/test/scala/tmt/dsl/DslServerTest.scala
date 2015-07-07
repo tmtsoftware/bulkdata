@@ -5,15 +5,22 @@ import akka.http.scaladsl.model.HttpEntity.Chunked
 import akka.http.scaladsl.model._
 import akka.stream.scaladsl.Sink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
+import tmt.common.ActorConfigs
 
 import scala.concurrent.duration.DurationInt
 
 class DslServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
-  val dslServer = new DslServer("localhost", 7001)
+  private  val interface = "localhost"
+  private  val port      = 7001
 
-  import dslServer._
+  val actorConfigs = new ActorConfigs("TMT-CLient")
+  import actorConfigs._
+
+  val dslServer = new DslServer(interface, port)
+
   import tmt.common.Utils._
-  val binding = await(server.run())
+
+  val binding = await(dslServer.server.run())
 
   test("chunked bidi bytes") {
     await(bidi(s"http://$interface:$port/images/bytes"))
@@ -53,6 +60,7 @@ class DslServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   override protected def afterAll() = {
     await(binding.unbind())
+    dslServer.actorConfigs.system.shutdown()
     system.shutdown()
   }
 }
