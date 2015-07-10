@@ -1,5 +1,7 @@
 package tmt.http
 
+import java.net.InetSocketAddress
+
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.testkit.scaladsl.TestSink
@@ -8,19 +10,17 @@ import tmt.common._
 
 class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
-  private val interface  = "localhost"
-  private val port          = 7001
-
   val actorConfigs = new ActorConfigs("TMT-CLient")
   import actorConfigs._
 
-  private val httpServer = new HttpServer(interface, port)
+  private val address    = new InetSocketAddress("localhost", 7001)
+  private val httpServer = new HttpServer(address)
 
   import Utils._
   val binding = await(httpServer.server.run())
 
   test("get") {
-    val response = await(Http().singleRequest(HttpRequest(uri = s"http://$interface:$port/boxes")))
+    val response = await(Http().singleRequest(HttpRequest(uri = s"http://${address.getHostName}:${address.getPort}/boxes")))
     val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
     images.runWith(TestSink.probe())
@@ -32,7 +32,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
   test("post") {
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
-    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$interface:$port/boxes", entity = chunked)))
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${address.getHostName}:${address.getPort}/boxes", entity = chunked)))
 
     response.status mustEqual StatusCodes.OK
   }
@@ -40,7 +40,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
   test("bidi") {
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
-    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://$interface:$port/boxes/bidi", entity = chunked)))
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${address.getHostName}:${address.getPort}/boxes/bidi", entity = chunked)))
     val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
     images.runWith(TestSink.probe())

@@ -1,16 +1,18 @@
 package tmt.dsl
 
+import java.net.InetSocketAddress
+
 import tmt.common.{ActorConfigs, Config, Server}
 
-class DataNode(interface: String, port: Int) {
+class DataNode(address: InetSocketAddress) {
   val actorConfigs = new ActorConfigs("TMT")
   import actorConfigs._
 
   val imageService = new MediaService
   val mediaRoute   = new MediaRoute(imageService)
-  val server       = new Server(interface, port, mediaRoute.route)
+  val server       = new Server(address, mediaRoute.route)
 }
 
-object DataNode extends DataNode(Config.interface, Config.port) with App {
+object DataNode extends DataNode(new InetSocketAddress(Config.interface, Config.port)) with App {
   server.run()
 }

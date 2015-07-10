@@ -1,5 +1,7 @@
 package tmt.dsl
 
+import java.net.InetSocketAddress
+
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.scaladsl.{FlattenStrategy, Sink, Source}
@@ -10,16 +12,16 @@ import tmt.common.Utils._
 import scala.concurrent.duration.DurationInt
 
 class TransferNodeTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
-  private val interface       = "localhost"
-  private val sourcePort      = 7001
-  private val destinationPort = 8001
 
   val testConfigs = new ActorConfigs("Test")
   import testConfigs._
 
-  val sourceServer = new DataNode(interface, sourcePort)
-  val destinationServer = new DataNode(interface, destinationPort)
-  val transferNode = new TransferNode(interface, sourcePort, interface, destinationPort)
+  val source = new InetSocketAddress("localhost", 7001)
+  val destination = new InetSocketAddress("localhost", 8001)
+
+  val sourceServer = new DataNode(source)
+  val destinationServer = new DataNode(destination)
+  val transferNode = new TransferNode(source, destination)
 
   val sourceBinding = await(sourceServer.server.run())
   val destinationBinding = await(destinationServer.server.run())
@@ -35,7 +37,7 @@ class TransferNodeTest extends FunSuite with MustMatchers with BeforeAndAfterAll
   }
 
   test("blob-basic") {
-    val result = movieList
+    val result = movieNames
       .mapAsync(1) { name => transferNode.singleTransfer(s"/movies/$name") }
       .map(verifyTransfer)
       .runWith(Sink.ignore)
@@ -44,7 +46,8 @@ class TransferNodeTest extends FunSuite with MustMatchers with BeforeAndAfterAll
   }
   
   test("blob-pipelined") {
-    val result = movieList
+    val result = movieNames
+      .map(name => s"/movies/$name")
       .via(transferNode.pipelinedTransfer)
       .map(verifyTransfer)
       .runWith(Sink.ignore)
@@ -57,9 +60,9 @@ class TransferNodeTest extends FunSuite with MustMatchers with BeforeAndAfterAll
     response.entity.asInstanceOf[HttpEntity.Strict].data.utf8String mustEqual "copied"
   }
 
-  def movieList = {
-    val listRequest = HttpRequest(uri = s"http://$interface:$sourcePort/movies/list")
-
+  def movieNames = {
+    val listRequest = HttpRequest(uri = s"http://${source.getHostString}:${source.getPort}/movies/list")
+    
     Source(Http().singleRequest(listRequest))
       .map(_.entity.dataBytes.map(_.utf8String))
       .flatten(FlattenStrategy.concat)
