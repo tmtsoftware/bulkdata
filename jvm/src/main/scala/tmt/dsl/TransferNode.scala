@@ -1,18 +1,17 @@
 package tmt.dsl
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
-import akka.stream.Materializer
 import akka.stream.scaladsl.Flow
+import tmt.common.ActorConfigs
 
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration._
 import scala.util.Success
 
-class TransferNode(sourceHost: String, sourcePort: Int, destinationHost: String, destinationPort: Int)(
-  implicit system: ActorSystem, ec: ExecutionContext, mat: Materializer
-) {
+class TransferNode(sourceHost: String, sourcePort: Int, destinationHost: String, destinationPort: Int) {
+
+  val transferConfigs = new ActorConfigs("Transfer")
+  import transferConfigs._
 
   val sourceFlow = Http().cachedHostConnectionPool[String](sourceHost, sourcePort)
   val destinationFlow = Http().cachedHostConnectionPool[String](destinationHost, destinationPort)

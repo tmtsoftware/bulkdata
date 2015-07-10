@@ -2,7 +2,7 @@ package tmt.dsl
 
 import tmt.common.{ActorConfigs, Config, Server}
 
-class DataNode(val interface: String, val port: Int) {
+class DataNode(interface: String, port: Int) {
   val actorConfigs = new ActorConfigs("TMT")
   import actorConfigs._
 

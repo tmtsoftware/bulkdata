@@ -3,7 +3,7 @@ package tmt.http
 import tmt.common.{ActorConfigs, Config, Server}
 import tmt.library.RequestHandlerExtensions.RichRequestHandler
 
-class HttpServer(val interface: String, val port: Int) {
+class HttpServer(interface: String, port: Int) {
   val actorConfigs = new ActorConfigs("TMT")
   import actorConfigs._
 
