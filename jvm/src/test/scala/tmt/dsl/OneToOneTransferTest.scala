@@ -11,7 +11,7 @@ import tmt.common.Utils._
 
 import scala.concurrent.duration.DurationInt
 
-class TransferNodeTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
+class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   val testConfigs = new ActorConfigs("Test")
   import testConfigs._
@@ -21,7 +21,7 @@ class TransferNodeTest extends FunSuite with MustMatchers with BeforeAndAfterAll
 
   val sourceServer = new DataNode(source)
   val destinationServer = new DataNode(destination)
-  val transferNode = new TransferNode(source, destination)
+  val transferNode = new OneToOneTransfer(source, destination)(new ActorConfigs("Transfer"))
 
   val sourceBinding = await(sourceServer.server.run())
   val destinationBinding = await(destinationServer.server.run())
@@ -48,7 +48,7 @@ class TransferNodeTest extends FunSuite with MustMatchers with BeforeAndAfterAll
   test("blob-pipelined") {
     val result = movieNames
       .map(name => s"/movies/$name")
-      .via(transferNode.pipelinedTransfer)
+      .via(transferNode.transferFlow)
       .map(verifyTransfer)
       .runWith(Sink.ignore)
 
