@@ -10,11 +10,11 @@ import tmt.common._
 
 class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
-  val actorConfigs = new ActorConfigs("TMT-CLient")
+  val actorConfigs = ActorConfigs.from("TMT-Client")
   import actorConfigs._
 
   private val address    = new InetSocketAddress("localhost", 7001)
-  private val httpServer = new HttpServer(address)
+  private val httpServer = new HttpServer(address)(ActorConfigs.from("http-server"))
 
   import Utils._
   val binding = await(httpServer.server.run())

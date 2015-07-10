@@ -4,7 +4,7 @@ import akka.stream.scaladsl.Source
 
 object Boxes {
 
-  val delay = Config.delay
+  val delay = SharedConfigs.delay
 
   val stream = Source(delay, delay, ())
     .scan(1)((acc, _) => acc + 1)

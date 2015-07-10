@@ -13,32 +13,32 @@ import scala.concurrent.duration.DurationInt
 
 class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
-  val testConfigs = new ActorConfigs("Test")
+  val testConfigs = ActorConfigs.from("Test")
   import testConfigs._
 
   val source = new InetSocketAddress("localhost", 7001)
   val destination = new InetSocketAddress("localhost", 8001)
 
-  val sourceServer = new DataNode(source)
-  val destinationServer = new DataNode(destination)
-  val transferNode = new OneToOneTransfer(source, destination)(new ActorConfigs("Transfer"))
+  val sourceServer = new DataNode(source)(ActorConfigs.from("source-node"))
+  val destinationServer = new DataNode(destination)(ActorConfigs.from("destination-node"))
+  val oneToOneTransfer = new OneToOneTransfer(source, destination)(testConfigs)
 
   val sourceBinding = await(sourceServer.server.run())
   val destinationBinding = await(destinationServer.server.run())
 
   test("frame-bytes") {
-    val transferResponse = await(transferNode.singleTransfer("/images/bytes"))
+    val transferResponse = await(oneToOneTransfer.singleTransfer("/images/bytes"))
     verifyTransfer(transferResponse)
   }
 
   test("frame-objects") {
-    val transferResponse = await(transferNode.singleTransfer("/images/objects"))
+    val transferResponse = await(oneToOneTransfer.singleTransfer("/images/objects"))
     verifyTransfer(transferResponse)
   }
 
   test("blob-basic") {
     val result = movieNames
-      .mapAsync(1) { name => transferNode.singleTransfer(s"/movies/$name") }
+      .mapAsync(1) { name => oneToOneTransfer.singleTransfer(s"/movies/$name") }
       .map(verifyTransfer)
       .runWith(Sink.ignore)
 
@@ -48,7 +48,7 @@ class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfte
   test("blob-pipelined") {
     val result = movieNames
       .map(name => s"/movies/$name")
-      .via(transferNode.transferFlow)
+      .via(oneToOneTransfer.transferFlow)
       .map(verifyTransfer)
       .runWith(Sink.ignore)
 

@@ -14,12 +14,13 @@ import tmt.library.SourceExtensions.RichSource
 
 import scala.concurrent.Future
 
-class MediaService(implicit system: ActorSystem, mat: Materializer) {
-  import system.dispatcher
+class MediaService(implicit actorConfigs: ActorConfigs) {
+
+  import actorConfigs._
 
   val fileIoDispatcher = system.dispatchers.lookup("akka.stream.default-file-io-dispatcher")
 
-  def files = Source(() => Producer.files)
+  def files = Source(() => Producer.files(configs.framesInputDir))
 
   val parallelism = 1
 
@@ -32,14 +33,14 @@ class MediaService(implicit system: ActorSystem, mat: Materializer) {
     .runWith(Sink.ignore)
 
   def copyMovie(name: String, byteArrays: Source[ByteString, Any]) =  {
-    val file = new File(s"${Config.moviesOutputDir}/$name")
+    val file = new File(s"${configs.moviesOutputDir}/$name")
     println(s"writing to $file")
     byteArrays.runWith(SynchronousFileSink(file)).map(_ => ())
   }
 
   def copyImages(images: Source[Image, Any]) = images.mapAsync(parallelism)(copyImage).runWith(Sink.ignore)
 
-  def listMovies = Source(() => new File(Config.moviesInputDir).list().iterator)
+  def listMovies = Source(() => new File(configs.moviesInputDir).list().iterator)
 
   private def readFile(file: File) = Future(Files.readAllBytes(file.toPath))(fileIoDispatcher)
   private def readImage(file: File) = readFile(file).map(data => Image(file.getName, data))(fileIoDispatcher)
@@ -47,7 +48,7 @@ class MediaService(implicit system: ActorSystem, mat: Materializer) {
   private def fileNamesToWrite = Source(() => Producer.numbers()).map(index => f"out-image-$index%05d.jpg")
 
   private def copyFile(name: String, data: Array[Byte]) = Future {
-    val file = new File(s"${Config.framesOutputDir}/$name")
+    val file = new File(s"${configs.framesOutputDir}/$name")
     println(s"writing to $file")
     Files.write(file.toPath, data)
   }(fileIoDispatcher)

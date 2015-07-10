@@ -2,10 +2,9 @@ package tmt.dsl
 
 import java.net.InetSocketAddress
 
-import tmt.common.{ActorConfigs, Config, Server}
+import tmt.common.{ActorConfigs, SharedConfigs, Server}
 
-class DataNode(address: InetSocketAddress) {
-  val actorConfigs = new ActorConfigs("TMT")
+class DataNode(address: InetSocketAddress)(implicit val actorConfigs: ActorConfigs) {
   import actorConfigs._
 
   val imageService = new MediaService
@@ -13,6 +12,6 @@ class DataNode(address: InetSocketAddress) {
   val server       = new Server(address, mediaRoute.route)
 }
 
-object DataNode extends DataNode(new InetSocketAddress(Config.interface, Config.port)) with App {
+object DataNode extends DataNode(new InetSocketAddress(SharedConfigs.interface, SharedConfigs.port))(ActorConfigs.from("data-node")) {
   server.run()
 }

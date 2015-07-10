@@ -1,7 +1,7 @@
 package tmt
 
 import org.scalajs.dom._
-import tmt.common.Config
+import tmt.common.SharedConfigs
 
 class Rendering(url: String) {
 
@@ -14,7 +14,7 @@ class Rendering(url: String) {
   }
 
   def render() = {
-    UiControls.ctx.drawImage(img, 0, 0, Config.imageWidth, Config.imageHeight)
+    UiControls.ctx.drawImage(img, 0, 0, SharedConfigs.imageWidth, SharedConfigs.imageHeight)
     UiControls.URL.revokeObjectURL(img.src)
   }
 

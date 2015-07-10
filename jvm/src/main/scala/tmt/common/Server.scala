@@ -2,15 +2,13 @@ package tmt.common
 
 import java.net.InetSocketAddress
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
 
-import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class Server(address: InetSocketAddress, connectionFlow: Types.ConnectionFlow)(implicit system: ActorSystem, mat: Materializer, executor: ExecutionContext) {
+class Server(address: InetSocketAddress, connectionFlow: Types.ConnectionFlow)(implicit actorConfigs: ActorConfigs) {
+  import actorConfigs._
 
   private val runnableGraph = {
     val connections = Http().bind(address.getHostName, address.getPort)

@@ -2,7 +2,7 @@ package tmt
 
 import monifu.concurrent.Implicits.globalScheduler
 import org.scalajs.dom._
-import tmt.common.Config
+import tmt.common.SharedConfigs
 
 import scala.concurrent.duration._
 import scala.scalajs.js
@@ -14,7 +14,7 @@ object WebsocketApp extends JSApp {
 
   @JSExport
   override def main() = UiControls.button.onclick = { e: Event =>
-    val socket = new WebSocket(s"ws://${Config.interface}:${Config.port}/images/bytes")
+    val socket = new WebSocket(s"ws://${SharedConfigs.interface}:${SharedConfigs.port}/images/bytes")
     socket.binaryType = "arraybuffer"
     drain(socket)
   }
