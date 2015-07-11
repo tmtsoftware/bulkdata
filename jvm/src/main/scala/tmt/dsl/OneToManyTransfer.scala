@@ -8,19 +8,20 @@ import tmt.common.ActorConfigs
 
 class OneToManyTransfer(source: InetSocketAddress, destinations: Seq[InetSocketAddress])(implicit actorConfigs: ActorConfigs) {
 
-  val producingClients = new ProducingClient(source)
+  val producingClient = new ProducingClient(source)
   val consumingClients = destinations.map(new ConsumingClient(_))
 
-  val transferFlow = Flow() { implicit b =>
+  val flow = Flow() { implicit b =>
     import FlowGraph.Implicits._
 
-    val pipe = b.add(producingClients.producerFlow)
+    val pipe = b.add(producingClient.flow)
     val broadcast = b.add(Broadcast[(MessageEntity, Uri)](destinations.size))
     val merge = b.add(Merge[HttpResponse](destinations.size))
 
     pipe.outlet ~> broadcast.in
+    
     consumingClients.zipWithIndex.foreach { case (consumingClient, i) =>
-      broadcast.out(i) ~> consumingClient.consumerFlow ~> merge.in(i)
+      broadcast.out(i) ~> consumingClient.flow ~> merge.in(i)
     }
 
     (pipe.inlet, merge.out)

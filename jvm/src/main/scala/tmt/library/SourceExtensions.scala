@@ -1,7 +1,7 @@
 package tmt.library
 
-import akka.stream.scaladsl.{Zip, FlowGraph, Source}
-
+import akka.stream.Materializer
+import akka.stream.scaladsl.{Sink, Source, Zip, FlowGraph}
 
 object SourceExtensions {
 
@@ -17,6 +17,8 @@ object SourceExtensions {
 
       zipper.out
     }
+
+    def multicast(implicit mat: Materializer) = Source(source.runWith(Sink.fanoutPublisher(4, 16)))
   }
 
 }

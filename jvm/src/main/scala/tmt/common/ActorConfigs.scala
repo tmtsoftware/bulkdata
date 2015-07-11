@@ -1,6 +1,8 @@
 package tmt.common
 
 import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.Uri
 import akka.stream.ActorMaterializer
 import com.typesafe.config.Config
 
@@ -8,6 +10,7 @@ class ActorConfigs(implicit val system: ActorSystem) {
   implicit val mat = ActorMaterializer()
   implicit val ec = system.dispatcher
   val configs = new AppConfigs(system.settings.config)
+  val superPool = Http().superPool[Uri]()
 }
 
 object ActorConfigs {

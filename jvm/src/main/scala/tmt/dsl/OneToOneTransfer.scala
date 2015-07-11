@@ -17,7 +17,7 @@ class OneToOneTransfer(source: InetSocketAddress, destination: InetSocketAddress
   private val producingClient = new ProducingClient(source)
   private val consumingClient = new ConsumingClient(destination)
   
-  val transferFlow = producingClient.producerFlow.via(consumingClient.consumerFlow)
+  val transferFlow = producingClient.flow.via(consumingClient.flow)
   
   def singleTransfer(relativeUri: String) = {
     val sourceUri = s"http://${source.getHostName}:${source.getPort}$relativeUri"
