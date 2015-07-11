@@ -1,4 +1,4 @@
-package tmt.media
+package tmt.media.server
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route

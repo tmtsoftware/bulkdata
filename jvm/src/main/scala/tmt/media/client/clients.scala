@@ -1,10 +1,10 @@
-package tmt.media
+package tmt.media.client
 
 import java.net.InetSocketAddress
 
 import akka.http.scaladsl.model._
 import akka.stream.scaladsl.Flow
-import tmt.common.{AppSettings, ActorConfigs}
+import tmt.common.{ActorConfigs, AppSettings}
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 import tmt.library.ResponseExtensions.RichResponse
 

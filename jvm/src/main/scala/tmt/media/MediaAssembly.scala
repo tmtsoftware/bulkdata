@@ -5,6 +5,8 @@ import java.net.InetSocketAddress
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import tmt.common.{AppSettings, ActorConfigs, Server}
+import tmt.media.client._
+import tmt.media.server.{MediaService, MediaRoute}
 
 class MediaAssembly(name: String) {
   import com.softwaremill.macwire._

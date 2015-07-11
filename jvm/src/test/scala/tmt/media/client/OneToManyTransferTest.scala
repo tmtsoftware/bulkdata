@@ -1,4 +1,4 @@
-package tmt.media
+package tmt.media.client
 
 import java.net.InetSocketAddress
 
@@ -9,6 +9,7 @@ import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import tmt.common.AppSettings
 import tmt.common.Utils._
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
+import tmt.media.MediaAssembly
 
 import scala.concurrent.duration.DurationInt
 

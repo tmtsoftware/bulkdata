@@ -1,4 +1,4 @@
-package tmt.media
+package tmt.media.client
 
 import akka.http.scaladsl.model.{HttpResponse, MessageEntity, Uri}
 import akka.stream.scaladsl.{Broadcast, Flow, FlowGraph, Merge}

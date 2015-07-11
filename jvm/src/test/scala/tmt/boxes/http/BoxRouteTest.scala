@@ -1,4 +1,4 @@
-package tmt.media
+package tmt.boxes.http
 
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
@@ -6,8 +6,7 @@ import akka.stream.scaladsl.Source
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import tmt.boxes.BoxMarshallers
-import tmt.boxes.http.{BoxAssembly, Boxes}
-import tmt.common.{CommonMarshallers, Box}
+import tmt.common.Box
 
 import scala.concurrent.duration._
 

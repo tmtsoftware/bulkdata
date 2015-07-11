@@ -1,9 +1,9 @@
-package tmt.media
+package tmt.media.client
 
 import java.net.InetSocketAddress
 
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{MessageEntity, HttpRequest, HttpMethods}
+import akka.http.scaladsl.model.{HttpMethods, HttpRequest, MessageEntity}
 import tmt.common.ActorConfigs
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 

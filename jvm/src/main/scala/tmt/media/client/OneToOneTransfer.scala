@@ -1,4 +1,4 @@
-package tmt.media
+package tmt.media.client
 
 import tmt.common.ActorConfigs
 

@@ -21,7 +21,7 @@ lazy val dataTransfer = crossProject.in(file("."))
   .jvmSettings(
     fork := true,
     libraryDependencies ++= Dependencies.jvmLibs,
-    mainClass in Revolver.reStart := Some("tmt.dsl.DataNode")
+    mainClass in Revolver.reStart := Some("tmt.media.server.MediaServer")
   )
   .jsSettings(
     persistLauncher in Compile := true,

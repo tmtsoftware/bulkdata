@@ -1,11 +1,9 @@
-package tmt.media
+package tmt.media.server
 
 import java.io.File
 import java.nio.file.Files
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.model.ws.BinaryMessage
-import akka.stream.Materializer
 import akka.stream.io.{SynchronousFileSink, SynchronousFileSource}
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
