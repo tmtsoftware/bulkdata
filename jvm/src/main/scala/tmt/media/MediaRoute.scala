@@ -6,7 +6,7 @@ import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.common._
 
-class MediaRoute(mediaService: MediaService, configs: ActorConfigs, settings: AppSettings) extends CustomMarshallers with CustomDirectives {
+class MediaRoute(mediaService: MediaService, configs: ActorConfigs, settings: AppSettings) extends CommonMarshallers with CustomDirectives {
 
   val route: Route = {
 
