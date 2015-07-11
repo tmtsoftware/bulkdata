@@ -7,7 +7,9 @@ class AppSettings(actorConfigs: ActorConfigs) {
 
   import actorConfigs._
 
-  val config = actorConfigs.system.settings.config
+  val fileIoDispatcher = system.dispatchers.lookup("akka.stream.default-file-io-dispatcher")
+
+  val config = system.settings.config
   val superPool = Http().superPool[Uri]()
 
   val framesInputDir = config.getString("data-location.frames.input")

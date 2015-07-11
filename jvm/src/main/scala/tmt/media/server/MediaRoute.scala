@@ -6,7 +6,11 @@ import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.common._
 
-class MediaRoute(mediaService: MediaService, configs: ActorConfigs, settings: AppSettings) extends CommonMarshallers with CustomDirectives {
+class MediaRoute(
+  mediaReadService: MediaReadService,
+  mediaWriteService: MediaWriteService,
+  settings: AppSettings
+) extends CommonMarshallers with CustomDirectives {
 
   val route: Route = {
 
@@ -21,7 +25,7 @@ class MediaRoute(mediaService: MediaService, configs: ActorConfigs, settings: Ap
     } ~
     path("movies" / "list") {
       get {
-        complete(mediaService.listMovies)
+        complete(mediaReadService.listMovies)
       }
     } ~
     pathPrefix("movies") {
@@ -29,7 +33,7 @@ class MediaRoute(mediaService: MediaService, configs: ActorConfigs, settings: Ap
       path(Rest) { name =>
         post {
           entity(as[Source[ByteString, Any]]) { byteStrings =>
-            onSuccess(mediaService.copyMovie(name, byteStrings)) {
+            onSuccess(mediaWriteService.copyMovie(name, byteStrings)) {
               complete("copied")
             }
           }
@@ -38,12 +42,12 @@ class MediaRoute(mediaService: MediaService, configs: ActorConfigs, settings: Ap
     } ~
     path("images" / "bytes") {
       get {
-        handleWebsocketMessages(Sink.ignore, mediaService.sendMessages) ~
-        complete(mediaService.sendBytes)
+        handleWebsocketMessages(Sink.ignore, mediaReadService.sendMessages) ~
+        complete(mediaReadService.sendBytes)
       } ~
       post {
         entity(as[Source[ByteString, Any]]) { byteStrings =>
-          onSuccess(mediaService.copyBytes(byteStrings)) {
+          onSuccess(mediaWriteService.copyBytes(byteStrings)) {
             complete("copied")
           }
         }
@@ -51,11 +55,11 @@ class MediaRoute(mediaService: MediaService, configs: ActorConfigs, settings: Ap
     } ~
     path("images" / "objects") {
       get {
-        complete(mediaService.sendImages)
+        complete(mediaReadService.sendImages)
       } ~
       post {
         entity(as[Source[Image, Any]]) { images =>
-          onSuccess(mediaService.copyImages(images)) {
+          onSuccess(mediaWriteService.copyImages(images)) {
             complete("copied")
           }
         }

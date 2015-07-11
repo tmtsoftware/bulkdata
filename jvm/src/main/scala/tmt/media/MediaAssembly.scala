@@ -6,7 +6,7 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import tmt.common.{AppSettings, ActorConfigs, Server}
 import tmt.media.client._
-import tmt.media.server.{MediaService, MediaRoute}
+import tmt.media.server.{MediaWriteService, MediaReadService, MediaRoute}
 
 class MediaAssembly(name: String) {
   import com.softwaremill.macwire._
@@ -18,7 +18,8 @@ class MediaAssembly(name: String) {
 
   lazy val appSettings = wire[AppSettings]
 
-  lazy val imageService           = wire[MediaService]
+  lazy val mediaReadService       = wire[MediaReadService]
+  lazy val mediaWriteService      = wire[MediaWriteService]
   lazy val mediaRoute: MediaRoute = wire[MediaRoute]
 
   def mediaServer(address: InetSocketAddress) = new Server(address, mediaRoute.route, actorConfigs)
