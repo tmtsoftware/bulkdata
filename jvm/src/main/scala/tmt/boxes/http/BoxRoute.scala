@@ -3,8 +3,7 @@ package tmt.boxes.http
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
-import tmt.boxes.BoxMarshallers
-import tmt.common.{Box, CommonMarshallers}
+import tmt.common.Box
 
 class BoxRoute(boxService: BoxService) extends BoxMarshallers {
   val route: Route = {

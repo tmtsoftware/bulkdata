@@ -1,6 +1,5 @@
-package tmt.boxes
+package tmt.boxes.http
 
-import tmt.boxes.http.BoxConversions
 import tmt.common.SourceMarshallers
 
 trait BoxMarshallers extends SourceMarshallers {

@@ -1,4 +1,4 @@
-package tmt.camera
+package tmt.integration.camera
 
 import java.util.concurrent.Executors
 

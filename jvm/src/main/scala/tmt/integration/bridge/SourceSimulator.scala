@@ -1,7 +1,7 @@
-package tmt.bridge
+package tmt.integration.bridge
 
 import akka.stream.Materializer
-import tmt.camera.Simulator
+import tmt.integration.camera.Simulator
 
 object SourceSimulator {
   def apply[T](producer: () => Iterator[T])(implicit materializer: Materializer) = {

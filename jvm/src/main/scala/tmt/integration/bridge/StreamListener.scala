@@ -1,8 +1,8 @@
-package tmt.bridge
+package tmt.integration.bridge
 
 import akka.actor.Status.{Failure, Success}
 import akka.stream.{Materializer, OverflowStrategy}
-import tmt.camera.Listener
+import tmt.integration.camera.Listener
 
 class StreamListener[T](implicit mat: Materializer) extends Listener[T] {
   val (actorRef, source) = Connector.coupling[T](100, OverflowStrategy.dropHead)
