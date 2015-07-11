@@ -2,7 +2,7 @@ package tmt.dsl
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import akka.stream.scaladsl.{Sink, Source}
+import akka.stream.scaladsl.Source
 import tmt.common.Box
 
 class BoxRoute(boxService: BoxService) extends CustomMarshallers {

@@ -1,26 +1,12 @@
 package tmt.common
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.Uri
-import akka.stream.ActorMaterializer
-import com.typesafe.config.Config
+import akka.stream.Materializer
 
-class ActorConfigs(implicit val system: ActorSystem) {
-  implicit val mat = ActorMaterializer()
-  implicit val ec = system.dispatcher
-  val configs = new AppConfigs(system.settings.config)
-  val superPool = Http().superPool[Uri]()
-}
+import scala.concurrent.ExecutionContext
 
-object ActorConfigs {
-  def from(name: String) = new ActorConfigs()(ActorSystem(name))
-}
-
-class AppConfigs(config: Config) {
-  val framesInputDir = config.getString("data-location.frames.input")
-  val framesOutputDir = config.getString("data-location.frames.output")
-
-  val moviesInputDir = config.getString("data-location.movies.input")
-  val moviesOutputDir = config.getString("data-location.movies.output")
+class ActorConfigs(_system: ActorSystem, _mat: Materializer, _ec: ExecutionContext) {
+  implicit val system = _system
+  implicit val mat    = _mat
+  implicit val ec     = _ec
 }

@@ -4,15 +4,16 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import akka.stream.scaladsl.Source
 import akka.stream.testkit.scaladsl.TestSink
-import org.scalatest.{FunSuite, MustMatchers}
+import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import tmt.common.{Boxes, Box}
 
 import scala.concurrent.duration._
 
-class BoxRouteTest extends FunSuite with MustMatchers with ScalatestRouteTest with CustomMarshallers {
+class BoxRouteTest extends FunSuite with MustMatchers with ScalatestRouteTest with CustomMarshallers with BeforeAndAfterAll {
 
+  val testAssembly = new Assembly("Test")
   implicit val routeTestTimeout = RouteTestTimeout(20.seconds)
-  val boxRoute = new BoxRoute(new BoxService)
+  val boxRoute = testAssembly.boxRoute
 
   test("get") {
 
@@ -43,4 +44,9 @@ class BoxRouteTest extends FunSuite with MustMatchers with ScalatestRouteTest wi
     }
 
   }
+
+  override protected def afterAll() = {
+    testAssembly.system.shutdown()
+  }
+
 }

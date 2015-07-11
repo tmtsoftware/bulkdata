@@ -14,7 +14,8 @@ lazy val dataTransfer = crossProject.in(file("."))
     scalaVersion := "2.11.6",
     version := "0.1-SNAPSHOT",
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
-    libraryDependencies += "me.chrons" %%% "boopickle" % "1.0.0"
+    libraryDependencies += "me.chrons" %%% "boopickle" % "1.0.0",
+    libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.5"
   )
   .jvmSettings(Revolver.settings: _*)
   .jvmSettings(

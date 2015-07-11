@@ -1,14 +1,15 @@
 package tmt.http
 
 import akka.http.scaladsl.model._
-import akka.stream.Materializer
 import akka.stream.scaladsl.Sink
 import tmt.common.Types.RequestHandler
-import tmt.common.{BoxConversions, Boxes}
+import tmt.common.{ActorConfigs, BoxConversions, Boxes}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
-class Handler(implicit mat: Materializer, executor: ExecutionContext) {
+class Handler(actorConfigs: ActorConfigs) {
+
+  import actorConfigs._
 
   val requestHandler: RequestHandler = {
 

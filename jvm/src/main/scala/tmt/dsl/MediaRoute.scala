@@ -4,11 +4,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
-import tmt.common.{ActorConfigs, SharedConfigs, Image}
+import tmt.common.{AppSettings, ActorConfigs, Image}
 
-class MediaRoute(mediaService: MediaService)(implicit actorConfigs: ActorConfigs) extends CustomMarshallers with CustomDirectives {
-
-  import actorConfigs._
+class MediaRoute(mediaService: MediaService, configs: ActorConfigs, settings: AppSettings) extends CustomMarshallers with CustomDirectives {
 
   val route: Route = {
 
@@ -27,7 +25,7 @@ class MediaRoute(mediaService: MediaService)(implicit actorConfigs: ActorConfigs
       }
     } ~
     pathPrefix("movies") {
-      getFromDirectory(configs.moviesInputDir) ~
+      getFromDirectory(settings.moviesInputDir) ~
       path(Rest) { name =>
         post {
           entity(as[Source[ByteString, Any]]) { byteStrings =>

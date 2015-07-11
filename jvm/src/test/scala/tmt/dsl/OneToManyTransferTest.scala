@@ -2,38 +2,42 @@ package tmt.dsl
 
 import java.net.InetSocketAddress
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.scaladsl.{FlattenStrategy, Sink, Source}
-import com.typesafe.config.ConfigFactory
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
-import tmt.common.ActorConfigs
+import tmt.common.AppSettings
 import tmt.common.Utils._
+import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 
 import scala.concurrent.duration.DurationInt
 
 class OneToManyTransferTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
-  val testConfigs = ActorConfigs.from("Test")
-  import testConfigs._
+  val testAssembly = new Assembly("Test")
+  import testAssembly.actorConfigs._
+
+  val sourceAssembly = new Assembly("Source")
+  val destination1Assembly = new Assembly("Destination1")
+  val destination2Assembly = new Assembly("Destination2") {
+    override lazy val appSettings = new AppSettings(actorConfigs) {
+      override val framesOutputDir = "/usr/local/data/tmt/movies/output2"
+    }
+  }
 
   val source = new InetSocketAddress("localhost", 7001)
   val destination1 = new InetSocketAddress("localhost", 8001)
   val destination2 = new InetSocketAddress("localhost", 8002)
 
-  val sourceServer = new DataNode(source)(ActorConfigs.from("source"))
-  val destination1Server = new DataNode(destination1)(ActorConfigs.from("destination1"))
-  val conf = ConfigFactory
-    .parseString(s"data-location.movies.output=/usr/local/data/tmt/movies/output2")
-    .withFallback(ConfigFactory.load())
+  val sourceServer = sourceAssembly.mediaServer(source)
+  val destination1Server = destination1Assembly.mediaServer(destination1)
 
-  val destination2Server = new DataNode(destination2)(new ActorConfigs()(ActorSystem("destination2", conf)))
-  val oneToManyTransfer = new OneToManyTransfer(source, Seq(destination1, destination2))(testConfigs)
+  val destination2Server = destination2Assembly.mediaServer(destination2)
+  val oneToManyTransfer = testAssembly.oneToManyTransfer(source, Seq(destination1, destination2))
 
-  val sourceBinding = await(sourceServer.server.run())
-  val destination1Binding = await(destination1Server.server.run())
-  val destination2Binding = await(destination2Server.server.run())
+  val sourceBinding = await(sourceServer.run())
+  val destination1Binding = await(destination1Server.run())
+  val destination2Binding = await(destination2Server.run())
 
   test("blob-pipelined") {
     val result = movieNames
@@ -51,7 +55,7 @@ class OneToManyTransferTest extends FunSuite with MustMatchers with BeforeAndAft
   }
 
   def movieNames = {
-    val listRequest = HttpRequest(uri = s"http://${source.getHostString}:${source.getPort}/movies/list")
+    val listRequest = HttpRequest(uri = source.absoluteUri("/movies/list"))
 
     Source(Http().singleRequest(listRequest))
       .map(_.entity.dataBytes.map(_.utf8String))
@@ -63,9 +67,9 @@ class OneToManyTransferTest extends FunSuite with MustMatchers with BeforeAndAft
     await(sourceBinding.unbind())
     await(destination1Binding.unbind())
     await(destination2Binding.unbind())
-    sourceServer.actorConfigs.system.shutdown()
-    destination1Server.actorConfigs.system.shutdown()
-    destination2Server.actorConfigs.system.shutdown()
-    system.shutdown()
+    sourceAssembly.system.shutdown()
+    destination1Assembly.system.shutdown()
+    destination2Assembly.system.shutdown()
+    testAssembly.system.shutdown()
   }
 }

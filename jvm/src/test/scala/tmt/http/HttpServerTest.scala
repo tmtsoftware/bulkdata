@@ -7,20 +7,23 @@ import akka.http.scaladsl.model._
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import tmt.common._
+import tmt.dsl.Assembly
+import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
+import Utils._
 
 class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
-  val actorConfigs = ActorConfigs.from("TMT-Client")
-  import actorConfigs._
+  val testAssembly = new Assembly("Test")
+  import testAssembly.actorConfigs._
 
-  private val address    = new InetSocketAddress("localhost", 7001)
-  private val httpServer = new HttpServer(address)(ActorConfigs.from("http-server"))
+  val httpServerAssembly = new Assembly("http-server")
+  val address    = new InetSocketAddress("localhost", 7001)
+  val httpServer = httpServerAssembly.httpServer(address)
 
-  import Utils._
-  val binding = await(httpServer.server.run())
+  val binding = await(httpServer.run())
 
   test("get") {
-    val response = await(Http().singleRequest(HttpRequest(uri = s"http://${address.getHostName}:${address.getPort}/boxes")))
+    val response = await(Http().singleRequest(HttpRequest(uri = address.absoluteUri("/boxes"))))
     val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
     images.runWith(TestSink.probe())
@@ -32,7 +35,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
   test("post") {
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
-    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${address.getHostName}:${address.getPort}/boxes", entity = chunked)))
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = address.absoluteUri("/boxes"), entity = chunked)))
 
     response.status mustEqual StatusCodes.OK
   }
@@ -40,7 +43,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
   test("bidi") {
     val chunked = HttpEntity.Chunked.fromData(ContentTypes.NoContentType, Boxes.ten.map(BoxConversions.toByteString))
 
-    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = s"http://${address.getHostName}:${address.getPort}/boxes/bidi", entity = chunked)))
+    val response = await(Http().singleRequest(HttpRequest(method = HttpMethods.POST, uri = address.absoluteUri("/boxes/bidi"), entity = chunked)))
     val images = response.entity.dataBytes.map(BoxConversions.fromByteString).log("Client-Received")
 
     images.runWith(TestSink.probe())
@@ -52,7 +55,7 @@ class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   override protected def afterAll() = {
     await(binding.unbind())
-    httpServer.actorConfigs.system.shutdown()
-    system.shutdown()
+    testAssembly.system.shutdown()
+    httpServerAssembly.system.shutdown()
   }
 }
