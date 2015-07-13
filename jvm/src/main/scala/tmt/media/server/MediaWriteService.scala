@@ -17,7 +17,8 @@ class MediaWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
 
   private val parallelism = 1
 
-  def copyBytes(byteArrays: Source[ByteString, Any]) = byteArrays.zip(fileNamesToWrite)
+  def copyBytes(byteArrays: Source[ByteString, Any]) = byteArrays.zipWithIndex
+    .map { case (data, index) => data -> f"out-image-$index%05d.jpg" }
     .mapAsync(parallelism) { case (data, file) => copyFile(file, data.toArray) }
     .runWith(Sink.ignore)
 
@@ -28,8 +29,6 @@ class MediaWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
   }
 
   def copyImages(images: Source[Image, Any]) = images.mapAsync(parallelism)(copyImage).runWith(Sink.ignore)
-
-  private def fileNamesToWrite = Source(() => Producer.numbers()).map(index => f"out-image-$index%05d.jpg")
 
   private def copyFile(name: String, data: Array[Byte]) = Future {
     val file = new File(s"${settings.framesOutputDir}/$name")

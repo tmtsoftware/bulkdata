@@ -18,6 +18,8 @@ object SourceExtensions {
       zipper.out
     }
 
+    def zipWithIndex = zip(Source(() => Iterator.from(0)))
+
     def multicast(implicit mat: Materializer) = Source(source.runWith(Sink.fanoutPublisher(4, 16)))
   }
 

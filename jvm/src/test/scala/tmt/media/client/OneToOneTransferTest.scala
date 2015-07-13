@@ -54,7 +54,7 @@ class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfte
   test("blob-pipelined") {
     val result = movieNames
       .map(name => s"/movies/$name")
-      .via(oneToOneTransfer.transferFlow)
+      .via(oneToOneTransfer.flow)
       .map(verifyTransfer)
       .runWith(Sink.ignore)
 
