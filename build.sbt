@@ -11,7 +11,7 @@ lazy val dataTransfer = crossProject.in(file("."))
   .settings(
     organization := "tmt",
     name := "data-transfer",
-    scalaVersion := "2.11.6",
+    scalaVersion := "2.11.7",
     version := "0.1-SNAPSHOT",
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
     libraryDependencies += "me.chrons" %%% "boopickle" % "1.0.0",
@@ -28,8 +28,8 @@ lazy val dataTransfer = crossProject.in(file("."))
     persistLauncher in Test := false,
     scalaJSStage in Global := FastOptStage,
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "0.8.0",
-      "org.monifu" %%% "monifu" % "1.0-M1"
+      "org.scala-js" %%% "scalajs-dom" % "0.8.1",
+      "org.monifu" %%% "monifu" % "1.0-M2"
     )
   )
 
