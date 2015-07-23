@@ -29,8 +29,10 @@ class MediaRoute(
       }
     } ~
     pathPrefix("movies") {
-      getFromDirectory(settings.moviesInputDir) ~
       path(Rest) { name =>
+        get {
+          complete(mediaReadService.sendMovie(name))
+        } ~
         post {
           entity(as[Source[ByteString, Any]]) { byteStrings =>
             onSuccess(mediaWriteService.copyMovie(name, byteStrings)) {

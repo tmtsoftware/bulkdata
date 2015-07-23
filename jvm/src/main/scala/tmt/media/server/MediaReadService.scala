@@ -20,6 +20,11 @@ class MediaReadService(actorConfigs: ActorConfigs, settings: AppSettings) {
   def sendBytes = files.mapAsync(parallelism)(readFile).map(ByteString.apply)
   def sendImages = files.mapAsync(parallelism)(readImage)
   def sendMessages = files.map(SynchronousFileSource(_)).map(BinaryMessage.apply)
+  def sendMovie(name: String) = {
+    val file = new File(s"${settings.moviesInputDir}/$name")
+    println(s"reading from $file")
+    SynchronousFileSource(file)
+  }
   def listMovies = Source(() => new File(settings.moviesInputDir).list().iterator)
 
   private def readFile(file: File) = Future(Files.readAllBytes(file.toPath))(settings.fileIoDispatcher)
