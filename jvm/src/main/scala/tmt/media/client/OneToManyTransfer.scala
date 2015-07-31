@@ -2,9 +2,8 @@ package tmt.media.client
 
 import akka.http.scaladsl.model.{HttpResponse, MessageEntity, Uri}
 import akka.stream.scaladsl.{Broadcast, Flow, FlowGraph, Merge}
-import tmt.common.ActorConfigs
 
-class OneToManyTransfer(producingClient: ProducingClient, consumingClients: Seq[ConsumingClient], actorConfigs: ActorConfigs) {
+class OneToManyTransfer(producingClient: ProducingClient, consumingClients: Seq[ConsumingClient]) {
 
   val flow = Flow() { implicit b =>
     import FlowGraph.Implicits._

@@ -31,8 +31,8 @@ class MediaAssembly(name: String) {
   def consumingClient(address: InetSocketAddress): ConsumingClient = wire[ConsumingClient]
 
   def oneToOneTransfer(source: InetSocketAddress, destination: InetSocketAddress) =
-    new OneToOneTransfer(producingClient(source), consumingClient(destination), actorConfigs)
+    new OneToOneTransfer(producingClient(source), consumingClient(destination))
 
   def oneToManyTransfer(source: InetSocketAddress, destinations: Seq[InetSocketAddress]) =
-    new OneToManyTransfer(producingClient(source), destinations.map(consumingClient), actorConfigs)
+    new OneToManyTransfer(producingClient(source), destinations.map(consumingClient))
 }
