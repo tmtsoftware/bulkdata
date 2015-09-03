@@ -7,8 +7,10 @@ import akka.util.ByteString
 import tmt.common._
 
 class MediaRoute(
-  mediaReadService: MediaReadService,
-  mediaWriteService: MediaWriteService,
+  imageReadService: ImageReadService,
+  movieReadService: MovieReadService,
+  imageWriteService: ImageWriteService,
+  movieWriteService: MovieWriteService,
   settings: AppSettings
 ) extends CommonMarshallers with CustomDirectives {
 
@@ -25,17 +27,17 @@ class MediaRoute(
     } ~
     path("movies" / "list") {
       get {
-        complete(mediaReadService.listMovies)
+        complete(movieReadService.listMovies)
       }
     } ~
     pathPrefix("movies") {
       path(Rest) { name =>
         get {
-          complete(mediaReadService.sendMovie(name))
+          complete(movieReadService.sendMovie(name))
         } ~
         post {
           entity(as[Source[ByteString, Any]]) { byteStrings =>
-            onSuccess(mediaWriteService.copyMovie(name, byteStrings)) {
+            onSuccess(movieWriteService.copyMovie(name, byteStrings)) {
               complete("copied")
             }
           }
@@ -44,12 +46,12 @@ class MediaRoute(
     } ~
     path("images" / "bytes") {
       get {
-        handleWebsocketMessages(Sink.ignore, mediaReadService.sendMessages) ~
-        complete(mediaReadService.sendBytes)
+        handleWebsocketMessages(Sink.ignore, imageReadService.sendMessages) ~
+        complete(imageReadService.sendBytes)
       } ~
       post {
         entity(as[Source[ByteString, Any]]) { byteStrings =>
-          onSuccess(mediaWriteService.copyBytes(byteStrings)) {
+          onSuccess(imageWriteService.copyBytes(byteStrings)) {
             complete("copied")
           }
         }
@@ -57,11 +59,11 @@ class MediaRoute(
     } ~
     path("images" / "objects") {
       get {
-        complete(mediaReadService.sendImages)
+        complete(imageReadService.sendImages)
       } ~
       post {
         entity(as[Source[Image, Any]]) { images =>
-          onSuccess(mediaWriteService.copyImages(images)) {
+          onSuccess(imageWriteService.copyImages(images)) {
             complete("copied")
           }
         }

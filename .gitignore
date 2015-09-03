@@ -20,3 +20,4 @@ _site
 bin
 .target
 conf/secret.conf
+data

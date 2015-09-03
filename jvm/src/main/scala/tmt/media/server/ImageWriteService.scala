@@ -11,7 +11,7 @@ import tmt.library.SourceExtensions.RichSource
 
 import scala.concurrent.Future
 
-class MediaWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
+class ImageWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
 
   import actorConfigs._
 
@@ -21,13 +21,7 @@ class MediaWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
     .map { case (data, index) => data -> f"out-image-$index%05d.jpg" }
     .mapAsync(parallelism) { case (data, file) => copyFile(file, data.toArray) }
     .runWith(Sink.ignore)
-
-  def copyMovie(name: String, byteArrays: Source[ByteString, Any]) = {
-    val file = new File(s"${settings.moviesOutputDir}/$name")
-    println(s"writing to $file")
-    byteArrays.runWith(SynchronousFileSink(file)).map(_ => ())
-  }
-
+  
   def copyImages(images: Source[Image, Any]) = images.mapAsync(parallelism)(copyImage).runWith(Sink.ignore)
 
   private def copyFile(name: String, data: Array[Byte]) = Future {
@@ -37,4 +31,15 @@ class MediaWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
   }(settings.fileIoDispatcher)
 
   private def copyImage(image: Image) = copyFile(image.name, image.bytes)
+}
+
+class MovieWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
+
+  import actorConfigs._
+
+  def copyMovie(name: String, byteArrays: Source[ByteString, Any]) = {
+    val file = new File(s"${settings.moviesOutputDir}/$name")
+    println(s"writing to $file")
+    byteArrays.runWith(SynchronousFileSink(file)).map(_ => ())
+  }
 }
