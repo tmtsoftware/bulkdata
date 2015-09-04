@@ -19,7 +19,7 @@ class ImageReadService(settings: AppSettings) {
   private def files = Source(() => Producer.files(settings.framesInputDir))
 
   def sendBytes = files.mapAsync(parallelism)(readFile).map(ByteString.apply)
-  def sendImages = files.mapAsync(parallelism)(readImage).throttle(10.millis)
+  def sendImages = files.mapAsync(parallelism)(readImage)
   def sendMessages = files.map(SynchronousFileSource(_)).map(BinaryMessage.apply)
 
   private def readFile(file: File) = Future(Files.readAllBytes(file.toPath))(settings.fileIoDispatcher)

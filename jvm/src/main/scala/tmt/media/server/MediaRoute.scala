@@ -11,7 +11,7 @@ class MediaRoute(
   movieReadService: MovieReadService,
   imageWriteService: ImageWriteService,
   movieWriteService: MovieWriteService
-) extends CommonMarshallers with CustomDirectives {
+) extends ImageMarshallers with CustomDirectives {
 
   val route: Route = {
 
