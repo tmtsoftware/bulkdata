@@ -7,5 +7,5 @@ import tmt.media.MediaAssembly
 
 object MediaServer extends MediaAssembly("media-server") with App {
   val address = new InetSocketAddress(SharedConfigs.interface, SharedConfigs.port)
-  mediaServer(address).run()
+  serverFactory.make(address).run()
 }

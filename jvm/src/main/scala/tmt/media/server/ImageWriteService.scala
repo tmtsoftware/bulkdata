@@ -24,13 +24,13 @@ class ImageWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
   
   def copyImages(images: Source[Image, Any]) = images.mapAsync(parallelism)(copyImage).runWith(Sink.ignore)
 
+  def copyImage(image: Image) = copyFile(image.name, image.bytes).map(_ => ())
+
   private def copyFile(name: String, data: Array[Byte]) = Future {
     val file = new File(s"${settings.framesOutputDir}/$name")
     println(s"writing to $file")
     Files.write(file.toPath, data)
   }(settings.fileIoDispatcher)
-
-  private def copyImage(image: Image) = copyFile(image.name, image.bytes)
 }
 
 class MovieWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {

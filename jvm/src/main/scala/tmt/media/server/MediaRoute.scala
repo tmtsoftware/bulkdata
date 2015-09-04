@@ -10,8 +10,7 @@ class MediaRoute(
   imageReadService: ImageReadService,
   movieReadService: MovieReadService,
   imageWriteService: ImageWriteService,
-  movieWriteService: MovieWriteService,
-  settings: AppSettings
+  movieWriteService: MovieWriteService
 ) extends CommonMarshallers with CustomDirectives {
 
   val route: Route = {

@@ -8,8 +8,10 @@ import akka.stream.io.SynchronousFileSource
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
 import tmt.common._
+import tmt.library.SourceExtensions.RichSource
 
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 class ImageReadService(settings: AppSettings) {
   private val parallelism = 1
@@ -17,7 +19,7 @@ class ImageReadService(settings: AppSettings) {
   private def files = Source(() => Producer.files(settings.framesInputDir))
 
   def sendBytes = files.mapAsync(parallelism)(readFile).map(ByteString.apply)
-  def sendImages = files.mapAsync(parallelism)(readImage)
+  def sendImages = files.mapAsync(parallelism)(readImage).throttle(10.millis)
   def sendMessages = files.map(SynchronousFileSource(_)).map(BinaryMessage.apply)
 
   private def readFile(file: File) = Future(Files.readAllBytes(file.toPath))(settings.fileIoDispatcher)

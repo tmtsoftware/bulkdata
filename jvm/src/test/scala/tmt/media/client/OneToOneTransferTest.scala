@@ -23,11 +23,11 @@ class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfte
   val sourceAssembly = new MediaAssembly("Source")
   val destinationAssembly = new MediaAssembly("Destination")
 
-  val sourceServer = sourceAssembly.mediaServer(source)
-  val destinationServer = destinationAssembly.mediaServer(destination)
+  val sourceServer = sourceAssembly.serverFactory.make(source)
+  val destinationServer = destinationAssembly.serverFactory.make(destination)
 
-  val oneToOneTransfer = testAssembly.oneToOneTransfer(source, destination)
-  val simpleTransfer = testAssembly.simpleTransfer(source, destination)
+  val oneToOneTransfer = testAssembly.oneToOneTransferFactory.make(source, destination)
+  val simpleTransfer = testAssembly.simpleTransferFactory.make(source, destination)
 
   val sourceBinding = await(sourceServer.run())
   val destinationBinding = await(destinationServer.run())

@@ -1,5 +1,7 @@
 package tmt.media.client
 
+import java.net.InetSocketAddress
+
 import akka.http.scaladsl.model.{HttpResponse, MessageEntity, Uri}
 import akka.stream.scaladsl.{Broadcast, Flow, FlowGraph, Merge}
 
@@ -21,4 +23,11 @@ class OneToManyTransfer(producingClient: ProducingClient, consumingClients: Seq[
     (pipe.inlet, merge.out)
   }
 
+}
+
+class OneToManyTransferFactory(producingClientFactory: ProducingClientFactory, consumingClientFactory: ConsumingClientFactory) {
+  def make(source: InetSocketAddress, destinations: Seq[InetSocketAddress]) = new OneToManyTransfer(
+    producingClientFactory.make(source),
+    destinations.map(consumingClientFactory.make)
+  )
 }

@@ -24,3 +24,7 @@ class SimpleTransfer(source: InetSocketAddress, destination: InetSocketAddress, 
     }
   }
 }
+
+class SimpleTransferFactory(actorConfigs: ActorConfigs) {
+  def make(source: InetSocketAddress, destination: InetSocketAddress) = new SimpleTransfer(source, destination, actorConfigs)
+}

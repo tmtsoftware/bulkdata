@@ -3,7 +3,7 @@ package tmt.media.client
 import java.net.InetSocketAddress
 
 import akka.http.scaladsl.model._
-import akka.stream.scaladsl.Flow
+import akka.stream.scaladsl.{FlattenStrategy, Source, Flow}
 import tmt.common.{ActorConfigs, AppSettings}
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 import tmt.library.ResponseExtensions.RichResponse
@@ -22,6 +22,14 @@ class ProducingClient(address: InetSocketAddress, actorConfigs: ActorConfigs, se
       response.multicastEntity -> uri
     }
 
+  def request(routeName: String) = Source(List(routeName))
+    .via(flow)
+    .map { case (entity, _) =>  entity.dataBytes }
+    .flatten(FlattenStrategy.concat)
+}
+
+class ProducingClientFactory(actorConfigs: ActorConfigs, settings: AppSettings) {
+  def make(address: InetSocketAddress) = new ProducingClient(address, actorConfigs, settings)
 }
 
 class ConsumingClient(address: InetSocketAddress, actorConfigs: ActorConfigs, settings: AppSettings) {
@@ -36,4 +44,8 @@ class ConsumingClient(address: InetSocketAddress, actorConfigs: ActorConfigs, se
       response.toStrict(1.second)
     }
 
+}
+
+class ConsumingClientFactory(actorConfigs: ActorConfigs, settings: AppSettings) {
+  def make(address: InetSocketAddress) = new ConsumingClient(address, actorConfigs, settings)
 }

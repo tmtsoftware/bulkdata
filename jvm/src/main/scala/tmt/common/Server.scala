@@ -4,6 +4,7 @@ import java.net.InetSocketAddress
 
 import akka.http.scaladsl.Http
 import akka.stream.scaladsl.Sink
+import tmt.media.server.MediaRoute
 
 import scala.util.{Failure, Success}
 
@@ -29,4 +30,9 @@ class Server(address: InetSocketAddress, connectionFlow: Types.ConnectionFlow, a
 
     binding
   }
+}
+
+class ServerFactory(actorConfigs: ActorConfigs, mediaRoute: MediaRoute) {
+  import actorConfigs._
+  def make(address: InetSocketAddress) = new Server(address, mediaRoute.route, actorConfigs)
 }
