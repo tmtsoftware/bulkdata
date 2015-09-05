@@ -1,8 +1,8 @@
-package tmt.common
+package tmt.marshalling
 
 import akka.http.scaladsl.marshalling.Marshaller
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.model.HttpEntity.Chunked
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.unmarshalling.Unmarshaller
 import akka.stream.scaladsl.Source
 

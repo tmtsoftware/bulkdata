@@ -1,6 +1,6 @@
 package tmt.wavefront
 
-import tmt.common.ImageMarshallers
+import tmt.marshalling.ImageMarshallers
 import tmt.media.client.ProducingClient
 
 class ImageGateway {

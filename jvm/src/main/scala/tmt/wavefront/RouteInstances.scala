@@ -1,13 +1,9 @@
 package tmt.wavefront
 
-import tmt.common.{ImageMarshallers, JsonMarshallers}
+import tmt.marshalling.{JsonMarshallers, ImageMarshallers}
 import tmt.media.server.ImageReadService
 
-class RouteInstances(
-  routeFactory: RouteFactory,
-  imageTransformations: ImageTransformations,
-  imageReadService: ImageReadService
-) {
+class RouteInstances(routeFactory: RouteFactory, imageTransformations: ImageTransformations, imageReadService: ImageReadService) {
 
   object Binary extends ImageMarshallers {
     val images = routeFactory.make(RouteFactory.ImageMetricsRoute, imageReadService.sendImages)

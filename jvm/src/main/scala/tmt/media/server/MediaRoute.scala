@@ -5,6 +5,7 @@ import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.common._
+import tmt.marshalling.ImageMarshallers
 
 class MediaRoute(
   imageReadService: ImageReadService,

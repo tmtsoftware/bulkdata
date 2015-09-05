@@ -14,6 +14,7 @@ lazy val dataTransfer = crossProject.in(file("."))
     scalaVersion := "2.11.7",
     version := "0.1-SNAPSHOT",
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
+    updateOptions := updateOptions.value.withCachedResolution(true),
     libraryDependencies += "me.chrons" %%% "boopickle" % "1.0.0",
     libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.5"
   )

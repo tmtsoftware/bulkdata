@@ -1,9 +1,8 @@
 package tmt.library
 
-import akka.stream.{OverflowStrategy, Materializer}
 import akka.stream.scaladsl._
+import akka.stream.{Materializer, OverflowStrategy}
 import tmt.common.Sources
-import tmt.integration.bridge.Connector
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -26,13 +25,7 @@ object SourceExtensions {
 
     def throttle(duration: FiniteDuration) = source.zip(Sources.ticks(duration)).map(_._1)
 
-    def hot2(implicit mat: Materializer) = {
-      val (actorRef, hotSource) = Connector.coupling[Out](0)
-      source.runForeach(x => actorRef ! x)
-      hotSource
-    }
-
-    def hot = source.buffer(0, OverflowStrategy.dropHead)
+    def hot = source.buffer(2, OverflowStrategy.dropHead)
 
     def multicast(implicit mat: Materializer) = Source(source.runWith(Sink.fanoutPublisher(2, 2)))
   }

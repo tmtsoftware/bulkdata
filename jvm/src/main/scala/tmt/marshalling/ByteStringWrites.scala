@@ -1,4 +1,4 @@
-package tmt.common
+package tmt.marshalling
 
 import akka.util.ByteString
 
