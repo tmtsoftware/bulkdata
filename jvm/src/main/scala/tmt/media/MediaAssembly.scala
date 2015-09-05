@@ -9,11 +9,12 @@ import tmt.wavefront._
 
 class MediaAssembly(name: String) {
   import com.softwaremill.macwire._
-  lazy val actorConfigs: ActorConfigs = wire[ActorConfigs]
 
-  implicit lazy val system = ActorSystem(name)
-  implicit lazy val ec     = system.dispatcher
-  implicit lazy val mat    = ActorMaterializer()
+  lazy val system = ActorSystem(name)
+  lazy val ec     = system.dispatcher
+  lazy val mat    = ActorMaterializer()(system)
+
+  lazy val actorConfigs: ActorConfigs = wire[ActorConfigs]
 
   lazy val appSettings = wire[AppSettings]
 

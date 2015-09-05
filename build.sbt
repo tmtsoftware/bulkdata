@@ -15,8 +15,8 @@ lazy val dataTransfer = crossProject.in(file("."))
     version := "0.1-SNAPSHOT",
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
     updateOptions := updateOptions.value.withCachedResolution(true),
-    libraryDependencies += "me.chrons" %%% "boopickle" % "1.0.0",
-    libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.5"
+    libraryDependencies += "me.chrons" %%% "boopickle" % "1.1.0",
+    libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.7"
   )
   .jvmSettings(Revolver.settings: _*)
   .jvmSettings(
@@ -30,7 +30,7 @@ lazy val dataTransfer = crossProject.in(file("."))
     scalaJSStage in Global := FastOptStage,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.8.1",
-      "org.monifu" %%% "monifu" % "1.0-M2"
+      "org.monifu" %%% "monifu" % "1.0-M11"
     )
   )
 

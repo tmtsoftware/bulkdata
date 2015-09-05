@@ -1,7 +1,7 @@
 package tmt.boxes.http
 
 import akka.util.ByteString
-import boopickle.{Unpickle, Pickle}
+import boopickle.Default._
 import tmt.common._
 import tmt.marshalling.{ByteStringWrites, ByteStringReads, BinaryMarshallers}
 

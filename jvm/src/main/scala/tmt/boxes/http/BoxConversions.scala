@@ -1,7 +1,7 @@
 package tmt.boxes.http
 
 import akka.util.ByteString
-import boopickle.{Pickle, Unpickle}
+import boopickle.Default._
 import tmt.common.Box
 
 object BoxConversions {

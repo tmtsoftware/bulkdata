@@ -1,7 +1,7 @@
 package tmt.marshalling
 
 import akka.util.ByteString
-import boopickle.{Pickle, Unpickle}
+import boopickle.Default._
 import tmt.common.Image
 
 trait ImageMarshallers extends BinaryMarshallers {

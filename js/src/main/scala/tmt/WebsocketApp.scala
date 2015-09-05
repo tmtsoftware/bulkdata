@@ -24,7 +24,7 @@ object WebsocketApp extends JSApp {
     .map(new Rendering(_))
     .flatMap(_.loaded)
     .map(_.render())
-    .bufferTimed(1.second).map(_.size).foreach(println)
+    .buffer(1.second).map(_.size).foreach(println)
 
   def makeUrl(messageEvent: MessageEvent) = {
     val arrayBuffer = messageEvent.data.asInstanceOf[ArrayBuffer]
