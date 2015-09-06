@@ -8,6 +8,7 @@ import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import tmt.common.Utils._
 import tmt.common._
+import tmt.common.models.Box
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 
 class HttpServerTest extends FunSuite with MustMatchers with BeforeAndAfterAll {

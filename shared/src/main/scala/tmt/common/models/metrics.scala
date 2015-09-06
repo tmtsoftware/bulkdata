@@ -1,4 +1,5 @@
-package tmt.common
+package tmt.common.models
+
 import boopickle.Default._
 
 case class ImageMetric(size: Int, timestamp: Long)

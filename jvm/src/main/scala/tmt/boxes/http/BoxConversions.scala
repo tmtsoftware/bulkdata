@@ -2,7 +2,7 @@ package tmt.boxes.http
 
 import akka.util.ByteString
 import boopickle.Default._
-import tmt.common.Box
+import tmt.common.models.Box
 
 object BoxConversions {
   def toByteString(box: Box) = ByteString(Pickle.intoBytes(box))

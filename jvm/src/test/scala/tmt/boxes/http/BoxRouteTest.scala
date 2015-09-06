@@ -5,7 +5,7 @@ import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 import akka.stream.scaladsl.Source
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
-import tmt.common.Box
+import tmt.common.models.Box
 import tmt.marshalling.BinaryMarshallers
 
 import scala.concurrent.duration._

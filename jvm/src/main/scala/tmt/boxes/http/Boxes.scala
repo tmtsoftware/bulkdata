@@ -1,7 +1,8 @@
 package tmt.boxes.http
 
 import akka.stream.scaladsl.Source
-import tmt.common.{Box, SharedConfigs}
+import tmt.common.SharedConfigs
+import tmt.common.models.Box
 
 object Boxes {
 

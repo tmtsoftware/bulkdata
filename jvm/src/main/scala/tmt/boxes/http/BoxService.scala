@@ -2,6 +2,7 @@ package tmt.boxes.http
 
 import akka.stream.scaladsl.{Sink, Source}
 import tmt.common._
+import tmt.common.models.Box
 
 class BoxService(actorConfigs: ActorConfigs) {
   import actorConfigs._

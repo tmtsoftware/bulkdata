@@ -1,6 +1,7 @@
 package tmt.wavefront
 
-import tmt.common.{Image, AppSettings}
+import tmt.common.AppSettings
+import tmt.common.models.Image
 import tmt.library.SourceExtensions
 import tmt.media.client.ProducingClientFactory
 

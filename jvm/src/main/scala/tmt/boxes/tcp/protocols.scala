@@ -3,7 +3,7 @@ package tmt.boxes.tcp
 import akka.stream.scaladsl.Tcp.OutgoingConnection
 import akka.stream.scaladsl._
 import akka.util.ByteString
-import tmt.common.Box
+import tmt.common.models.Box
 
 import scala.concurrent.Future
 

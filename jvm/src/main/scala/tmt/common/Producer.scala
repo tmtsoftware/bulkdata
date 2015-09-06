@@ -2,6 +2,8 @@ package tmt.common
 
 import java.io.File
 
+import tmt.common.models.Box
+
 object Producer {
   def numbers() = Iterator.from(1)
   def boxes() = numbers().map(x => Box(x.toString))

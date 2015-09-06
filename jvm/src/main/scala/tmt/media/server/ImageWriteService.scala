@@ -7,6 +7,7 @@ import akka.stream.io.SynchronousFileSink
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.common._
+import tmt.common.models.Image
 import tmt.library.SourceExtensions.RichSource
 
 import scala.concurrent.Future

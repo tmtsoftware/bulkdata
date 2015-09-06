@@ -5,8 +5,8 @@ import akka.stream.ActorMaterializer
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, MustMatchers, FunSuite}
 import tmt.boxes.http.Boxes
-import tmt.common.Box
 import tmt.boxes.tcp.ServerProtocol.Get
+import tmt.common.models.Box
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}

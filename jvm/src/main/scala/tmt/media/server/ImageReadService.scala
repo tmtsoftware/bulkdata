@@ -8,10 +8,9 @@ import akka.stream.io.SynchronousFileSource
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
 import tmt.common._
-import tmt.library.SourceExtensions.RichSource
+import tmt.common.models.Image
 
 import scala.concurrent.Future
-import scala.concurrent.duration._
 
 class ImageReadService(settings: AppSettings) {
   private val parallelism = 1
