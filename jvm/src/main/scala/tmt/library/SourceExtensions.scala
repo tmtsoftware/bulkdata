@@ -3,6 +3,7 @@ package tmt.library
 import akka.stream.scaladsl._
 import akka.stream.{Materializer, OverflowStrategy}
 import tmt.common.Sources
+import tmt.integration.bridge.Connector
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -25,19 +26,24 @@ object SourceExtensions {
 
     def throttle(duration: FiniteDuration) = source.zip(Sources.ticks(duration)).map(_._1)
 
-    def hot = source.buffer(2, OverflowStrategy.dropHead)
+    def hot = source.buffer(1, OverflowStrategy.dropBuffer)
 
     def multicast(implicit mat: Materializer) = Source(source.runWith(Sink.fanoutPublisher(2, 2)))
   }
 
-  def merge[Out, Mat](sources: Seq[Source[Out, Mat]]) = Source() { implicit b =>
-    import FlowGraph.Implicits._
+  def merge[Out, Mat](sources: Seq[Source[Out, Mat]]) =
+    if(sources.isEmpty)
+      Source.empty[Out]
+    else {
+      Source() { implicit b =>
+        import FlowGraph.Implicits._
 
-    val merge = b.add(Merge[Out](sources.length))
+        val merge = b.add(Merge[Out](sources.length))
 
-    sources.zipWithIndex.foreach { case (source, index) => source ~> merge.in(index) }
+        sources.zipWithIndex.foreach { case (source, index) => source ~> merge.in(index) }
 
-    merge.out
-  }
+        merge.out
+      }
+    }
 
 }
