@@ -4,8 +4,9 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.Source
 import tmt.common.Box
+import tmt.marshalling.BinaryMarshallers
 
-class BoxRoute(boxService: BoxService) extends BoxMarshallers {
+class BoxRoute(boxService: BoxService) extends BinaryMarshallers {
   val route: Route = {
     path("boxes") {
       get {

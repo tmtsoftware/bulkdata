@@ -5,14 +5,14 @@ import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.common._
-import tmt.marshalling.ImageMarshallers
+import tmt.marshalling.{BinaryMarshallers}
 
 class MediaRoute(
   imageReadService: ImageReadService,
   movieReadService: MovieReadService,
   imageWriteService: ImageWriteService,
   movieWriteService: MovieWriteService
-) extends ImageMarshallers with CustomDirectives {
+) extends BinaryMarshallers with CustomDirectives {
 
   val route: Route = {
 

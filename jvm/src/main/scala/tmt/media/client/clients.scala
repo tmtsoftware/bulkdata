@@ -7,6 +7,7 @@ import akka.stream.scaladsl.{FlattenStrategy, Source, Flow}
 import tmt.common.{ActorConfigs, AppSettings}
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 import tmt.library.ResponseExtensions.RichResponse
+import tmt.marshalling.BFormat
 
 import scala.concurrent.duration.DurationInt
 import scala.util.Success
@@ -22,10 +23,11 @@ class ProducingClient(address: InetSocketAddress, actorConfigs: ActorConfigs, se
       response.multicastEntity -> uri
     }
 
-  def request(routeName: String) = Source(List(routeName))
+  def request[T: BFormat](routeName: String) = Source(List(routeName))
     .via(flow)
     .map { case (entity, _) =>  entity.dataBytes }
     .flatten(FlattenStrategy.concat)
+    .map(BFormat[T].read)
 }
 
 class ProducingClientFactory(actorConfigs: ActorConfigs, settings: AppSettings) {

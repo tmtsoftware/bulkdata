@@ -6,10 +6,11 @@ import akka.stream.scaladsl.Source
 import akka.stream.testkit.scaladsl.TestSink
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import tmt.common.Box
+import tmt.marshalling.BinaryMarshallers
 
 import scala.concurrent.duration._
 
-class BoxRouteTest extends FunSuite with MustMatchers with ScalatestRouteTest with BoxMarshallers with BeforeAndAfterAll {
+class BoxRouteTest extends FunSuite with MustMatchers with ScalatestRouteTest with BinaryMarshallers with BeforeAndAfterAll {
 
   val testAssembly = new BoxAssembly("Test")
   implicit val routeTestTimeout = RouteTestTimeout(20.seconds)

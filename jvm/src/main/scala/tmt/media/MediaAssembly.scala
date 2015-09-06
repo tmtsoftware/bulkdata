@@ -34,6 +34,5 @@ class MediaAssembly(name: String) {
   lazy val serverFactory         = wire[ServerFactory]
 
   lazy val copyTransformation     = wire[ImageTransformations]
-  lazy val imageGateway           = wire[ImageGateway]
   lazy val imageSourceService     = wire[ImageSourceService]
 }

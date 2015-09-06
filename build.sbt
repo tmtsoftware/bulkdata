@@ -15,6 +15,7 @@ lazy val dataTransfer = crossProject.in(file("."))
     version := "0.1-SNAPSHOT",
     transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
     updateOptions := updateOptions.value.withCachedResolution(true),
+    parallelExecution in Test := false,
     libraryDependencies += "me.chrons" %%% "boopickle" % "1.1.0",
     libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.7"
   )
