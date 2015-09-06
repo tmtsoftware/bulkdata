@@ -1,11 +1,10 @@
-package tmt.wavefront
-
-import play.api.libs.json.Json
+package tmt.common
+import boopickle.Default._
 
 case class ImageMetric(size: Int, timestamp: Long)
 
 object ImageMetric {
-  implicit val format = Json.format[ImageMetric]
+  implicit val pickler = generatePickler[ImageMetric]
 }
 
 case class CumulativeMetric(size: Int, count: Int) {
@@ -13,7 +12,7 @@ case class CumulativeMetric(size: Int, count: Int) {
 }
 
 object CumulativeMetric {
-  implicit val format = Json.format[CumulativeMetric]
+  implicit val pickler = generatePickler[CumulativeMetric]
 }
 
 case class PerSecMetric(size: Int, count: Int)
@@ -24,5 +23,5 @@ object PerSecMetric {
     imageMetrics.length
   )
 
-  implicit val format = Json.format[PerSecMetric]
+  implicit val pickler = generatePickler[PerSecMetric]
 }

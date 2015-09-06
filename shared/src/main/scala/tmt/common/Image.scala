@@ -1,10 +1,10 @@
 package tmt.common
+import boopickle.Default._
 
 case class Image(name: String, bytes: Array[Byte]) {
   def size = bytes.length
 }
 
 object Image {
-  import boopickle.Default._
   implicit val pickler = generatePickler[Image]
 }

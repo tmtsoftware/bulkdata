@@ -6,8 +6,6 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-stream-experimental" % "1.0",
     "com.typesafe.akka" %% "akka-http-core-experimental" % "1.0",
     "com.typesafe.akka" %% "akka-http-experimental" % "1.0",
-    "com.typesafe.play" % "play-json_2.11" % "2.4.2",
-    "de.heikoseeberger" %% "akka-http-play-json" % "1.1.0",
     "net.codingwell" %% "scala-guice" % "4.0.0",
 
     //test
