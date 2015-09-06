@@ -1,16 +1,21 @@
 package tmt.media
 
+import java.io.File
+
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import tmt.common.{ActorConfigs, AppSettings, ServerFactory}
+import com.typesafe.config.ConfigFactory
+import tmt.common.{ActorConfigs, AppSettings, MediaServerFactory}
 import tmt.media.client._
 import tmt.media.server._
 import tmt.wavefront._
 
-class MediaAssembly(name: String) {
+class MediaAssembly(name: String, confName: String = "application.conf") {
   import com.softwaremill.macwire._
 
-  lazy val system = ActorSystem(name)
+  lazy val config = ConfigFactory.load(confName)
+
+  lazy val system = ActorSystem(name, config)
   lazy val ec     = system.dispatcher
   lazy val mat    = ActorMaterializer()(system)
 
@@ -31,8 +36,11 @@ class MediaAssembly(name: String) {
   lazy val oneToManyTransferFactory = wire[OneToManyTransferFactory]
 
   lazy val simpleTransferFactory = wire[SimpleTransferFactory]
-  lazy val serverFactory         = wire[ServerFactory]
+  lazy val mediaServerFactory         = wire[MediaServerFactory]
 
-  lazy val copyTransformation     = wire[ImageTransformations]
-  lazy val imageSourceService     = wire[ImageSourceService]
+  lazy val imageSourceService = wire[ImageSourceService]
+  lazy val copyTransformation = wire[ImageTransformations]
+  lazy val routeFactory       = wire[RouteFactory]
+  lazy val routeInstances     = wire[RouteInstances]
+  lazy val serverFactory     = wire[ServerFactory]
 }

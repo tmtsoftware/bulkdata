@@ -21,8 +21,13 @@ class AppSettings(actorConfigs: ActorConfigs) {
   val moviesInputDir = config.getString("data-location.movies.input")
   val moviesOutputDir = config.getString("data-location.movies.output")
 
-  val upstreamServers: Seq[InetSocketAddress] = {
-    val upstreamServerObjects = config.getConfigList("upstream-servers").asScala
-    upstreamServerObjects.map(obj => new InetSocketAddress(obj.getString("interface"), obj.getInt("port")))
+  object topology {
+    val role = config.getString("topology.role")
+    val imageSources = {
+      val imageSourceObjects = config.getConfigList("topology.image-sources").asScala
+      imageSourceObjects.map(obj => new InetSocketAddress(obj.getString("interface"), obj.getInt("port")))
+    }
+    val binding = new InetSocketAddress(config.getString("topology.interface"), config.getInt("topology.port"))
   }
+  
 }

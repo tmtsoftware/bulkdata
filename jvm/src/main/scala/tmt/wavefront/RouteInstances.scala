@@ -9,11 +9,13 @@ class RouteInstances(
   imageReadService: ImageReadService
 ) extends BinaryMarshallers {
 
-  val images         = routeFactory.make(RouteFactory.ImageMetricsRoute, imageReadService.sendImages)
-  val filteredImages = routeFactory.make(RouteFactory.FilteredImagesRoute, imageTransformations.filteredImages)
-  val copiedImages   = routeFactory.make(RouteFactory.CopiedImagesRoute, imageTransformations.copiedImages)
+  def find(role: String) = role match {
+    case Roles.ImageSource => routeFactory.make(Routes.Images, imageReadService.sendImages)
 
-  val imageMetrics      = routeFactory.make(RouteFactory.ImageMetricsRoute, imageTransformations.imageMetrics)
-  val cumulativeMetrics = routeFactory.make(RouteFactory.CumulativeMetricsRoute, imageTransformations.cumulativeMetrics)
-  val perSecMetrics     = routeFactory.make(RouteFactory.PerSecMetricsRoute, imageTransformations.perSecMetrics)
+    case Roles.ImageCopy   => routeFactory.make(Routes.Images, imageTransformations.copiedImages)
+    case Roles.ImageFilter => routeFactory.make(Routes.Images, imageTransformations.filteredImages)
+
+    case Roles.MetricsCumulative => routeFactory.make(Routes.Metrics, imageTransformations.cumulativeMetrics)
+    case Roles.MetricsPerSec     => routeFactory.make(Routes.Metrics, imageTransformations.perSecMetrics)
+  }
 }

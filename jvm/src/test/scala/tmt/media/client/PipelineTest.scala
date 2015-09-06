@@ -12,10 +12,24 @@ import tmt.media.MediaAssembly
 
 import scala.concurrent.duration.DurationInt
 
-class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
+class PipelineTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
   val testAssembly = new MediaAssembly("Test")
   import testAssembly.actorConfigs._
+
+  object Addresses {
+    val images = new InetSocketAddress("localhost", 7001)
+    val filteredImages = new InetSocketAddress("localhost", 8001)
+  }
+
+  object Assemblies {
+    val images = new MediaAssembly("Images")
+    val filteredImages = new MediaAssembly("FilteredImages")
+  }
+
+  object Servers {
+    val images = Assemblies.images.mediaServerFactory
+  }
 
   val source = new InetSocketAddress("localhost", 7001)
   val destination = new InetSocketAddress("localhost", 8001)

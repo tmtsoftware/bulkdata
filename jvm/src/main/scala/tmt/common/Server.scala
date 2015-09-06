@@ -31,8 +31,3 @@ class Server(address: InetSocketAddress, connectionFlow: Types.ConnectionFlow, a
     binding
   }
 }
-
-class ServerFactory(actorConfigs: ActorConfigs, mediaRoute: MediaRoute) {
-  import actorConfigs._
-  def make(address: InetSocketAddress) = new Server(address, mediaRoute.route, actorConfigs)
-}

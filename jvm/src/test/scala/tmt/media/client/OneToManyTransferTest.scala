@@ -30,10 +30,10 @@ class OneToManyTransferTest extends FunSuite with MustMatchers with BeforeAndAft
   val destination1 = new InetSocketAddress("localhost", 8001)
   val destination2 = new InetSocketAddress("localhost", 8002)
 
-  val sourceServer = sourceAssembly.serverFactory.make(source)
-  val destination1Server = destination1Assembly.serverFactory.make(destination1)
+  val sourceServer = sourceAssembly.mediaServerFactory.make(source)
+  val destination1Server = destination1Assembly.mediaServerFactory.make(destination1)
 
-  val destination2Server = destination2Assembly.serverFactory.make(destination2)
+  val destination2Server = destination2Assembly.mediaServerFactory.make(destination2)
   val oneToManyTransfer = testAssembly.oneToManyTransferFactory.make(source, Seq(destination1, destination2))
 
   val sourceBinding = await(sourceServer.run())

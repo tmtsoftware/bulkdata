@@ -20,6 +20,6 @@ class ImageTransformations(imageSourceService: ImageSourceService, imageWriteSer
   }
 
   val imageMetrics = images.map(image => ImageMetric(image.size, DateTime.now.clicks))
-  val cumulativeMetrics = imageMetrics.scan(CumulativeMetric(0, 0))(_ + _)
+  val cumulativeMetrics = imageMetrics.scan(CumulativeMetric(0, 0, 0, 0))(_ + _)
   val perSecMetrics = imageMetrics.groupedWithin(10000, 1.second).map(PerSecMetric.fromImageMetrics)
 }

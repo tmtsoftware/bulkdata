@@ -8,8 +8,13 @@ object ImageMetric {
   implicit val pickler = generatePickler[ImageMetric]
 }
 
-case class CumulativeMetric(size: Int, count: Int) {
-  def +(imageMetric: ImageMetric) = CumulativeMetric(size + imageMetric.size, count + 1)
+case class CumulativeMetric(cumulativeSize: Long, cumulativeCount: Long, currentSize: Long, timestamp: Long) {
+  def +(imageMetric: ImageMetric) = CumulativeMetric(
+    cumulativeSize + imageMetric.size,
+    cumulativeCount + 1,
+    imageMetric.size,
+    imageMetric.timestamp
+  )
 }
 
 object CumulativeMetric {
