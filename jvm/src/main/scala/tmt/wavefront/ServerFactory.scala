@@ -12,6 +12,6 @@ class ServerFactory(
 
   def make() = appSettings.topology.role match {
     case "media" => mediaServerFactory.make()
-    case role    => new Server(appSettings.topology.binding, routeInstances.find(role), actorConfigs)
+    case role    => new Server(appSettings.topology.binding, routeInstances.find(Role.withName(role)), actorConfigs)
   }
 }

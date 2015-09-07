@@ -34,13 +34,14 @@ class MediaAssembly(name: String) {
   lazy val oneToManyTransferFactory = wire[OneToManyTransferFactory]
 
   lazy val simpleTransferFactory = wire[SimpleTransferFactory]
-  lazy val mediaServerFactory         = wire[MediaServerFactory]
+  lazy val mediaServerFactory    = wire[MediaServerFactory]
 
-  lazy val imageSourceService = wire[ImageSourceService]
-  lazy val copyTransformation = wire[ImageTransformations]
-  lazy val routeFactory       = wire[RouteFactory]
-  lazy val routeInstances     = wire[RouteInstances]
-  lazy val serverFactory     = wire[ServerFactory]
+  lazy val imageSourceService     = wire[ItemSourceService]
+  lazy val imageTransformations   = wire[ImageTransformations]
+  lazy val metricsTransformations = wire[MetricsTransformations]
+  lazy val routeFactory           = wire[RouteFactory]
+  lazy val routeInstances         = wire[RouteInstances]
+  lazy val serverFactory          = wire[ServerFactory]
 
   lazy val binding = appSettings.topology.binding
 }

@@ -23,9 +23,9 @@ class AppSettings(actorConfigs: ActorConfigs) {
 
   object topology {
     val role = config.getString("topology.role")
-    val imageSources = {
-      val imageSourceObjects = config.getConfigList("topology.image-sources").asScala
-      imageSourceObjects.map(obj => new InetSocketAddress(obj.getString("interface"), obj.getInt("port")))
+    val sources = {
+      val sourceObjects = config.getConfigList("topology.sources").asScala
+      sourceObjects.map(obj => new InetSocketAddress(obj.getString("interface"), obj.getInt("port")))
     }
     val binding = new InetSocketAddress(config.getString("topology.binding.interface"), config.getInt("topology.binding.port"))
   }

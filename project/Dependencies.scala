@@ -7,6 +7,7 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-http-core-experimental" % "1.0",
     "com.typesafe.akka" %% "akka-http-experimental" % "1.0",
     "net.codingwell" %% "scala-guice" % "4.0.0",
+    "com.beachape" %% "enumeratum" % "1.3.1",
 
     //test
     "org.scalatest" %% "scalatest" % "2.2.5" % "test",
