@@ -13,6 +13,5 @@ object Role extends Enum[Role] {
   case object ImageFilter  extends Role("image-filter")
 
   case object MetricsPerImage  extends Role("metrics-per-image")
-  case object MetricsCumulative  extends Role("metrics-cumulative")
-  case object MetricsPerSec  extends Role("metrics-per-sec")
+  case object MetricsAgg  extends Role("metrics-agg")
 }

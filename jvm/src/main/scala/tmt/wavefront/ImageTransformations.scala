@@ -12,13 +12,13 @@ class ImageTransformations(
 
   import actorConfigs._
 
-  val images = imageSourceService.getItems[Image](Routes.Images)
+  lazy val images = imageSourceService.getItems[Image](Routes.Images)
 
-  val filteredImages = images.filter(_.name.contains("9"))
+  lazy val filteredImages = images.filter(_.name.contains("9"))
 
-  val copiedImages = images.mapAsync(1) { image =>
+  lazy val copiedImages = images.mapAsync(1) { image =>
     imageWriteService.copyImage(image).map(_ => image)
   }
 
-  val imageMetrics = images.map(image => ImageMetric(image.name, image.size, DateTime.now.clicks))
+  lazy val imageMetrics = images.map(image => ImageMetric(image.name, image.size, DateTime.now.clicks))
 }
