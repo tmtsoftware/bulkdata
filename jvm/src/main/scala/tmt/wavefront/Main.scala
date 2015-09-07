@@ -6,7 +6,8 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 object Main extends App {
-  new RunningServer(args.head)
+  val role = args.head
+  new RunningServer(role)
 }
 
 class RunningServer(role: String) {
