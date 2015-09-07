@@ -1,12 +1,9 @@
 package tmt.media.client
 
-import java.net.InetSocketAddress
-
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.scaladsl.{FlattenStrategy, Sink, Source}
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
-import tmt.common.AppSettings
 import tmt.common.Utils._
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 import tmt.media.MediaAssembly
@@ -15,25 +12,21 @@ import scala.concurrent.duration.DurationInt
 
 class OneToManyTransferTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
-  val testAssembly = new MediaAssembly("Test")
+  val testAssembly = new MediaAssembly("application")
   import testAssembly.actorConfigs._
 
-  val sourceAssembly = new MediaAssembly("Source")
-  val destination1Assembly = new MediaAssembly("Destination1")
-  val destination2Assembly = new MediaAssembly("Destination2") {
-    override lazy val appSettings = new AppSettings(actorConfigs) {
-      override val framesOutputDir = "/usr/local/data/tmt/movies/output2"
-    }
-  }
+  val sourceAssembly = new MediaAssembly("source")
+  val destination1Assembly = new MediaAssembly("destination1")
+  val destination2Assembly = new MediaAssembly("destination2")
 
-  val source = new InetSocketAddress("localhost", 7001)
-  val destination1 = new InetSocketAddress("localhost", 8001)
-  val destination2 = new InetSocketAddress("localhost", 8002)
+  val sourceServer = sourceAssembly.mediaServerFactory.make()
+  val destination1Server = destination1Assembly.mediaServerFactory.make()
+  val destination2Server = destination2Assembly.mediaServerFactory.make()
 
-  val sourceServer = sourceAssembly.mediaServerFactory.make(source)
-  val destination1Server = destination1Assembly.mediaServerFactory.make(destination1)
+  val source = sourceAssembly.appSettings.topology.binding
+  val destination1 = destination1Assembly.appSettings.topology.binding
+  val destination2 = destination2Assembly.appSettings.topology.binding
 
-  val destination2Server = destination2Assembly.mediaServerFactory.make(destination2)
   val oneToManyTransfer = testAssembly.oneToManyTransferFactory.make(source, Seq(destination1, destination2))
 
   val sourceBinding = await(sourceServer.run())

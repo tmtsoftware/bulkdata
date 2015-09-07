@@ -1,11 +1,7 @@
 package tmt.media.server
 
-import java.net.InetSocketAddress
-
-import tmt.common.SharedConfigs
 import tmt.media.MediaAssembly
 
-object MediaServer extends MediaAssembly("media-server") with App {
-  val address = new InetSocketAddress(SharedConfigs.interface, SharedConfigs.port)
-  mediaServerFactory.make(address).run()
+object MediaServer extends MediaAssembly("application") with App {
+  mediaServerFactory.make().run()
 }

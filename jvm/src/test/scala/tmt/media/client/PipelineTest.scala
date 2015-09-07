@@ -20,7 +20,7 @@ class PipelineTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
   val bindings = servers.map(s => await(s.run()))
 
   test("run") {
-    Thread.sleep(50000)
+    Thread.sleep(30000)
   }
 
   override protected def afterAll() = {

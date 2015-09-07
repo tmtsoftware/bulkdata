@@ -1,7 +1,5 @@
 package tmt.media.client
 
-import java.net.InetSocketAddress
-
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.scaladsl.{FlattenStrategy, Sink, Source}
@@ -14,17 +12,17 @@ import scala.concurrent.duration.DurationInt
 
 class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
-  val testAssembly = new MediaAssembly("Test")
+  val testAssembly = new MediaAssembly("application")
   import testAssembly.actorConfigs._
 
-  val source = new InetSocketAddress("localhost", 7001)
-  val destination = new InetSocketAddress("localhost", 8001)
+  val sourceAssembly = new MediaAssembly("source")
+  val destinationAssembly = new MediaAssembly("destination1")
 
-  val sourceAssembly = new MediaAssembly("Source")
-  val destinationAssembly = new MediaAssembly("Destination")
+  val sourceServer = sourceAssembly.mediaServerFactory.make()
+  val destinationServer = destinationAssembly.mediaServerFactory.make()
 
-  val sourceServer = sourceAssembly.mediaServerFactory.make(source)
-  val destinationServer = destinationAssembly.mediaServerFactory.make(destination)
+  val source = sourceAssembly.appSettings.topology.binding
+  val destination = destinationAssembly.appSettings.topology.binding
 
   val oneToOneTransfer = testAssembly.oneToOneTransferFactory.make(source, destination)
   val simpleTransfer = testAssembly.simpleTransferFactory.make(source, destination)

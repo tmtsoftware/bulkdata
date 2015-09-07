@@ -1,10 +1,8 @@
 package tmt.common
 
-import java.net.InetSocketAddress
-
 import tmt.media.server.MediaRoute
 
-class MediaServerFactory(actorConfigs: ActorConfigs, mediaRoute: MediaRoute) {
+class MediaServerFactory(actorConfigs: ActorConfigs, mediaRoute: MediaRoute, appSettings: AppSettings) {
   import actorConfigs._
-  def make(address: InetSocketAddress) = new Server(address, mediaRoute.route, actorConfigs)
+  def make() = new Server(appSettings.topology.binding, mediaRoute.route, actorConfigs)
 }
