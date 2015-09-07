@@ -1,8 +1,8 @@
-package tmt
+package tmt.images
 
 import monifu.concurrent.Implicits.globalScheduler
 import org.scalajs.dom._
-import tmt.common.SharedConfigs
+import tmt.common.{UiControls, Stream, SharedConfigs}
 
 import scala.concurrent.duration._
 import scala.scalajs.js

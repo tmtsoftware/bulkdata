@@ -1,8 +1,7 @@
-package tmt
+package tmt.common
 
 import org.scalajs.dom.html.{Button, Canvas}
 import org.scalajs.dom.{CanvasRenderingContext2D, URL, document}
-import tmt.common.SharedConfigs
 
 import scala.scalajs.js
 

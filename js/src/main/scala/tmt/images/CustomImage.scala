@@ -1,5 +1,4 @@
-package tmt
-
+package tmt.images
 
 import org.scalajs.dom.Event
 import org.scalajs.dom.html.Image

@@ -1,7 +1,7 @@
-package tmt
+package tmt.images
 
 import org.scalajs.dom._
-import tmt.common.SharedConfigs
+import tmt.common.{UiControls, Stream, SharedConfigs}
 
 class Rendering(url: String) {
 

@@ -1,4 +1,4 @@
-package tmt
+package tmt.common
 
 import monifu.reactive.Observable
 import org.scalajs.dom.{ErrorEvent, Event, MessageEvent, WebSocket}

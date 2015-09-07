@@ -7,7 +7,7 @@ object SharedConfigs {
   val delay = 1.milli
 
   val interface = "localhost"
-  val port = 6001
+  val port = 8000
 
   val imageWidth = 1920/2
   val imageHeight = 1080/2
