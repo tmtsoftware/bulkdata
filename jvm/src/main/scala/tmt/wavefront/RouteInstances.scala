@@ -13,7 +13,7 @@ class RouteInstances(
 
   def find(role: Role) = role match {
     case Role.ImageSource => routeFactory.make(
-      Routes.Images, imageReadService.sendImages.map(x => {Thread.sleep(1); println(s"11111: serving image ${x.name}"); x})
+      Routes.Images, imageReadService.sendImages.map(x => {Thread.sleep(100); println(s"11111: serving image ${x.name}"); x})
     )
 
     case Role.ImageCopy   => routeFactory.make(

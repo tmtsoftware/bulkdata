@@ -1,24 +1,15 @@
 package tmt.images
 
-import monifu.concurrent.Implicits.globalScheduler
 import org.scalajs.dom._
-import tmt.common.{UiControls, Stream, SharedConfigs}
+import org.scalajs.dom.raw.Blob
+import tmt.common.{CanvasControls, Stream}
 
 import scala.concurrent.duration._
 import scala.scalajs.js
-import scala.scalajs.js.JSApp
-import scala.scalajs.js.annotation.JSExport
 import scala.scalajs.js.typedarray.ArrayBuffer
+import monifu.concurrent.Implicits.globalScheduler
 
-object WebsocketApp extends JSApp {
-
-  @JSExport
-  override def main() = UiControls.button.onclick = { e: Event =>
-    val socket = new WebSocket(s"ws://${SharedConfigs.interface}:${SharedConfigs.port}/images/bytes")
-    socket.binaryType = "arraybuffer"
-    drain(socket)
-  }
-
+object ImageRendering {
   def drain(socket: WebSocket) = Stream.socket(socket)
     .map(makeUrl)
     .map(new Rendering(_))
@@ -30,6 +21,6 @@ object WebsocketApp extends JSApp {
     val arrayBuffer = messageEvent.data.asInstanceOf[ArrayBuffer]
     val properties = js.Dynamic.literal("type" -> "image/jpeg").asInstanceOf[BlobPropertyBag]
     val blob = new Blob(js.Array(arrayBuffer), properties)
-    UiControls.URL.createObjectURL(blob)
+    CanvasControls.URL.createObjectURL(blob)
   }
 }

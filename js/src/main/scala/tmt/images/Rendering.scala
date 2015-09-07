@@ -1,7 +1,7 @@
 package tmt.images
 
 import org.scalajs.dom._
-import tmt.common.{UiControls, Stream, SharedConfigs}
+import tmt.common.{CanvasControls, Stream, SharedConfigs}
 
 class Rendering(url: String) {
 
@@ -14,8 +14,8 @@ class Rendering(url: String) {
   }
 
   def render() = {
-    UiControls.ctx.drawImage(img, 0, 0, SharedConfigs.imageWidth, SharedConfigs.imageHeight)
-    UiControls.URL.revokeObjectURL(img.src)
+    CanvasControls.ctx.drawImage(img, 0, 0, SharedConfigs.imageWidth, SharedConfigs.imageHeight)
+    CanvasControls.URL.revokeObjectURL(img.src)
   }
 
 }
