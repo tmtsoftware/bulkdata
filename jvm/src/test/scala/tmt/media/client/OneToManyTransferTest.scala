@@ -7,6 +7,7 @@ import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import tmt.common.Utils._
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 import tmt.media.MediaAssembly
+import tmt.wavefront.RunningServer
 
 import scala.concurrent.duration.DurationInt
 
@@ -15,23 +16,12 @@ class OneToManyTransferTest extends FunSuite with MustMatchers with BeforeAndAft
   val testAssembly = new MediaAssembly("application")
   import testAssembly.actorConfigs._
 
-  val sourceAssembly = new MediaAssembly("source")
-  val destination1Assembly = new MediaAssembly("destination1")
-  val destination2Assembly = new MediaAssembly("destination2")
+  val roles = Seq("source", "destination1", "destination2")
+  val runningServers = roles.map(new RunningServer(_))
 
-  val sourceServer = sourceAssembly.mediaServerFactory.make()
-  val destination1Server = destination1Assembly.mediaServerFactory.make()
-  val destination2Server = destination2Assembly.mediaServerFactory.make()
-
-  val source = sourceAssembly.appSettings.topology.binding
-  val destination1 = destination1Assembly.appSettings.topology.binding
-  val destination2 = destination2Assembly.appSettings.topology.binding
+  val Seq(source, destination1, destination2) = runningServers.map(_.assembly.binding)
 
   val oneToManyTransfer = testAssembly.oneToManyTransferFactory.make(source, Seq(destination1, destination2))
-
-  val sourceBinding = await(sourceServer.run())
-  val destination1Binding = await(destination1Server.run())
-  val destination2Binding = await(destination2Server.run())
 
   test("blob-pipelined") {
     val result = movieNames
@@ -58,12 +48,7 @@ class OneToManyTransferTest extends FunSuite with MustMatchers with BeforeAndAft
   }
 
   override protected def afterAll() = {
-    await(sourceBinding.unbind())
-    await(destination1Binding.unbind())
-    await(destination2Binding.unbind())
-    sourceAssembly.system.shutdown()
-    destination1Assembly.system.shutdown()
-    destination2Assembly.system.shutdown()
+    runningServers.foreach(_.stop())
     testAssembly.system.shutdown()
   }
 }

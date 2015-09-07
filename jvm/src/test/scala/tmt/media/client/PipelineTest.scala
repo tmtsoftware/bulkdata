@@ -1,9 +1,7 @@
 package tmt.media.client
 
 import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
-import tmt.common.Utils._
-import tmt.media.MediaAssembly
-import tmt.wavefront.Roles
+import tmt.wavefront.{Roles, RunningServer}
 
 class PipelineTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
 
@@ -15,16 +13,13 @@ class PipelineTest extends FunSuite with MustMatchers with BeforeAndAfterAll {
     Roles.MetricsPerSec
   )
 
-  val assemblies = roles.map(new MediaAssembly(_))
-  val servers = assemblies.map(_.serverFactory.make())
-  val bindings = servers.map(s => await(s.run()))
+  val runningServers = roles.map(new RunningServer(_))
 
   test("run") {
     Thread.sleep(30000)
   }
 
   override protected def afterAll() = {
-    bindings.foreach(b => await(b.unbind()))
-    assemblies.foreach(_.system.shutdown())
+    runningServers.foreach(_.stop())
   }
 }

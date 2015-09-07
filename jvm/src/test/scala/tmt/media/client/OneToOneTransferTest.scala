@@ -7,6 +7,7 @@ import org.scalatest.{BeforeAndAfterAll, FunSuite, MustMatchers}
 import tmt.common.Utils._
 import tmt.library.InetSocketAddressExtensions.RichInetSocketAddress
 import tmt.media.MediaAssembly
+import tmt.wavefront.RunningServer
 
 import scala.concurrent.duration.DurationInt
 
@@ -15,20 +16,13 @@ class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfte
   val testAssembly = new MediaAssembly("application")
   import testAssembly.actorConfigs._
 
-  val sourceAssembly = new MediaAssembly("source")
-  val destinationAssembly = new MediaAssembly("destination1")
+  val roles = Seq("source", "destination1")
+  val runningServers = roles.map(new RunningServer(_))
 
-  val sourceServer = sourceAssembly.mediaServerFactory.make()
-  val destinationServer = destinationAssembly.mediaServerFactory.make()
-
-  val source = sourceAssembly.appSettings.topology.binding
-  val destination = destinationAssembly.appSettings.topology.binding
+  val Seq(source, destination) = runningServers.map(_.assembly.binding)
 
   val oneToOneTransfer = testAssembly.oneToOneTransferFactory.make(source, destination)
   val simpleTransfer = testAssembly.simpleTransferFactory.make(source, destination)
-
-  val sourceBinding = await(sourceServer.run())
-  val destinationBinding = await(destinationServer.run())
 
   test("frame-bytes") {
     val transferResponse = await(simpleTransfer.singleTransfer("/images/bytes"))
@@ -73,12 +67,8 @@ class OneToOneTransferTest extends FunSuite with MustMatchers with BeforeAndAfte
       .take(2)
   }
 
-
   override protected def afterAll() = {
-    await(sourceBinding.unbind())
-    await(destinationBinding.unbind())
-    sourceAssembly.system.shutdown()
-    destinationAssembly.system.shutdown()
+    runningServers.foreach(_.stop())
     system.shutdown()
   }
 }

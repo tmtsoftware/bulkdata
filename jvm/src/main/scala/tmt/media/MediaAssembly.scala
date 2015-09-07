@@ -19,7 +19,7 @@ class MediaAssembly(name: String) {
 
   lazy val actorConfigs: ActorConfigs = wire[ActorConfigs]
 
-  lazy val appSettings = wire[AppSettings]
+  lazy val appSettings: AppSettings = wire[AppSettings]
 
   lazy val imageReadService       = wire[ImageReadService]
   lazy val movieReadService       = wire[MovieReadService]
@@ -41,4 +41,6 @@ class MediaAssembly(name: String) {
   lazy val routeFactory       = wire[RouteFactory]
   lazy val routeInstances     = wire[RouteInstances]
   lazy val serverFactory     = wire[ServerFactory]
+
+  lazy val binding = appSettings.topology.binding
 }
