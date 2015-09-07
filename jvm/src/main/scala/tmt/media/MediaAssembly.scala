@@ -1,7 +1,5 @@
 package tmt.media
 
-import java.io.File
-
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
@@ -10,10 +8,10 @@ import tmt.media.client._
 import tmt.media.server._
 import tmt.wavefront._
 
-class MediaAssembly(name: String, confName: String = "application.conf") {
+class MediaAssembly(name: String) {
   import com.softwaremill.macwire._
 
-  lazy val config = ConfigFactory.load(confName)
+  lazy val config = ConfigFactory.load(name)
 
   lazy val system = ActorSystem(name, config)
   lazy val ec     = system.dispatcher
