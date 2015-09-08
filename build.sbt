@@ -17,7 +17,8 @@ lazy val dataTransfer = crossProject.in(file("."))
     updateOptions := updateOptions.value.withCachedResolution(true),
     parallelExecution in Test := false,
     libraryDependencies += "me.chrons" %%% "boopickle" % "1.1.0",
-    libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.7"
+    libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.7",
+    libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.3.6"
   )
   .jvmSettings(Revolver.settings: _*)
   .jvmSettings(
