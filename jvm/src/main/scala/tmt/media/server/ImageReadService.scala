@@ -15,7 +15,7 @@ import scala.concurrent.Future
 class ImageReadService(settings: AppSettings) {
   private val parallelism = 1
 
-  private def files = Source(() => Producer.files(settings.framesInputDir))
+  private def files = Source(() => Producer.filesInLoop(settings.framesInputDir))
 
   def sendBytes = files.mapAsync(parallelism)(readFile).map(ByteString.apply)
   def sendImages = files.mapAsync(parallelism)(readImage)
