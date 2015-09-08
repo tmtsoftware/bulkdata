@@ -13,22 +13,35 @@ object WebsocketApp extends JSApp {
 
   @JSExport
   override def main() = {
-    CanvasControls.button.onclick = { e: Event =>
-      val socket = new WebSocket(s"ws://${SharedConfigs.interface}:${SharedConfigs.port}/images/bytes")
-      socket.binaryType = "arraybuffer"
-      ImageRendering.drain(socket)
-    }
+    images()
+    cumulativeMetrics()
+    perSecMetrics()
+  }
 
+  @JSExport
+  def perSecMetrics(): Unit = {
+    PerSecControls.button.onclick = { e: Event =>
+      val socket = new WebSocket(s"ws://${SharedConfigs.interface}:8005/metrics-per-sec")
+      socket.binaryType = "arraybuffer"
+      MetricsRendering.render[PerSecMetric](socket, PerSecControls.span)
+    }
+  }
+
+  @JSExport
+  def cumulativeMetrics(): Unit = {
     CumulativeControls.button.onclick = { e: Event =>
       val socket = new WebSocket(s"ws://${SharedConfigs.interface}:8005/metrics-cumulative")
       socket.binaryType = "arraybuffer"
       MetricsRendering.render[CumulativeMetric](socket, CumulativeControls.span)
     }
+  }
 
-    PerSecControls.button.onclick = { e: Event =>
-      val socket = new WebSocket(s"ws://${SharedConfigs.interface}:8005/metrics-per-sec")
+  @JSExport
+  def images(): Unit = {
+    CanvasControls.button.onclick = { e: Event =>
+      val socket = new WebSocket(s"ws://${SharedConfigs.interface}:${SharedConfigs.port}/images/bytes")
       socket.binaryType = "arraybuffer"
-      MetricsRendering.render[PerSecMetric](socket, PerSecControls.span)
+      ImageRendering.drain(socket)
     }
   }
 }

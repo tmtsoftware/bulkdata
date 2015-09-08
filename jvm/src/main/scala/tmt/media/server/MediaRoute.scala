@@ -20,6 +20,9 @@ class MediaRoute(
     pathSingleSlash {
       getFromResource("web/index.html")
     } ~
+    path("demo") {
+      getFromResource("web/demo.html")
+    } ~
     path("data-transfer-launcher.js") {
       getFromResource("data-transfer-launcher.js")
     } ~
