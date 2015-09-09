@@ -1,14 +1,15 @@
 package tmt.wavefront
 
 import tmt.marshalling.BinaryMarshallers
-import tmt.media.server.ImageReadService
+import tmt.media.server.{MediaRoute, ImageReadService}
 import akka.http.scaladsl.server.Directives._
 
 class RouteInstances(
   routeFactory: RouteFactory,
   imageTransformations: ImageTransformations,
   metricsTransformations: MetricsTransformations,
-  imageReadService: ImageReadService
+  imageReadService: ImageReadService,
+  mediaRoute: MediaRoute
 ) extends BinaryMarshallers {
 
   def find(role: Role) = role match {
@@ -33,6 +34,6 @@ class RouteInstances(
         Routes.MetricsCumulative, metricsTransformations.cumulativeMetrics.map(x => {println(s"55555: serving metric $x"); x})
       ) ~ routeFactory.websocket(
         Routes.MetricsPerSec, metricsTransformations.perSecMetrics.map(x => {println(s"66666: serving metric $x"); x})
-      )
+      ) ~ mediaRoute.route
   }
 }

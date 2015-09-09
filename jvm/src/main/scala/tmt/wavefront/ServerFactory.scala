@@ -11,7 +11,7 @@ class ServerFactory(
   import actorConfigs._
 
   def make() = appSettings.topology.role match {
-    case "media" => mediaServerFactory.make()
+    case "frontend" => mediaServerFactory.make()
     case role    => new Server(appSettings.topology.binding, routeInstances.find(Role.withName(role)), actorConfigs)
   }
 }

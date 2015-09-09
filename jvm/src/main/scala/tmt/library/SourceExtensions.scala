@@ -26,9 +26,9 @@ object SourceExtensions {
 
     def throttle(duration: FiniteDuration) = source.zip(Sources.ticks(duration)).map(_._1)
 
-    def withoutBackPressure = source.buffer(1, OverflowStrategy.dropHead)
-    def hotUnicast(implicit mat: Materializer) = Source(source.withoutBackPressure.runWith(Sink.publisher))
-    def hotMulticast(implicit mat: Materializer) = Source(source.withoutBackPressure.runWith(Sink.fanoutPublisher(2, 2)))
+    def removeBackPressure = source.buffer(1, OverflowStrategy.dropHead)
+    def hotMulticast(implicit mat: Materializer) = Source(source.removeBackPressure.runWith(Sink.fanoutPublisher(2, 2)))
+    def hotUnicast(implicit mat: Materializer) = Source(source.removeBackPressure.runWith(Sink.publisher))
     def multicast(implicit mat: Materializer) = Source(source.runWith(Sink.fanoutPublisher(2, 2)))
   }
 

@@ -15,39 +15,47 @@ class MediaRoute(
   movieWriteService: MovieWriteService
 ) extends BinaryMarshallers with CustomDirectives {
 
-  val route: Route = {
+  val route = staticRoute ~ movieRoute ~ imageRoute
 
+  
+  lazy val staticRoute: Route = {
     pathSingleSlash {
       getFromResource("web/index.html")
     } ~
-    path("demo") {
-      getFromResource("web/demo.html")
-    } ~
-    path("data-transfer-launcher.js") {
-      getFromResource("data-transfer-launcher.js")
-    } ~
-    path("data-transfer-fastopt.js") {
-      getFromResource("data-transfer-fastopt.js")
-    } ~
+      path("demo") {
+        getFromResource("web/demo.html")
+      } ~
+      path("data-transfer-launcher.js") {
+        getFromResource("data-transfer-launcher.js")
+      } ~
+      path("data-transfer-fastopt.js") {
+        getFromResource("data-transfer-fastopt.js")
+      }
+  }
+
+  lazy val movieRoute: Route = {
     path("movies" / "list") {
       get {
         complete(movieReadService.listMovies)
       }
     } ~
-    pathPrefix("movies") {
-      path(Rest) { name =>
-        get {
-          complete(movieReadService.sendMovie(name))
-        } ~
-        post {
-          entity(as[Source[ByteString, Any]]) { byteStrings =>
-            onSuccess(movieWriteService.copyMovie(name, byteStrings)) {
-              complete("copied")
+      pathPrefix("movies") {
+        path(Rest) { name =>
+          get {
+            complete(movieReadService.sendMovie(name))
+          } ~
+            post {
+              entity(as[Source[ByteString, Any]]) { byteStrings =>
+                onSuccess(movieWriteService.copyMovie(name, byteStrings)) {
+                  complete("copied")
+                }
+              }
             }
-          }
         }
       }
-    } ~
+  }
+
+  lazy val imageRoute: Route = {
     path("images" / "bytes") {
       get {
         handleWebsocketMessages(Sink.ignore, imageReadService.sendMessages) ~
