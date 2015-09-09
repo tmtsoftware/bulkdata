@@ -5,6 +5,7 @@ import java.net.InetSocketAddress
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.Uri
 import collection.JavaConverters._
+import scala.util.Try
 
 class AppSettings(actorConfigs: ActorConfigs) {
 
@@ -14,6 +15,8 @@ class AppSettings(actorConfigs: ActorConfigs) {
 
   val config = system.settings.config
   val superPool = Http().superPool[Uri]()
+
+  val maxTransferFiles = Try(config.getInt("max-transfer-files")).getOrElse(Int.MaxValue)
 
   val framesInputDir = config.getString("data-location.frames.input")
   val framesOutputDir = config.getString("data-location.frames.output")

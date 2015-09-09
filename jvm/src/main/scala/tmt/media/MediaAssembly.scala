@@ -2,7 +2,7 @@ package tmt.media
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import tmt.common.{ActorConfigs, AppSettings, ConfigLoader, MediaServerFactory}
+import tmt.common._
 import tmt.media.client._
 import tmt.media.server._
 import tmt.wavefront._
@@ -19,6 +19,8 @@ class MediaAssembly(name: String, env: String = "dev") {
   lazy val actorConfigs: ActorConfigs = wire[ActorConfigs]
 
   lazy val appSettings: AppSettings = wire[AppSettings]
+
+  lazy val producer = wire[Producer]
 
   lazy val imageReadService       = wire[ImageReadService]
   lazy val movieReadService       = wire[MovieReadService]
@@ -41,6 +43,7 @@ class MediaAssembly(name: String, env: String = "dev") {
   lazy val routeFactory           = wire[RouteFactory]
   lazy val routeInstances         = wire[RouteInstances]
   lazy val serverFactory          = wire[ServerFactory]
+
 
   lazy val binding = appSettings.topology.binding
 }

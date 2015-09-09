@@ -4,7 +4,7 @@ import java.net.InetSocketAddress
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import tmt.common.{ActorConfigs, AppSettings, Server}
+import tmt.common.{Producer, ActorConfigs, AppSettings, Server}
 import tmt.library.RequestHandlerExtensions.RichRequestHandler
 
 class BoxAssembly(name: String) {
@@ -15,9 +15,10 @@ class BoxAssembly(name: String) {
   implicit lazy val ec     = system.dispatcher
   implicit lazy val mat    = ActorMaterializer()
 
+  lazy val producer = wire[Producer]
+
   lazy val appSettings = wire[AppSettings]
 
-  
   lazy val handler   : Handler    = wire[Handler]
   lazy val boxService = wire[BoxService]
   lazy val boxRoute = wire[BoxRoute]
