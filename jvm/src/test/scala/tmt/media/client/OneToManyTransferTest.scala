@@ -17,7 +17,7 @@ class OneToManyTransferTest extends FunSuite with MustMatchers with BeforeAndAft
   import testAssembly.actorConfigs._
 
   val roles = Seq("source", "destination1", "destination2")
-  val runningServers = roles.map(new RunningServer(_))
+  val runningServers = roles.map(new RunningServer(_, "dev"))
 
   val Seq(source, destination1, destination2) = runningServers.map(_.assembly.binding)
 
