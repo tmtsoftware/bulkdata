@@ -20,8 +20,11 @@ class MediaRoute(
   
   lazy val staticRoute: Route = {
     pathSingleSlash {
-      getFromResource("web/index.html")
+      getFromResource("web/index-dev.html")
     } ~
+      path("index-prod") {
+        getFromResource("web/index-prod.html")
+      } ~
       path("demo-dev") {
         getFromResource("web/demo-dev.html")
       } ~
