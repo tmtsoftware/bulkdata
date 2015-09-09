@@ -2,6 +2,7 @@ package tmt.library
 
 import akka.stream.scaladsl._
 import akka.stream.{Materializer, OverflowStrategy}
+import org.reactivestreams.Publisher
 import tmt.common.Sources
 import tmt.integration.bridge.Connector
 
@@ -26,10 +27,17 @@ object SourceExtensions {
 
     def throttle(duration: FiniteDuration) = source.zip(Sources.ticks(duration)).map(_._1)
 
-    def removeBackPressure = source.buffer(1, OverflowStrategy.dropHead)
-    def hotMulticast(implicit mat: Materializer) = Source(source.removeBackPressure.runWith(Sink.fanoutPublisher(2, 2)))
-    def hotUnicast(implicit mat: Materializer) = Source(source.removeBackPressure.runWith(Sink.publisher))
     def multicast(implicit mat: Materializer) = Source(source.runWith(Sink.fanoutPublisher(2, 2)))
+
+    def hotUnicast(implicit mat: Materializer) = hot(Sink.publisher)
+    def hotMulticast(implicit mat: Materializer) = hot(Sink.fanoutPublisher(2, 2))
+
+    def hot(sink: Sink[Out, Publisher[Out]])(implicit mat: Materializer) = {
+      val (actorRef, hotSource) = Connector.coupling(sink)
+      source.runForeach(x => actorRef ! x)
+      hotSource
+    }
+
   }
 
   def merge[Out, Mat](sources: Seq[Source[Out, Mat]]) =

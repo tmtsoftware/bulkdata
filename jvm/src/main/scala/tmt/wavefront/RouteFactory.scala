@@ -14,7 +14,7 @@ class RouteFactory(actorConfigs: ActorConfigs) extends CustomDirectives {
   def make[T: Types.Stream](routeName: String, dataSource: Source[T, Any]): Route = {
     val items = dataSource.hotMulticast
     path(routeName) {
-      get(complete(items))
+      get(complete(items.hotUnicast))
     }
   }
 
@@ -22,7 +22,7 @@ class RouteFactory(actorConfigs: ActorConfigs) extends CustomDirectives {
     val items = dataSource.hotMulticast
     val messages = items.map(x => BinaryMessage(BFormat[T].write(x)))
     path(routeName) {
-      handleWebsocketMessages(Sink.ignore, messages)
+      handleWebsocketMessages(Sink.ignore, messages.hotUnicast)
     }
   }
 }
