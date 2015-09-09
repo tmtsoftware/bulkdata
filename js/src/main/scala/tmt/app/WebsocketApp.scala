@@ -21,7 +21,7 @@ object WebsocketApp extends JSApp {
   @JSExport
   def showImages(env: String): Unit = {
     CanvasControls.button.onclick = { e: Event =>
-      val socket = new WebSocket(s"ws://${Hosts.getHost(env, "hosts.image-source")}:8000/images/bytes")
+      val socket = new WebSocket(s"ws://${Hosts.getHost(env, "image-source")}:8000/images/bytes")
       socket.binaryType = "arraybuffer"
       ImageRendering.drain(socket)
     }
@@ -30,7 +30,7 @@ object WebsocketApp extends JSApp {
   @JSExport
   def perSecMetrics(env: String): Unit = {
     PerSecControls.button.onclick = { e: Event =>
-      val socket = new WebSocket(s"ws://${Hosts.getHost(env, "hosts.metrics-agg")}:8005/metrics-per-sec")
+      val socket = new WebSocket(s"ws://${Hosts.getHost(env, "metrics-agg")}:8005/metrics-per-sec")
       socket.binaryType = "arraybuffer"
       MetricsRendering.render[PerSecMetric](socket, PerSecControls.span)
     }
@@ -39,7 +39,7 @@ object WebsocketApp extends JSApp {
   @JSExport
   def cumulativeMetrics(env: String): Unit = {
     CumulativeControls.button.onclick = { e: Event =>
-      val socket = new WebSocket(s"ws://${Hosts.getHost(env, "hosts.metrics-agg")}:8005/metrics-cumulative")
+      val socket = new WebSocket(s"ws://${Hosts.getHost(env, "metrics-agg")}:8005/metrics-cumulative")
       socket.binaryType = "arraybuffer"
       MetricsRendering.render[CumulativeMetric](socket, CumulativeControls.span)
     }
