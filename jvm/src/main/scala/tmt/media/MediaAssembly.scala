@@ -2,18 +2,17 @@ package tmt.media
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import com.typesafe.config.ConfigFactory
-import tmt.common.{ActorConfigs, AppSettings, MediaServerFactory}
+import tmt.common.{ActorConfigs, AppSettings, ConfigLoader, MediaServerFactory}
 import tmt.media.client._
 import tmt.media.server._
 import tmt.wavefront._
 
-class MediaAssembly(name: String) {
+class MediaAssembly(name: String, env: String = "dev") {
   import com.softwaremill.macwire._
 
-  lazy val config = ConfigFactory.load(name)
+  lazy val configLoader = wire[ConfigLoader]
 
-  lazy val system = ActorSystem(name, config)
+  lazy val system = ActorSystem(name, configLoader.load(name, env))
   lazy val ec     = system.dispatcher
   lazy val mat    = ActorMaterializer()(system)
 
