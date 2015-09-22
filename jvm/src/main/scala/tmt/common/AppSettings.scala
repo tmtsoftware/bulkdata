@@ -24,13 +24,14 @@ class AppSettings(actorConfigs: ActorConfigs) {
   val moviesInputDir = config.getString("data-location.movies.input")
   val moviesOutputDir = config.getString("data-location.movies.output")
 
-  object topology {
-    val role = config.getString("topology.role")
-    val sources = {
-      val sourceObjects = config.getConfigList("topology.sources").asScala
-      sourceObjects.map(obj => new InetSocketAddress(obj.getString("interface"), obj.getInt("port")))
-    }
-    val binding = new InetSocketAddress(config.getString("topology.binding.interface"), config.getInt("topology.binding.port"))
+  val imageReadThrottle = config.getDuration("image-read-throttle").toMillis
+
+  val env = config.getString("env")
+
+  object binding {
+    val role = config.getString("binding.role")
+    val hostname = config.getString("binding.hostname")
+    val httpPort = config.getInt("binding.http-port")
+    val httpAddress = new InetSocketAddress(hostname, httpPort)
   }
-  
 }

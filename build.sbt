@@ -1,13 +1,13 @@
 name := "tmt-root"
 
 lazy val root = project.in(file(".")).
-  aggregate(dtJs, dtJvm)
+  aggregate(pubJs, pubsubJvm)
   .settings(
     publish := {},
     publishLocal := {}
   )
 
-lazy val dataTransfer = crossProject.in(file("."))
+lazy val pubsub = crossProject.in(file("."))
   .settings(
     organization := "tmt",
     name := "data-transfer",
@@ -24,7 +24,8 @@ lazy val dataTransfer = crossProject.in(file("."))
   .jvmSettings(
     fork := true,
     libraryDependencies ++= Dependencies.jvmLibs,
-    mainClass in Revolver.reStart := Some("tmt.media.server.MediaServer")
+    mainClass in Revolver.reStart := Some("tmt.wavefront.Main"),
+    Revolver.reStartArgs := Seq("frontend", "dev")
   )
   .jsSettings(
     persistLauncher in Compile := true,
@@ -36,10 +37,10 @@ lazy val dataTransfer = crossProject.in(file("."))
     )
   )
 
-lazy val dtJvm = dataTransfer.jvm.settings(
+lazy val pubsubJvm = pubsub.jvm.settings(
   (resourceGenerators in Compile) <+=
-    (fastOptJS in Compile in dtJs, packageScalaJSLauncher in Compile in dtJs).map((f1, f2) => Seq(f1.data, f2.data)),
-  watchSources <++= (watchSources in dtJs)
+    (fastOptJS in Compile in pubJs, packageScalaJSLauncher in Compile in pubJs).map((f1, f2) => Seq(f1.data, f2.data)),
+  watchSources <++= (watchSources in pubJs)
 )
 
-lazy val dtJs = dataTransfer.js
+lazy val pubJs = pubsub.js

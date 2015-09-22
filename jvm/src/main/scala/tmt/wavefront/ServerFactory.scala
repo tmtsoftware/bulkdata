@@ -1,17 +1,19 @@
 package tmt.wavefront
 
-import tmt.common.{MediaServerFactory, Server, AppSettings, ActorConfigs}
+import tmt.common.{ActorConfigs, AppSettings, Server}
+import tmt.media.server.MediaRoute
 
 class ServerFactory(
   routeInstances: RouteInstances,
   actorConfigs: ActorConfigs,
   appSettings: AppSettings,
-  mediaServerFactory: MediaServerFactory
+  mediaRoute: MediaRoute
 ) {
+
   import actorConfigs._
 
-  def make() = appSettings.topology.role match {
-    case "frontend" => mediaServerFactory.make()
-    case role    => new Server(appSettings.topology.binding, routeInstances.find(Role.withName(role)), actorConfigs)
+  def make() = appSettings.binding.role match {
+    case "frontend" => new Server(appSettings.binding.httpAddress, mediaRoute.route, actorConfigs)
+    case role       => new Server(appSettings.binding.httpAddress, routeInstances.find(Role.withName(role)), actorConfigs)
   }
 }

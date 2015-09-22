@@ -1,18 +1,23 @@
 package tmt.wavefront
 
 import akka.http.scaladsl.model.DateTime
+import akka.stream.scaladsl.Source
 import tmt.common.ActorConfigs
 import tmt.common.models.{Image, ImageMetric}
 import tmt.media.server.ImageWriteService
+import tmt.pubsub.{Subscriber, Publisher}
 
 class ImageTransformations(
-  imageSourceService: ItemSourceService,
   imageWriteService: ImageWriteService,
-  actorConfigs: ActorConfigs) {
+  actorConfigs: ActorConfigs,
+  imageSubscriber: Subscriber[Image]) {
 
   import actorConfigs._
 
-  lazy val images = imageSourceService.getItems[Image](Routes.Images)
+  lazy val images: Source[Image, Unit] = {
+    imageSubscriber.subscribe(Role.ImageSource)
+    imageSubscriber.source
+  }
 
   lazy val filteredImages = images.filter(_.name.contains("9"))
 

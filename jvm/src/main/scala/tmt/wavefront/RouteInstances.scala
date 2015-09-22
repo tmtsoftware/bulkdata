@@ -1,39 +1,32 @@
 package tmt.wavefront
 
-import tmt.marshalling.BinaryMarshallers
-import tmt.media.server.{MediaRoute, ImageReadService}
 import akka.http.scaladsl.server.Directives._
+import akka.util.ByteString
+import tmt.common.ActorConfigs
+import tmt.library.SourceExtensions.RichSource
+import tmt.marshalling.BinaryMarshallers
+import tmt.media.server.{ImageReadService, MediaRoute}
 
 class RouteInstances(
   routeFactory: RouteFactory,
   imageTransformations: ImageTransformations,
   metricsTransformations: MetricsTransformations,
   imageReadService: ImageReadService,
-  mediaRoute: MediaRoute
+  mediaRoute: MediaRoute,
+  actorConfigs: ActorConfigs
 ) extends BinaryMarshallers {
 
+  import actorConfigs._
+
   def find(role: Role) = role match {
-    case Role.ImageSource => routeFactory.make(
-      Routes.Images, imageReadService.sendImages.map(x => {Thread.sleep(1); println(s"11111: serving image ${x.name}"); x})
-    )
-
-    case Role.ImageCopy   => routeFactory.make(
-      Routes.Images, imageTransformations.copiedImages.map(x => {println(s"22222: serving image ${x.name}"); x})
-    )
-
-    case Role.ImageFilter => routeFactory.make(
-      Routes.Images, imageTransformations.filteredImages.map(x => {println(s"33333: serving image ${x.name}"); x})
-    )
-
-    case Role.MetricsPerImage => routeFactory.make(
-      Routes.Metrics, imageTransformations.imageMetrics.map(x => {println(s"44444: serving metric $x"); x})
-    )
-
-    case Role.MetricsAgg =>
-      routeFactory.websocket(
-        Routes.MetricsCumulative, metricsTransformations.cumulativeMetrics.map(x => {println(s"55555: serving metric $x"); x})
-      ) ~ routeFactory.websocket(
-        Routes.MetricsPerSec, metricsTransformations.perSecMetrics.map(x => {println(s"66666: serving metric $x"); x})
-      ) ~ mediaRoute.route
+    case Role.ImageSource     =>
+      val images = imageReadService.sendImages.hotMulticast
+      routeFactory.make(role, images, images.map(x => ByteString(x.bytes)))
+    case Role.ImageCopy       => routeFactory.make(role, imageTransformations.copiedImages)
+    case Role.ImageFilter     => routeFactory.make(role, imageTransformations.filteredImages)
+    case Role.MetricsPerImage => routeFactory.make(role, imageTransformations.imageMetrics)
+    case Role.MetricsAgg      =>
+      routeFactory.make(Role.MetricsCumulative, metricsTransformations.cumulativeMetrics) ~
+        routeFactory.make(Role.MetricsPerSec, metricsTransformations.perSecMetrics)
   }
 }

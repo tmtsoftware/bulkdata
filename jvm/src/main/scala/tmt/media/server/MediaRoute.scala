@@ -6,7 +6,7 @@ import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.common._
 import tmt.common.models.Image
-import tmt.marshalling.{BinaryMarshallers}
+import tmt.marshalling.BinaryMarshallers
 
 class MediaRoute(
   imageReadService: ImageReadService,
