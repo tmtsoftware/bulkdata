@@ -4,9 +4,12 @@ import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
 import play.api.mvc.{Action, Controller}
+import services.ThrottlingService
+
+import scala.concurrent.duration.DurationLong
 
 @Singleton
-class StreamController @Inject()(appSettings: AppSettings) extends Controller {
+class StreamController @Inject()(appSettings: AppSettings, throttlingService: ThrottlingService) extends Controller {
 
   val env = appSettings.env
 
@@ -18,5 +21,10 @@ class StreamController @Inject()(appSettings: AppSettings) extends Controller {
         s"ws://${appSettings.hosts.imageSource}/image-source"
       )
     )
+  }
+
+  def throttle(delay: Long) = Action {
+    throttlingService.throttle(delay.millis)
+    Accepted("ok")
   }
 }

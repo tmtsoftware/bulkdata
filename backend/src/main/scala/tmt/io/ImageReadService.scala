@@ -12,18 +12,17 @@ import tmt.common.models.Image
 import tmt.library.SourceExtensions.RichSource
 
 import scala.concurrent.Future
-import scala.concurrent.duration.DurationLong
 
 class ImageReadService(actorConfigs: ActorConfigs, settings: AppSettings, producer: Producer, throttler: Throttler) {
 
-  val (ticker, source) = throttler.coupling
+  val ticks = throttler.ticks
   
   private val parallelism = 1
 
   private def files = Source(() => producer.files(settings.framesInputDir))
 
   def sendBytes = files.mapAsync(parallelism)(readFile).map(ByteString.apply)
-  def sendImages = files.mapAsync(parallelism)(readImage).throttleBy(source)
+  def sendImages = files.mapAsync(parallelism)(readImage).throttleBy(ticks)
   def sendMessages = files.map(SynchronousFileSource(_)).map(BinaryMessage.apply)
 
   private def readImage(file: File) = readFile(file).map(data => Image(file.getName, data))(actorConfigs.ec)

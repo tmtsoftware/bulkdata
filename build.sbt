@@ -8,7 +8,7 @@ lazy val commonSettings = Seq(
   libraryDependencies += "me.chrons" %%% "boopickle" % "1.1.0",
   libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.7",
   libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.3.6"
-)
+) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
 lazy val backend = project.in(file("backend"))
   .dependsOn(sharedJvm)
@@ -31,7 +31,9 @@ lazy val frontend = project.in(file("frontend"))
     pipelineStages := Seq(scalaJSProd, gzip),
     libraryDependencies ++= Seq(
       "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
-      "org.webjars" % "jquery" % "1.11.1"
+      "org.webjars" % "jquery" % "1.11.1",
+      "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.0-RC2",
+      "com.typesafe.akka" % "akka-slf4j_2.11" % "2.4.0-RC2"
     )
   )
 

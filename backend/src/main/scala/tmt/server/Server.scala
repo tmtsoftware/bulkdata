@@ -25,7 +25,7 @@ class Server(address: InetSocketAddress, connectionFlow: Types.ConnectionFlow, a
 
     binding.onComplete {
       case Success(b) => println(s"Server started, listening on: ${b.localAddress}")
-      case Failure(e) => println(s"Server could not bind to $address due to: ${e.getMessage}"); system.shutdown()
+      case Failure(e) => println(s"Server could not bind to $address due to: ${e.getMessage}"); system.terminate()
     }
 
     binding
