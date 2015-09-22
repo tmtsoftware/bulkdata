@@ -1,46 +1,60 @@
-name := "tmt-root"
+lazy val clients = Seq(client)
+lazy val scalaV = "2.11.7"
 
-lazy val root = project.in(file(".")).
-  aggregate(pubJs, pubsubJvm)
-  .settings(
-    publish := {},
-    publishLocal := {}
-  )
+lazy val commonSettings = Seq(
+  scalaVersion := scalaV,
+  transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
+  updateOptions := updateOptions.value.withCachedResolution(true),
+  libraryDependencies += "me.chrons" %%% "boopickle" % "1.1.0",
+  libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.7",
+  libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.3.6"
+)
 
-lazy val pubsub = crossProject.in(file("."))
+lazy val backend = project.in(file("backend"))
+  .dependsOn(sharedJvm)
+  .settings(commonSettings: _*)
   .settings(
-    organization := "tmt",
-    name := "data-transfer",
-    scalaVersion := "2.11.7",
-    version := "0.1-SNAPSHOT",
-    transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
-    updateOptions := updateOptions.value.withCachedResolution(true),
-    parallelExecution in Test := false,
-    libraryDependencies += "me.chrons" %%% "boopickle" % "1.1.0",
-    libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.7",
-    libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.3.6"
-  )
-  .jvmSettings(Revolver.settings: _*)
-  .jvmSettings(
     fork := true,
-    libraryDependencies ++= Dependencies.jvmLibs,
-    mainClass in Revolver.reStart := Some("tmt.wavefront.Main"),
-    Revolver.reStartArgs := Seq("frontend", "dev")
+    libraryDependencies ++= Dependencies.jvmLibs
   )
-  .jsSettings(
-    persistLauncher in Compile := true,
-    persistLauncher in Test := false,
-    scalaJSStage in Global := FastOptStage,
+
+lazy val aggProjects = (clients :+ backend).map(Project.projectToRef)
+
+lazy val frontend = project.in(file("frontend"))
+  .enablePlugins(PlayScala)
+  .dependsOn(sharedJvm)
+  .aggregate(aggProjects: _*)
+  .settings(commonSettings: _*)
+  .settings(
+    routesGenerator := InjectedRoutesGenerator,
+    scalaJSProjects := clients,
+    pipelineStages := Seq(scalaJSProd, gzip),
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "0.8.1",
+      "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
+      "org.webjars" % "jquery" % "1.11.1"
+    )
+  )
+
+lazy val client = project.in(file("client"))
+  .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
+  .dependsOn(sharedJs)
+  .settings(commonSettings: _*)
+  .settings(
+    persistLauncher := true,
+    persistLauncher in Test := false,
+    libraryDependencies ++= Seq(
+      "org.scala-js" %%% "scalajs-dom" % "0.8.0",
       "org.monifu" %%% "monifu" % "1.0-M11"
     )
   )
 
-lazy val pubsubJvm = pubsub.jvm.settings(
-  (resourceGenerators in Compile) <+=
-    (fastOptJS in Compile in pubJs, packageScalaJSLauncher in Compile in pubJs).map((f1, f2) => Seq(f1.data, f2.data)),
-  watchSources <++= (watchSources in pubJs)
-)
+lazy val shared = crossProject.crossType(CrossType.Pure)
+  .in(file("shared"))
+  .jsConfigure(_ enablePlugins ScalaJSPlay)
+  .settings(commonSettings: _*)
 
-lazy val pubJs = pubsub.js
+lazy val sharedJvm = shared.jvm
+lazy val sharedJs = shared.js
+
+// loads the Play project at sbt startup
+onLoad in Global := (Command.process("project frontend", _: State)) compose (onLoad in Global).value

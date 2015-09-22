@@ -1,23 +1,32 @@
-.DS_Store
+logs
+project/project
 project/target
-/project/boot
-/project/plugins/project
-dist
 target
-lib_managed/
-src_managed/
-test-output/
+tmp
+.history
+dist
 .idea
+*.iml
+/out
 .idea_modules
 .classpath
 .project
-.cache
+/RUNNING_PID
 .settings
-*.log
-_site
-*.iml
-/.sass-cache/
-bin
+.DS_Store
+
+# hidden cross project folders
+shared/.js
+shared/.jvm
+
+# temp files
+.~*
+*~
+*.orig
+
+# eclipse
+.scala_dependencies
+.buildpath
+.cache
 .target
-conf/secret.conf
-data
+bin/
