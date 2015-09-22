@@ -4,6 +4,7 @@ import java.net.InetSocketAddress
 
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.Uri
+import scala.concurrent.duration.DurationLong
 import scala.util.Try
 
 class AppSettings(actorConfigs: ActorConfigs) {
@@ -23,7 +24,7 @@ class AppSettings(actorConfigs: ActorConfigs) {
   val moviesInputDir = config.getString("data-location.movies.input")
   val moviesOutputDir = config.getString("data-location.movies.output")
 
-  val imageReadThrottle = config.getDuration("image-read-throttle").toMillis
+  val imageReadThrottle = config.getDuration("image-read-throttle").toMillis.millis
 
   val env = config.getString("env")
 

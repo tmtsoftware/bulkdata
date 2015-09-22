@@ -4,7 +4,7 @@ import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Publish, Subscribe, Unsubscribe}
 import akka.stream.scaladsl.{Sink, Source}
 import tmt.app.ActorConfigs
-import tmt.integration.bridge.Connector
+import tmt.library.Connector
 
 class Publisher(actorConfigs: ActorConfigs) {
   import actorConfigs._

@@ -43,5 +43,7 @@ class MediaAssembly(name: String, env: String = "dev") {
   lazy val routeInstances         = wire[RouteInstances]
   lazy val serverFactory          = wire[ServerFactory]
 
+  lazy val throttler = wire[Throttler]
+
   lazy val binding = appSettings.binding.httpAddress
 }

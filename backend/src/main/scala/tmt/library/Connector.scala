@@ -1,4 +1,4 @@
-package tmt.integration.bridge
+package tmt.library
 
 import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.stream.{Materializer, OverflowStrategy}

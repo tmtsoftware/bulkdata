@@ -3,7 +3,6 @@ package tmt.library
 import akka.stream.Materializer
 import akka.stream.scaladsl._
 import org.reactivestreams.Publisher
-import tmt.integration.bridge.Connector
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -24,7 +23,8 @@ object SourceExtensions {
 
     def zipWithIndex = zip(Source(() => Iterator.from(0)))
 
-    def throttle(duration: FiniteDuration) = source.zip(Sources.ticks(duration)).map(_._1)
+    def throttle(duration: FiniteDuration) = throttleBy(Sources.ticks(duration))
+    def throttleBy[Out2, Mat2](other: Source[Out2, Mat2]) = source.zip(other).map(_._1)
 
     def multicast(implicit mat: Materializer) = Source(source.runWith(Sink.fanoutPublisher(2, 2)))
 
