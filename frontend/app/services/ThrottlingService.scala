@@ -11,7 +11,7 @@ import scala.concurrent.duration.FiniteDuration
 @Singleton
 class ThrottlingService @Inject()(system: ActorSystem) {
   private val client = system.actorOf(ClusterClient.props(ClusterClientSettings(system)))
-  def throttle(delay: FiniteDuration) = {
-    client ! ClusterClient.Publish("image-source-throttle", Throttle.UpdateDelay(delay))
+  def throttle(topic: String, delay: FiniteDuration) = {
+    client ! ClusterClient.Publish(topic, Throttle.UpdateDelay(delay))
   }
 }

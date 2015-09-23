@@ -23,8 +23,8 @@ class StreamController @Inject()(appSettings: AppSettings, throttlingService: Th
     )
   }
 
-  def throttle(delay: Long) = Action {
-    throttlingService.throttle(delay.millis)
+  def throttle(topic: String, delay: Long) = Action {
+    throttlingService.throttle(s"throttle-$topic", delay.millis)
     Accepted("ok")
   }
 }

@@ -15,7 +15,7 @@ import scala.concurrent.Future
 
 class ImageReadService(actorConfigs: ActorConfigs, settings: AppSettings, producer: Producer, throttler: Throttler) {
 
-  val ticks = throttler.ticks
+  val ticks = throttler.ticks("throttle-image-source")
   
   private val parallelism = 1
 
@@ -30,4 +30,3 @@ class ImageReadService(actorConfigs: ActorConfigs, settings: AppSettings, produc
     Files.readAllBytes(file.toPath)
   }(settings.fileIoDispatcher)
 }
-
