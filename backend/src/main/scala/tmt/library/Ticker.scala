@@ -10,8 +10,7 @@ class Ticker(initialDelay: FiniteDuration, actorRef: ActorRef) extends Actor {
 
   val scheduler = context.system.scheduler
 
-  def startNewSchedule(delay: FiniteDuration) =
-    scheduler.schedule(delay, delay, actorRef, Ticker.Tick())
+  def startNewSchedule(delay: FiniteDuration) = scheduler.schedule(delay, delay, actorRef, Ticker.Tick)
 
   var currentSchedule = startNewSchedule(initialDelay)
 
@@ -24,7 +23,8 @@ class Ticker(initialDelay: FiniteDuration, actorRef: ActorRef) extends Actor {
 }
 
 object Ticker {
-  case class Tick()
+  trait Tick
+  case object Tick extends Tick
 
   def props(initialDelay: FiniteDuration, actorRef: ActorRef) = Props(new Ticker(initialDelay, actorRef))
 }
