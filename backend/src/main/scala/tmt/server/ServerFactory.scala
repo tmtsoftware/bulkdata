@@ -1,6 +1,6 @@
 package tmt.server
 
-import library.Role
+import tmt.library.Role
 import tmt.app.{ActorConfigs, AppSettings}
 
 class ServerFactory(

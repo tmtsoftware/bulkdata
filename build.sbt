@@ -23,7 +23,7 @@ lazy val backend = project.in(file("backend"))
   .settings(commonSettings: _*)
   .settings(
     fork := true,
-    libraryDependencies ++= Dependencies.jvmLibs
+    libraryDependencies ++= Dependencies.backendLibs
   )
 
 lazy val aggProjects = (clients :+ backend :+ common).map(Project.projectToRef)

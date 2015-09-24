@@ -1,7 +1,7 @@
 package tmt.transformations
 
 import akka.stream.scaladsl.Source
-import library.Role
+import tmt.library.Role
 import tmt.common.models.{CumulativeMetric, ImageMetric, PerSecMetric}
 import tmt.server.Subscriber
 
