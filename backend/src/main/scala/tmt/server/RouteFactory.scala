@@ -13,8 +13,10 @@ class RouteFactory(actorConfigs: ActorConfigs, publisher: Publisher, appSettings
 
   import actorConfigs._
 
-  def make[T: Types.Stream: BFormat](topic: String, dataSource: Source[T, Any]): Route =
-    make(topic, dataSource, dataSource)
+  def make[T: Types.Stream: BFormat](topic: String, dataSource: Source[T, Any]): Route = {
+    val multicast = dataSource.hotMulticast
+    make(topic, multicast, multicast)
+  }
 
   def make[T: Types.Stream, S: BFormat](topic: String, dataSource: Source[T, Any], socketSource: Source[S, Any]): Route = {
     publisher.publish(topic, dataSource)

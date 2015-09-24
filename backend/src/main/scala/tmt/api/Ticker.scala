@@ -1,22 +1,16 @@
 package tmt.api
 
 import akka.actor.{Actor, ActorRef, Props}
-import akka.cluster.client.ClusterClientReceptionist
-import akka.stream.scaladsl.Sink
 import tmt.app.{ActorConfigs, AppSettings}
 import tmt.common.models.Messages
-import tmt.library.Connector
 
 import scala.concurrent.duration.FiniteDuration
 
-class TickerService(appSettings: AppSettings, actorConfigs: ActorConfigs) {
+class TickerService(
+  appSettings: AppSettings, actorConfigs: ActorConfigs
+) extends ClusterReceptionistService[Ticker.Tick]("throttle", actorConfigs) {
   import actorConfigs._
-
-  val (actorRef, source) = Connector.coupling[Ticker.Tick](Sink.publisher)
-  val ticker = system.actorOf(Ticker.props(appSettings.bindingName, appSettings.imageReadThrottle, actorRef))
-  ClusterClientReceptionist(system).registerSubscriber("throttle", ticker)
-
-  def ticks = source
+  def wrap(ref: ActorRef) = system.actorOf(Ticker.props(appSettings.bindingName, appSettings.imageReadThrottle, ref))
 }
 
 class Ticker(serverName: String, initialDelay: FiniteDuration, actorRef: ActorRef) extends Actor {

@@ -21,7 +21,7 @@ class StreamController @Inject()(
       views.html.streams(
         s"ws://${appSettings.hosts.accumulator1}/accumulator1",
         s"ws://${appSettings.hosts.frequency1}/frequency1",
-        s"ws://${appSettings.hosts.camera1}/source1"
+        s"ws://${appSettings.hosts.camera1}/camera1"
       )
     )
   }

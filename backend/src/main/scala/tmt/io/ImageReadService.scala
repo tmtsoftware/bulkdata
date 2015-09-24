@@ -16,7 +16,7 @@ import scala.concurrent.Future
 
 class ImageReadService(actorConfigs: ActorConfigs, settings: AppSettings, producer: Producer, tickerService: TickerService) {
 
-  val ticks = tickerService.ticks
+  val ticks = tickerService.source
   
   private val parallelism = 1
 
