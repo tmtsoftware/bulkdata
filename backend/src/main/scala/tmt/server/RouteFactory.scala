@@ -13,13 +13,13 @@ class RouteFactory(actorConfigs: ActorConfigs, publisher: Publisher, appSettings
 
   import actorConfigs._
 
-  def make[T: Types.Stream: BFormat](role: Role, dataSource: Source[T, Any]): Route =
-    make(role, dataSource, dataSource)
+  def make[T: Types.Stream: BFormat](topic: String, dataSource: Source[T, Any]): Route =
+    make(topic, dataSource, dataSource)
 
-  def make[T: Types.Stream, S: BFormat](role: Role, dataSource: Source[T, Any], socketSource: Source[S, Any]): Route = {
-    publisher.publish(role, dataSource)
+  def make[T: Types.Stream, S: BFormat](topic: String, dataSource: Source[T, Any], socketSource: Source[S, Any]): Route = {
+    publisher.publish(topic, dataSource)
     def messages = socketSource.map(x => BinaryMessage(BFormat[S].write(x))).hotMulticast
-    path(role.entryName) {
+    path(topic) {
       get {
         handleWebsocketMessages(Sink.ignore, messages) ~ complete(dataSource)
       }

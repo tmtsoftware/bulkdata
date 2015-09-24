@@ -2,23 +2,19 @@ package tmt.transformations
 
 import akka.http.scaladsl.model.DateTime
 import akka.stream.scaladsl.Source
-import tmt.library.Role
+import tmt.api.SubscriptionService
 import tmt.app.ActorConfigs
 import tmt.common.models.{Image, ImageMetric}
 import tmt.io.ImageWriteService
-import tmt.server.Subscriber
 
 class ImageTransformations(
   imageWriteService: ImageWriteService,
   actorConfigs: ActorConfigs,
-  imageSubscriber: Subscriber[Image]) {
+  imageSubscriber: SubscriptionService[Image]) {
 
   import actorConfigs._
 
-  lazy val images: Source[Image, Unit] = {
-    imageSubscriber.subscribe(Role.Source)
-    imageSubscriber.source
-  }
+  lazy val images: Source[Image, Unit] = imageSubscriber.source
 
   lazy val filteredImages = images.filter(_.name.contains("9"))
 

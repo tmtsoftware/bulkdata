@@ -34,4 +34,6 @@ class AppSettings(actorConfigs: ActorConfigs) {
     val httpPort = config.getInt("binding.http-port")
     val httpAddress = new InetSocketAddress(hostname, httpPort)
   }
+
+  val bindingName = config.getString("binding-name")
 }

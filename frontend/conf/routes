@@ -1,5 +1,7 @@
-GET         /                       controllers.StreamController.streams()
-POST        /throttle/:topic/:delay        controllers.StreamController.throttle(topic, delay: Long)
+GET         /                                  controllers.StreamController.streams()
+POST        /:server/throttle/:delay           controllers.StreamController.throttle(server, delay: Long)
+POST        /:server/subscribe/:topic          controllers.StreamController.subscribe(server, topic)
+POST        /:server/unsubscribe/:topic        controllers.StreamController.unsubscribe(server, topic)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file           controllers.Assets.at(path="/public", file)
+GET         /assets/*file                      controllers.Assets.at(path="/public", file)

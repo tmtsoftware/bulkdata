@@ -2,6 +2,7 @@ package tmt.app
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
+import tmt.api.{SubscriptionService, TickerService}
 import tmt.common.models.{Image, ImageMetric}
 import tmt.io._
 import tmt.clients._
@@ -35,15 +36,15 @@ class MediaAssembly(name: String, env: String = "dev") {
   lazy val oneToManyTransferFactory = wire[OneToManyTransferFactory]
 
   lazy val publisher              = wire[Publisher]
-  lazy val imageSubscriber        = wire[Subscriber[Image]]
-  lazy val metricSubscriber       = wire[Subscriber[ImageMetric]]
+  lazy val imageSubscriber        = wire[SubscriptionService[Image]]
+  lazy val metricSubscriber       = wire[SubscriptionService[ImageMetric]]
   lazy val imageTransformations   = wire[ImageTransformations]
   lazy val metricsTransformations = wire[MetricsTransformations]
   lazy val routeFactory           = wire[RouteFactory]
   lazy val routeInstances         = wire[RouteInstances]
   lazy val serverFactory          = wire[ServerFactory]
 
-  lazy val throttler = wire[Throttler]
+  lazy val tickerService = wire[TickerService]
 
   lazy val binding = appSettings.binding.httpAddress
 }

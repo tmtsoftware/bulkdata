@@ -7,15 +7,16 @@ import akka.http.scaladsl.model.ws.BinaryMessage
 import akka.stream.io.SynchronousFileSource
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
+import tmt.api.TickerService
 import tmt.app.{ActorConfigs, AppSettings}
 import tmt.common.models.Image
 import tmt.library.SourceExtensions.RichSource
 
 import scala.concurrent.Future
 
-class ImageReadService(actorConfigs: ActorConfigs, settings: AppSettings, producer: Producer, throttler: Throttler) {
+class ImageReadService(actorConfigs: ActorConfigs, settings: AppSettings, producer: Producer, tickerService: TickerService) {
 
-  val ticks = throttler.ticks("throttle-image-source")
+  val ticks = tickerService.ticks
   
   private val parallelism = 1
 
