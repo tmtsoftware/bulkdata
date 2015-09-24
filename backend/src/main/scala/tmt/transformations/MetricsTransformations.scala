@@ -1,8 +1,9 @@
 package tmt.transformations
 
 import akka.stream.scaladsl.Source
+import library.Role
 import tmt.common.models.{CumulativeMetric, ImageMetric, PerSecMetric}
-import tmt.server.{Role, Subscriber}
+import tmt.server.Subscriber
 
 import scala.concurrent.duration.DurationInt
 

@@ -3,6 +3,7 @@ package tmt.server
 import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Publish, Subscribe, Unsubscribe}
 import akka.stream.scaladsl.{Sink, Source}
+import library.Role
 import tmt.app.ActorConfigs
 import tmt.library.Connector
 

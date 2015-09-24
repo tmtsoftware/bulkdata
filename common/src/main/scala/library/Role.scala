@@ -1,4 +1,4 @@
-package tmt.server
+package library
 
 import enumeratum.{Enum, EnumEntry}
 

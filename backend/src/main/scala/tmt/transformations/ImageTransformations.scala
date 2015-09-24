@@ -2,10 +2,11 @@ package tmt.transformations
 
 import akka.http.scaladsl.model.DateTime
 import akka.stream.scaladsl.Source
+import library.Role
 import tmt.app.ActorConfigs
 import tmt.common.models.{Image, ImageMetric}
 import tmt.io.ImageWriteService
-import tmt.server.{Role, Subscriber}
+import tmt.server.Subscriber
 
 class ImageTransformations(
   imageWriteService: ImageWriteService,

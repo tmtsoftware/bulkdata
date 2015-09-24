@@ -1,6 +1,7 @@
 package tmt.server
 
 import akka.util.ByteString
+import library.Role
 import tmt.app.ActorConfigs
 import tmt.io.ImageReadService
 import tmt.library.SourceExtensions.RichSource

@@ -4,6 +4,7 @@ import akka.http.scaladsl.model.ws.BinaryMessage
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.stream.scaladsl.{Sink, Source}
+import library.Role
 import tmt.app.{ActorConfigs, AppSettings, CustomDirectives, Types}
 import tmt.library.SourceExtensions.RichSource
 import tmt.marshalling.BFormat

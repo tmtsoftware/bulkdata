@@ -10,19 +10,27 @@ lazy val commonSettings = Seq(
   libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.3.6"
 ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
-lazy val backend = project.in(file("backend"))
+lazy val common = project.in(file("common"))
   .dependsOn(sharedJvm)
+  .settings(commonSettings: _*)
+  .settings(
+    fork := true,
+    libraryDependencies += "com.beachape" %% "enumeratum" % "1.3.1"
+  )
+
+lazy val backend = project.in(file("backend"))
+  .dependsOn(common)
   .settings(commonSettings: _*)
   .settings(
     fork := true,
     libraryDependencies ++= Dependencies.jvmLibs
   )
 
-lazy val aggProjects = (clients :+ backend).map(Project.projectToRef)
+lazy val aggProjects = (clients :+ backend :+ common).map(Project.projectToRef)
 
 lazy val frontend = project.in(file("frontend"))
   .enablePlugins(PlayScala)
-  .dependsOn(sharedJvm)
+  .dependsOn(common)
   .aggregate(aggProjects: _*)
   .settings(commonSettings: _*)
   .settings(
