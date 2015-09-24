@@ -29,7 +29,7 @@ class AppSettings(actorConfigs: ActorConfigs) {
   val env = config.getString("env")
 
   object binding {
-    val role = config.getString("binding.role")
+    val role = config.getString("binding.role.name")
     val hostname = config.getString("binding.hostname")
     val httpPort = config.getInt("binding.http-port")
     val httpAddress = new InetSocketAddress(hostname, httpPort)

@@ -12,7 +12,7 @@ class Publisher(actorConfigs: ActorConfigs) {
   private val mediator = DistributedPubSub(system).mediator
 
   def publish(role: Role, xs: Source[Any, Any]) = xs.runForeach { x =>
-    if(role != Role.MetricsCumulative) {
+    if(role != Role.Accumulator) {
       println(s"publishing: $role: $x")
     }
     mediator ! Publish(role.entryName, x)

@@ -12,8 +12,11 @@ class AppSettings @Inject()(configuration: Configuration) {
   val env = config.getString("env")
 
   object hosts {
-    val frontend = config.getString("hosts.frontend")
-    val imageSource = config.getString("hosts.image-source")
-    val metricsAgg = config.getString("hosts.metrics-agg")
+    val camera1 = config.getString("hosts.camera1")
+    val camera2 = config.getString("hosts.camera2")
+    val accumulator1 = config.getString("hosts.accumulator1")
+    val accumulator2 = config.getString("hosts.accumulator2")
+    val frequency1 = config.getString("hosts.frequency1")
+    val frequency2 = config.getString("hosts.frequency2")
   }
 }

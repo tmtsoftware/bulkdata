@@ -8,7 +8,7 @@ import scala.concurrent.duration.DurationInt
 
 class MetricsTransformations(metricSubscriber: Subscriber[ImageMetric]) {
   lazy val imageMetrics: Source[ImageMetric, Unit] = {
-    metricSubscriber.subscribe(Role.MetricsPerImage)
+    metricSubscriber.subscribe(Role.Metric)
     metricSubscriber.source
   }
   lazy val cumulativeMetrics = imageMetrics.scan(CumulativeMetric("", 0, 0, 0, 0))(_ + _)

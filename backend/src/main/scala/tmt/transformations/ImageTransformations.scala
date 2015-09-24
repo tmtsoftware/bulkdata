@@ -15,7 +15,7 @@ class ImageTransformations(
   import actorConfigs._
 
   lazy val images: Source[Image, Unit] = {
-    imageSubscriber.subscribe(Role.ImageSource)
+    imageSubscriber.subscribe(Role.Source)
     imageSubscriber.source
   }
 
