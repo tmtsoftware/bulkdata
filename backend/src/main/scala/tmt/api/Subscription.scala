@@ -4,11 +4,12 @@ import akka.actor.{Actor, ActorRef, Props}
 import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Subscribe, Unsubscribe}
 import tmt.app.{ActorConfigs, AppSettings}
+import tmt.common.Topics
 import tmt.common.models.Messages
 
 class SubscriptionService[T](
   appSettings: AppSettings, actorConfigs: ActorConfigs
-) extends ClusterReceptionistService[T]("subscribe", actorConfigs) {
+) extends ClusterReceptionistService[T](Topics.Subscription, actorConfigs) {
   import actorConfigs._
   def wrap(ref: ActorRef) = system.actorOf(Subscription.props(appSettings.bindingName, ref))
 }

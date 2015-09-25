@@ -2,13 +2,14 @@ package tmt.api
 
 import akka.actor.{Actor, ActorRef, Props}
 import tmt.app.{ActorConfigs, AppSettings}
+import tmt.common.Topics
 import tmt.common.models.Messages
 
 import scala.concurrent.duration.FiniteDuration
 
 class TickerService(
   appSettings: AppSettings, actorConfigs: ActorConfigs
-) extends ClusterReceptionistService[Ticker.Tick]("throttle", actorConfigs) {
+) extends ClusterReceptionistService[Ticker.Tick](Topics.Throttle, actorConfigs) {
   import actorConfigs._
   def wrap(ref: ActorRef) = system.actorOf(Ticker.props(appSettings.bindingName, appSettings.imageReadThrottle, ref))
 }

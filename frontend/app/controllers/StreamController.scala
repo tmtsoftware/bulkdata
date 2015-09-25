@@ -9,21 +9,21 @@ import services.ClusterClientService
 import scala.concurrent.duration.DurationLong
 
 @Singleton
-class StreamController @Inject()(
-  appSettings: AppSettings,
-  clusterClientService: ClusterClientService
-) extends Controller {
-
-  val env = appSettings.env
+class StreamController @Inject()(appSettings: AppSettings, clusterClientService: ClusterClientService) extends Controller {
 
   def streams() = Action {
     Ok(
       views.html.streams(
-        s"ws://${appSettings.hosts.accumulator1}/accumulator1",
-        s"ws://${appSettings.hosts.frequency1}/frequency1",
-        s"ws://${appSettings.hosts.camera1}/camera1"
+        makeUrl("accumulator1"),
+        makeUrl("frequency1"),
+        makeUrl("camera1")
       )
     )
+  }
+
+  private def makeUrl(topic: String) = {
+    val host = appSettings.hosts.getString(topic)
+    s"ws://$host/$topic"
   }
 
   def throttle(serverName: String, delay: Long) = Action {
