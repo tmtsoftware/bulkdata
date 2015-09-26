@@ -11,7 +11,7 @@ class TickerService(
   appSettings: AppSettings, actorConfigs: ActorConfigs
 ) extends ClusterReceptionistService[Ticker.Tick](Topics.Throttle, actorConfigs) {
   import actorConfigs._
-  def wrap(ref: ActorRef) = system.actorOf(Ticker.props(appSettings.bindingName, appSettings.imageReadThrottle, ref))
+  def wrap(ref: ActorRef) = system.actorOf(Ticker.props(appSettings.binding.name, appSettings.imageReadThrottle, ref))
 }
 
 class Ticker(serverName: String, initialDelay: FiniteDuration, actorRef: ActorRef) extends Actor {

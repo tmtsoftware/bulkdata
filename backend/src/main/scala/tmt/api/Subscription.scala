@@ -11,7 +11,7 @@ class SubscriptionService[T](
   appSettings: AppSettings, actorConfigs: ActorConfigs
 ) extends ClusterReceptionistService[T](Topics.Subscription, actorConfigs) {
   import actorConfigs._
-  def wrap(ref: ActorRef) = system.actorOf(Subscription.props(appSettings.bindingName, ref))
+  def wrap(ref: ActorRef) = system.actorOf(Subscription.props(appSettings.binding.name, ref))
 }
 
 class Subscription(serverName: String, actorRef: ActorRef) extends Actor {

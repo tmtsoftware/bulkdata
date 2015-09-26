@@ -19,7 +19,7 @@ class RouteInstances(
 
   import actorConfigs._
 
-  val serverName = appSettings.bindingName
+  val serverName = appSettings.binding.name
 
   def find(role: Role) = role match {
     case Role.Source      =>

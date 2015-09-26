@@ -7,10 +7,12 @@ class ConfigLoader {
 
   def load(name: String, env: String) = {
     val config = parse(env)
-    config
-      .withFallback(config.getConfig(name))
-      .withFallback(ConfigValueFactory.fromMap(Map("binding-name" -> name).asJava))
-      .resolve()
+    val binding = Map(
+      "binding" -> config.getObject(s"bindings.$name"),
+      "binding-name" -> name
+    )
+    val bindingConfig = ConfigValueFactory.fromMap(binding.asJava)
+    config.withFallback(bindingConfig).resolve()
   }
 
   def parse(name: String) = ConfigFactory.load(
