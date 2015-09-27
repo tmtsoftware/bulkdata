@@ -1,4 +1,7 @@
 GET         /                                  controllers.StreamController.streams()
+
+GET         /:role/servers                     controllers.StreamController.servers(role)
+
 POST        /:server/throttle/:delay           controllers.StreamController.throttle(server, delay: Long)
 POST        /:server/subscribe/:topic          controllers.StreamController.subscribe(server, topic)
 POST        /:server/unsubscribe/:topic        controllers.StreamController.unsubscribe(server, topic)

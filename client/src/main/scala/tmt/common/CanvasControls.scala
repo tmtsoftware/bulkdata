@@ -1,12 +1,12 @@
 package tmt.common
 
-import org.scalajs.dom.html.{Span, Button, Canvas}
+import org.scalajs.dom.html.{Select, Span, Button, Canvas}
 import org.scalajs.dom.{CanvasRenderingContext2D, URL, document}
 
 import scala.scalajs.js
 
 object CanvasControls {
-  val button = document.getElementById("show-images").asInstanceOf[Button]
+  val select = document.getElementById("source-selection").asInstanceOf[Select]
   val canvas = document.getElementById("canvas").asInstanceOf[Canvas]
 
   canvas.width = SharedConfigs.imageWidth
@@ -16,12 +16,7 @@ object CanvasControls {
   val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
 }
 
-object CumulativeControls {
-  val button = document.getElementById("show-cumulative").asInstanceOf[Button]
-  val span = document.getElementById("cumulative").asInstanceOf[Span]
-}
-
 object PerSecControls {
-  val button = document.getElementById("show-per-sec").asInstanceOf[Button]
+  val select = document.getElementById("frequency-selection").asInstanceOf[Select]
   val span = document.getElementById("per-sec").asInstanceOf[Span]
 }

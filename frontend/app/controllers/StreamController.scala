@@ -3,20 +3,24 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
+import library.GenericExtensions.RichGeneric
+import models.{RoleMappings, HostMappings}
 import play.api.mvc.{Action, Controller}
 import services.ClusterClientService
 
 import scala.concurrent.duration.DurationLong
 
 @Singleton
-class StreamController @Inject()(appSettings: AppSettings, clusterClientService: ClusterClientService) extends Controller {
+class StreamController @Inject()(
+  appSettings: AppSettings,
+  clusterClientService: ClusterClientService
+) extends Controller {
 
   def streams() = Action {
     Ok(
       views.html.streams(
-        makeUrl("accumulator1"),
-        makeUrl("frequency1"),
-        makeUrl("camera1")
+        HostMappings(appSettings.hosts),
+        roleMappings
       )
     )
   }
@@ -39,5 +43,11 @@ class StreamController @Inject()(appSettings: AppSettings, clusterClientService:
   def unsubscribe(serverName: String, topic: String) = Action {
     clusterClientService.unsubscribe(serverName, topic)
     Accepted("ok")
+  }
+
+  private val roleMappings = RoleMappings(appSettings.bindings)
+
+  def servers(role: String) = Action {
+    Ok(roleMappings.getServers(role).toJson)
   }
 }
