@@ -16,18 +16,11 @@ class StreamController @Inject()(
   clusterClientService: ClusterClientService
 ) extends Controller {
 
-  def streams() = Action {
-    Ok(
-      views.html.streams(
-        HostMappings(appSettings.hosts),
-        roleMappings
-      )
-    )
-  }
+  private val roleMappings = RoleMappings(appSettings.bindings)
+  private val hostMappings = HostMappings(appSettings.hosts)
 
-  private def makeUrl(topic: String) = {
-    val host = appSettings.hosts.getString(topic)
-    s"ws://$host/$topic"
+  def streams() = Action {
+    Ok(views.html.streams(hostMappings, roleMappings))
   }
 
   def throttle(serverName: String, delay: Long) = Action {
@@ -43,11 +36,5 @@ class StreamController @Inject()(
   def unsubscribe(serverName: String, topic: String) = Action {
     clusterClientService.unsubscribe(serverName, topic)
     Accepted("ok")
-  }
-
-  private val roleMappings = RoleMappings(appSettings.bindings)
-
-  def servers(role: String) = Action {
-    Ok(roleMappings.getServers(role).toJson)
   }
 }

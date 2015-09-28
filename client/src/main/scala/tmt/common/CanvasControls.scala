@@ -23,6 +23,6 @@ object PerSecControls {
 
 object ImageRateControls {
   val button = document.getElementById("change-rate").asInstanceOf[Button]
-  val serverName = document.getElementById("server-name").asInstanceOf[Input]
+  val serverName = document.getElementById("server-name").asInstanceOf[Select]
   val newRate = document.getElementById("new-rate").asInstanceOf[Input]
 }

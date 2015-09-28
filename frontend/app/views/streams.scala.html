@@ -1,7 +1,6 @@
 @(hostMappings: HostMappings, roleMappings: RoleMappings)
 
 @main("Streams") {
-  <link rel="stylesheet" type="text/css" href="assets/stylesheets/streams.css" />
   <div class="main">
     <label>Frequency</label>
     <select id="frequency-selection">
@@ -20,7 +19,10 @@
 
   <div class="rate" style="">
     <label class="label" disabled>Change input rate</label><br><br>
-    <input type="text" id="server-name" placeholder="server name" /><br><br>
+    <label>Source</label>
+    <select id="server-name">
+      @roleMappings.getServers("source").map { x => <option value="@x">@x</option> }
+    </select>
     <input type="text" id="new-rate" placeholder="new rate" /><br><br>
     <button id="change-rate" type="button">Change</button>
   </div>
