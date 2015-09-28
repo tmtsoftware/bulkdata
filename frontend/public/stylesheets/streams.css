@@ -1,0 +1,34 @@
+.main {
+    float: left;
+    width: 70%;
+}
+
+.rate {
+    float: right;
+    width: 20%;
+    padding: 25px;
+    margin: 1%;
+    background-color: #D3E1E6;
+    border-radius: 7px;
+}
+
+.rate .label {
+    text-align: left;
+    border-radius: 7px;
+    font-size: medium;
+    font-weight: bold;
+    background: transparent;
+    color: black;
+}
+.rate input {
+    text-align: left;
+    width: 100%;
+    height: 20px;
+}
+.rate #change-rate {
+    width: 100%;
+    height: 25px;
+    border-radius: 7px;
+    background-color: cadetblue;
+    border-color: cadetblue;
+}

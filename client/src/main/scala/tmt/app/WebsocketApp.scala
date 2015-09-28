@@ -1,8 +1,9 @@
 package tmt.app
 
+import org.scalajs.dom
 import org.scalajs.dom._
 import tmt.common.models.PerSecMetric
-import tmt.common.{CanvasControls, PerSecControls}
+import tmt.common.{ImageRateControls, CanvasControls, PerSecControls}
 import tmt.images.ImageRendering
 import tmt.metrics.MetricsRendering
 
@@ -15,6 +16,7 @@ object WebsocketApp extends JSApp {
   override def main() = {
     perSecMetrics()
     showImages()
+    changeImageRate()
   }
 
   def perSecMetrics(): Unit = {
@@ -34,6 +36,19 @@ object WebsocketApp extends JSApp {
       socket = new WebSocket(CanvasControls.select.value)
       socket.binaryType = "arraybuffer"
       ImageRendering.drain(socket)
+    }
+  }
+
+  def changeImageRate(): Unit = {
+    import dom.ext._
+    import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+
+    ImageRateControls.button.onclick = { e: Event =>
+      val url = s"${ImageRateControls.serverName.value}/throttle/${ImageRateControls.newRate.value}"
+
+      Ajax.post(url).onSuccess{ case xhr =>
+          println("success")
+      }
     }
   }
 }

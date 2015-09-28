@@ -1,17 +1,27 @@
 @(hostMappings: HostMappings, roleMappings: RoleMappings)
 
 @main("Streams") {
-  <label>Frequency</label>
-  <select id="frequency-selection">
-    <option selected disabled hidden value=''>select</option>
-    @roleMappings.getServers("frequency").map { x => <option value="@hostMappings.getHost(x)">@x</option> }
-  </select>
-  <div><span id="per-sec"></span></div>
+  <link rel="stylesheet" type="text/css" href="assets/stylesheets/streams.css" />
+  <div class="main">
+    <label>Frequency</label>
+    <select id="frequency-selection">
+      <option selected disabled hidden value=''>select</option>
+      @roleMappings.getServers("frequency").map { x => <option value="@hostMappings.getHost(x)">@x</option> }
+    </select>
+    <div><span id="per-sec"></span></div>
 
-  <label>Source</label>
-  <select id="source-selection">
-    <option selected disabled hidden value=''>select</option>
-    @roleMappings.getServers("source").map { x => <option value="@hostMappings.getHost(x)">@x</option> }
-  </select>
-  <div><canvas id="canvas"></canvas></div>
+    <label>Source</label>
+    <select id="source-selection">
+      <option selected disabled hidden value=''>select</option>
+      @roleMappings.getServers("source").map { x => <option value="@hostMappings.getHost(x)">@x</option> }
+    </select>
+    <div><canvas id="canvas"></canvas></div>
+  </div>
+
+  <div class="rate" style="">
+    <label class="label" disabled>Change input rate</label><br><br>
+    <input type="text" id="server-name" placeholder="server name" /><br><br>
+    <input type="text" id="new-rate" placeholder="new rate" /><br><br>
+    <button id="change-rate" type="button">Change</button>
+  </div>
 }

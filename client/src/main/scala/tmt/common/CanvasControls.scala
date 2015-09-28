@@ -1,6 +1,6 @@
 package tmt.common
 
-import org.scalajs.dom.html.{Select, Span, Button, Canvas}
+import org.scalajs.dom.html._
 import org.scalajs.dom.{CanvasRenderingContext2D, URL, document}
 
 import scala.scalajs.js
@@ -19,4 +19,10 @@ object CanvasControls {
 object PerSecControls {
   val select = document.getElementById("frequency-selection").asInstanceOf[Select]
   val span = document.getElementById("per-sec").asInstanceOf[Span]
+}
+
+object ImageRateControls {
+  val button = document.getElementById("change-rate").asInstanceOf[Button]
+  val serverName = document.getElementById("server-name").asInstanceOf[Input]
+  val newRate = document.getElementById("new-rate").asInstanceOf[Input]
 }
