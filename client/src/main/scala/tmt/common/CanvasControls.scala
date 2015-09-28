@@ -4,6 +4,7 @@ import org.scalajs.dom.html._
 import org.scalajs.dom.{CanvasRenderingContext2D, URL, document}
 
 import scala.scalajs.js
+import Helper._
 
 object CanvasControls {
   val select = document.getElementById("source-selection").asInstanceOf[Select]
@@ -25,4 +26,17 @@ object ImageRateControls {
   val button = document.getElementById("change-rate").asInstanceOf[Button]
   val serverName = document.getElementById("server-name").asInstanceOf[Select]
   val newRate = document.getElementById("new-rate").asInstanceOf[Input]
+}
+
+object SubscriptionControls {
+  val role1 = document.get[Select]("role1")
+  val role2 = document.get[Select]("role2")
+  val server1 = document.get[Select]("server1")
+  val server2 = document.get[Select]("server2")
+}
+
+object Helper {
+  implicit class RichDoc(val doc: Document) extends AnyVal {
+    def get[T](id: String) = doc.getElementById(id).asInstanceOf[T]
+  }
 }

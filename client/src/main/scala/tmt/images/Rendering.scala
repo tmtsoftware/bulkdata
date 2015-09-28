@@ -1,11 +1,12 @@
 package tmt.images
 
 import org.scalajs.dom._
+import org.scalajs.dom.html.Image
 import tmt.common.{CanvasControls, Stream, SharedConfigs}
 
 class Rendering(url: String) {
 
-  val img = document.createElement("img").asInstanceOf[CustomImage]
+  val img = document.createElement("img").asInstanceOf[Image]
   
   def loaded = {
     val rendering = Stream.event(img.onload_=).map(_ => this)

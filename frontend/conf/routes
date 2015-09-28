@@ -1,7 +1,16 @@
 GET         /                                  controllers.StreamController.streams()
+GET         /:role/servers                     controllers.StreamController.servers(role)
+
 POST        /:server/throttle/:delay           controllers.StreamController.throttle(server, delay: Long)
 POST        /:server/subscribe/:topic          controllers.StreamController.subscribe(server, topic)
 POST        /:server/unsubscribe/:topic        controllers.StreamController.unsubscribe(server, topic)
+
+# Autowire calls
+POST        /api/*path                         controllers.ApiController.autowireApi(path: String)
+GET         /mappings                          controllers.ApiController.mappings()
+
+# Logging
+POST        /logging                           controllers.ApiController.logging
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                      controllers.Assets.at(path="/public", file)

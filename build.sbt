@@ -5,9 +5,13 @@ lazy val commonSettings = Seq(
   scalaVersion := scalaV,
   transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
   updateOptions := updateOptions.value.withCachedResolution(true),
-  libraryDependencies += "me.chrons" %%% "boopickle" % "1.1.0",
-  libraryDependencies += "com.softwaremill.macwire" %% "macros" % "1.0.7",
-  libraryDependencies += "com.lihaoyi" %%% "upickle" % "0.3.6"
+  libraryDependencies ++= Seq(
+    "me.chrons" %%% "boopickle" % "1.1.0",
+    "com.softwaremill.macwire" %% "macros" % "1.0.7",
+    "com.lihaoyi" %%% "upickle" % "0.3.6",
+    "com.lihaoyi" %%% "autowire" % "0.2.5",
+    "org.scala-lang.modules" %% "scala-async" % "0.9.5"
+  )
 ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
 lazy val common = project.in(file("common"))
@@ -53,7 +57,8 @@ lazy val client = project.in(file("client"))
     persistLauncher := true,
     persistLauncher in Test := false,
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "0.8.0",
+      "com.lihaoyi" %%% "scalatags" % "0.5.2",
+      "org.scala-js" %%% "scalajs-dom" % "0.8.2",
       "org.monifu" %%% "monifu" % "1.0-M11"
     )
   )

@@ -1,29 +1,52 @@
-@(hostMappings: HostMappings, roleMappings: RoleMappings)
+@(hostMappings: HostMappings, roleMappings: tmt.common.models.RoleMappings)
 
 @main("Streams") {
-  <div class="main">
-    <label>Frequency</label>
+  <div>
+    <select id="role1">
+      <option selected disabled hidden value=''>select role</option>
+      @roleMappings.roles.map { x => <option value="@x">@x</option> }
+    </select>
+    <div id="server1">
+      <select>
+        <option selected disabled hidden value=''>select server</option>
+      </select>
+    </div>
+    <label>Subscribed by</label>
+    <select id="role2">
+      <option selected disabled hidden value=''>select role</option>
+      @roleMappings.roles.map { x => <option value="@x">@x</option> }
+    </select>
+    <select id="server2">
+      <option selected disabled hidden value=''>select server</option>
+    </select>
+    <button id="subscribe" type="button">Connect</button>
+  </div>
+
+  <div>
+    <label>Change input rate</label><br><br>
+    <label>Source</label>
+    <select id="server-name">
+    @roleMappings.getServers("source").map { x => <option value="@x">@x</option> }
+    </select>
+    <input type="text" id="new-rate" placeholder="new rate"/><br><br>
+    <button id="change-rate" type="button">Change</button>
+  </div>
+
+  <div>
+    <label>Frequency Computing Node</label>
     <select id="frequency-selection">
       <option selected disabled hidden value=''>select</option>
       @roleMappings.getServers("frequency").map { x => <option value="@hostMappings.getHost(x)">@x</option> }
     </select>
     <div><span id="per-sec"></span></div>
+  </div>
 
-    <label>Source</label>
+  <div>
+    <label>Image Source</label>
     <select id="source-selection">
       <option selected disabled hidden value=''>select</option>
       @roleMappings.getServers("source").map { x => <option value="@hostMappings.getHost(x)">@x</option> }
     </select>
     <div><canvas id="canvas"></canvas></div>
-  </div>
-
-  <div class="rate" style="">
-    <label class="label" disabled>Change input rate</label><br><br>
-    <label>Source</label>
-    <select id="server-name">
-      @roleMappings.getServers("source").map { x => <option value="@x">@x</option> }
-    </select>
-    <input type="text" id="new-rate" placeholder="new rate" /><br><br>
-    <button id="change-rate" type="button">Change</button>
   </div>
 }
