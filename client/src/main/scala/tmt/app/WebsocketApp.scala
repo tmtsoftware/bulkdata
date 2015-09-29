@@ -4,7 +4,7 @@ import boopickle.Default._
 import org.scalajs.dom
 import org.scalajs.dom._
 import org.scalajs.dom.ext.Ajax
-import org.scalajs.dom.html.Select
+import org.scalajs.dom.html.{Div, Select}
 import tmt.common.models.{PerSecMetric, RoleMappings}
 import tmt.common.{CanvasControls, ImageRateControls, PerSecControls}
 import tmt.images.ImageRendering
@@ -56,33 +56,22 @@ object WebsocketApp extends JSApp {
   def connect(): Unit = async {
     import tmt.common.SubscriptionControls._
     import upickle.default._
-
     import scalatags.JsDom.all._
 
     val roleMappings = read[RoleMappings](await(Ajax.get("/mappings")).responseText)
 
-    var server1Select: Select = null
-    var server2Select: Select = null
-
-    role1.onchange = { e: Event =>
-      val servers = roleMappings.getServers(role1.value)
-      val selectNode = select(
+    def populateOptions(role: Select, server: Div) = role.onchange = { e: Event =>
+      val servers = roleMappings.getServers(role.value)
+      val selectNode = select(id := s"${server.id}-select")(
+        option(selected := true, disabled, hidden := true, value := "")("select-server"),
         servers.map(s => option(value := s, s))
       ).render
-      server1.innerHTML = ""
-      server1.appendChild(selectNode)
-      server1Select = selectNode
+      server.innerHTML = ""
+      server.appendChild(selectNode)
     }
 
-    role2.onchange = { e: Event =>
-      val servers = roleMappings.getServers(role2.value)
-      val selectNode = select(
-        servers.map(s => option(value := s, s))
-      ).render
-      server2.innerHTML = ""
-      server2.appendChild(selectNode)
-      server2Select = selectNode
-    }
+    populateOptions(role1, server1)
+    populateOptions(role2, server2)
 
     button1.onclick = { e: Event =>
       val source = server1Select.value

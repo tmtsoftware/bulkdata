@@ -18,8 +18,6 @@ class SubscriptionView(roleMappings: RoleMappings) extends View {
       optionHint("select role"),
       makeOptions(roleMappings.roles)
     ),
-    div(id := serverId)(
-      select(optionHint("select server"))
-    )
+    div(id := serverId)
   )
 }

@@ -5,9 +5,8 @@ import javax.inject.{Inject, Singleton}
 import common.AppSettings
 import models.{RoleMappingsFactory, HostMappings}
 import play.api.mvc.{Action, Controller}
-import play.twirl.api.Html
 import services.ClusterClientService
-import templates.{PageFactory, SubscriptionView}
+import templates.PageFactory
 
 import scala.concurrent.duration.DurationLong
 
