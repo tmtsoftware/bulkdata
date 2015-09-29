@@ -3,10 +3,11 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
-import library.GenericExtensions.RichGeneric
 import models.{RoleMappingsFactory, HostMappings}
 import play.api.mvc.{Action, Controller}
+import play.twirl.api.Html
 import services.ClusterClientService
+import templates.{PageFactory, SubscriptionView}
 
 import scala.concurrent.duration.DurationLong
 
@@ -14,14 +15,21 @@ import scala.concurrent.duration.DurationLong
 class StreamController @Inject()(
   appSettings: AppSettings,
   clusterClientService: ClusterClientService,
-  roleMappingsFactory: RoleMappingsFactory
+  roleMappingsFactory: RoleMappingsFactory,
+  pageFactory: PageFactory
 ) extends Controller {
 
   private val roleMappings = roleMappingsFactory.fromConfig(appSettings.bindings)
   private val hostMappings = HostMappings(appSettings.hosts)
 
   def streams() = Action {
-    Ok(views.html.streams(hostMappings, roleMappings))
+    Ok(pageFactory.showcase(roleMappings, hostMappings).render)
+  }
+
+  def mappings() = Action {
+    val roleMappings = roleMappingsFactory.fromConfig(appSettings.bindings)
+    import upickle.default._
+    Ok(write(roleMappings))
   }
 
   def throttle(serverName: String, delay: Long) = Action {
@@ -38,9 +46,4 @@ class StreamController @Inject()(
     clusterClientService.unsubscribe(serverName, topic)
     Accepted("ok")
   }
-
-  def servers(role: String) = Action {
-    Ok(roleMappings.getServers(role).toJson)
-  }
-
 }

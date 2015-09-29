@@ -44,7 +44,8 @@ lazy val frontend = project.in(file("frontend"))
       "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
       "org.webjars" % "jquery" % "1.11.1",
       "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.0-RC2",
-      "com.typesafe.akka" % "akka-slf4j_2.11" % "2.4.0-RC2"
+      "com.typesafe.akka" % "akka-slf4j_2.11" % "2.4.0-RC2",
+      "com.lihaoyi" %% "scalatags" % "0.5.2"
     )
   )
 

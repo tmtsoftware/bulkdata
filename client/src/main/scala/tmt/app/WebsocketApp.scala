@@ -5,7 +5,7 @@ import org.scalajs.dom
 import org.scalajs.dom._
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.html.Select
-import tmt.common.models.PerSecMetric
+import tmt.common.models.{PerSecMetric, RoleMappings}
 import tmt.common.{CanvasControls, ImageRateControls, PerSecControls}
 import tmt.images.ImageRendering
 import tmt.metrics.MetricsRendering
@@ -25,22 +25,21 @@ object WebsocketApp extends JSApp {
     render(CanvasControls.select) { socket =>
       ImageRendering.drain(socket)
     }
-    changeImageRate()
-    Ajax.get("/mappings").onComplete(x => println(x.get.responseText))
-    dd()
+    throttle()
+    connect()
   }
 
   def render(select: Select)(block: WebSocket => Unit): Unit = {
     var socket: WebSocket = null
     select.onchange = { e: Event =>
-      if(socket != null) socket.close()
+      if (socket != null) socket.close()
       socket = new WebSocket(select.value)
       socket.binaryType = "arraybuffer"
       block(socket)
     }
   }
 
-  def changeImageRate(): Unit = {
+  def throttle(): Unit = {
     import dom.ext._
 
     import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -48,30 +47,47 @@ object WebsocketApp extends JSApp {
     ImageRateControls.button.onclick = { e: Event =>
       val url = s"${ImageRateControls.serverName.value}/throttle/${ImageRateControls.newRate.value}"
 
-      Ajax.post(url).onSuccess{ case xhr =>
-          println("success")
+      Ajax.post(url).onSuccess { case xhr =>
+        println("success")
       }
     }
   }
 
-  def dd(): Unit = {
-    async {
-      import tmt.common.SubscriptionControls._
+  def connect(): Unit = async {
+    import tmt.common.SubscriptionControls._
+    import upickle.default._
 
-      import scalatags.JsDom.all._
-      role1.onchange = { e: Event =>
-        val servers = Seq.empty[String]
-        val ee = select(
-          servers.map(s => option(value := s, s)) :_*
-        ).render
-        server1.innerHTML = ""
-        server1.add(ee)
-      }
-    }
-  }
-
-  def aa = {
     import scalatags.JsDom.all._
-    img().render
+
+    val roleMappings = read[RoleMappings](await(Ajax.get("/mappings")).responseText)
+
+    var server1Select: Select = null
+    var server2Select: Select = null
+
+    role1.onchange = { e: Event =>
+      val servers = roleMappings.getServers(role1.value)
+      val selectNode = select(
+        servers.map(s => option(value := s, s))
+      ).render
+      server1.innerHTML = ""
+      server1.appendChild(selectNode)
+      server1Select = selectNode
+    }
+
+    role2.onchange = { e: Event =>
+      val servers = roleMappings.getServers(role2.value)
+      val selectNode = select(
+        servers.map(s => option(value := s, s))
+      ).render
+      server2.innerHTML = ""
+      server2.appendChild(selectNode)
+      server2Select = selectNode
+    }
+
+    button1.onclick = { e: Event =>
+      val source = server1Select.value
+      val target = server2Select.value
+      Ajax.post(s"$target/subscribe/$source")
+    }
   }
 }

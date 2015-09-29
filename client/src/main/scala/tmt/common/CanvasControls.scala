@@ -31,8 +31,9 @@ object ImageRateControls {
 object SubscriptionControls {
   val role1 = document.get[Select]("role1")
   val role2 = document.get[Select]("role2")
-  val server1 = document.get[Select]("server1")
-  val server2 = document.get[Select]("server2")
+  val server1 = document.get[Div]("server1")
+  val server2 = document.get[Div]("server2")
+  val button1 = document.get[Button]("subscribe")
 }
 
 object Helper {
