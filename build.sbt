@@ -9,7 +9,6 @@ lazy val commonSettings = Seq(
     "me.chrons" %%% "boopickle" % "1.1.0",
     "com.softwaremill.macwire" %% "macros" % "1.0.7",
     "com.lihaoyi" %%% "upickle" % "0.3.6",
-    "com.lihaoyi" %%% "autowire" % "0.2.5",
     "org.scala-lang.modules" %% "scala-async" % "0.9.5"
   )
 ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
