@@ -2,6 +2,7 @@ lazy val clients = Seq(client)
 lazy val scalaV = "2.11.7"
 
 lazy val commonSettings = Seq(
+  organization := "tmt",
   scalaVersion := scalaV,
   transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
   updateOptions := updateOptions.value.withCachedResolution(true),

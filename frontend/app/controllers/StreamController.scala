@@ -27,7 +27,6 @@ class StreamController @Inject()(
   }
 
   def mappings() = Action {
-    val roleMappings = roleMappingsFactory.fromConfig(appSettings.bindings)
     import upickle.default._
     Ok(write(roleMappings))
   }
