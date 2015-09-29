@@ -1,7 +1,7 @@
 lazy val clients = Seq(client)
 lazy val scalaV = "2.11.7"
 
-lazy val commonSettings = Seq(
+lazy val sharedSettings = Seq(
   organization := "tmt",
   scalaVersion := scalaV,
   transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
@@ -14,17 +14,17 @@ lazy val commonSettings = Seq(
   )
 ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
-lazy val common = project.in(file("common"))
+lazy val common = project
   .dependsOn(sharedJvm)
-  .settings(commonSettings: _*)
+  .settings(sharedSettings: _*)
   .settings(
     fork := true,
     libraryDependencies += "com.beachape" %% "enumeratum" % "1.3.1"
   )
 
-lazy val backend = project.in(file("backend"))
+lazy val backend = project
   .dependsOn(common)
-  .settings(commonSettings: _*)
+  .settings(sharedSettings: _*)
   .settings(
     fork := true,
     libraryDependencies ++= Dependencies.backendLibs
@@ -32,11 +32,11 @@ lazy val backend = project.in(file("backend"))
 
 lazy val aggProjects = (clients :+ backend :+ common).map(Project.projectToRef)
 
-lazy val frontend = project.in(file("frontend"))
+lazy val frontend = project
   .enablePlugins(PlayScala)
   .dependsOn(common)
   .aggregate(aggProjects: _*)
-  .settings(commonSettings: _*)
+  .settings(sharedSettings: _*)
   .settings(
     routesGenerator := InjectedRoutesGenerator,
     scalaJSProjects := clients,
@@ -50,10 +50,10 @@ lazy val frontend = project.in(file("frontend"))
     )
   )
 
-lazy val client = project.in(file("client"))
+lazy val client = project
   .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
   .dependsOn(sharedJs)
-  .settings(commonSettings: _*)
+  .settings(sharedSettings: _*)
   .settings(
     persistLauncher := true,
     persistLauncher in Test := false,
@@ -65,12 +65,13 @@ lazy val client = project.in(file("client"))
   )
 
 lazy val shared = crossProject.crossType(CrossType.Pure)
-  .in(file("shared"))
   .jsConfigure(_ enablePlugins ScalaJSPlay)
-  .settings(commonSettings: _*)
+  .settings(sharedSettings: _*)
 
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
 // loads the Play project at sbt startup
-onLoad in Global := (Command.process("project frontend", _: State)) compose (onLoad in Global).value
+onLoad in Global := (onLoad in Global).value.andThen { state =>
+  Command.process("project frontend", state)
+}
