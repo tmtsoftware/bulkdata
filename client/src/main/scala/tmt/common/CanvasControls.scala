@@ -35,8 +35,8 @@ object SubscriptionControls {
   val server1 = document.get[Div]("server1")
   val server2 = document.get[Div]("server2")
 
-  val server1Select = document.get[Select](s"${server1.id}-select")
-  val server2Select = document.get[Select](s"${server2.id}-select")
+  def server1Select = document.get[Select](s"${server1.id}-select")
+  def server2Select = document.get[Select](s"${server2.id}-select")
 
   val button1 = document.get[Button]("subscribe")
 }
