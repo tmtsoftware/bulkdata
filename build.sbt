@@ -19,7 +19,10 @@ lazy val common = project
   .settings(sharedSettings: _*)
   .settings(
     fork := true,
-    libraryDependencies += "com.beachape" %% "enumeratum" % "1.3.1"
+    libraryDependencies ++= Seq(
+      "com.beachape" %% "enumeratum" % "1.3.1",
+      "com.typesafe" % "config" % "1.3.0"
+    )
   )
 
 lazy val backend = project
