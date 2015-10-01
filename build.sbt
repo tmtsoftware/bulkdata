@@ -6,31 +6,25 @@ lazy val sharedSettings = Seq(
   scalaVersion := scalaV,
   transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
   updateOptions := updateOptions.value.withCachedResolution(true),
-  libraryDependencies ++= Seq(
-    "me.chrons" %%% "boopickle" % "1.1.0",
-    "com.softwaremill.macwire" %% "macros" % "1.0.7",
-    "com.lihaoyi" %%% "upickle" % "0.3.6",
-    "org.scala-lang.modules" %% "scala-async" % "0.9.5"
-  )
+  libraryDependencies ++= Dependencies.sharedLibs.value
 ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
+
+lazy val client = project
+  .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
+  .dependsOn(sharedJs)
+  .settings(sharedSettings: _*)
+  .settings(
+    persistLauncher := true,
+    persistLauncher in Test := false,
+    libraryDependencies ++= Dependencies.clientLibs.value
+  )
 
 lazy val common = project
   .dependsOn(sharedJvm)
   .settings(sharedSettings: _*)
   .settings(
     fork := true,
-    libraryDependencies ++= Seq(
-      "com.beachape" %% "enumeratum" % "1.3.1",
-      "com.typesafe" % "config" % "1.3.0"
-    )
-  )
-
-lazy val backend = project
-  .dependsOn(common)
-  .settings(sharedSettings: _*)
-  .settings(
-    fork := true,
-    libraryDependencies ++= Dependencies.backendLibs
+    libraryDependencies ++= Dependencies.commonLibs
   )
 
 lazy val aggProjects = (clients :+ backend :+ common).map(Project.projectToRef)
@@ -44,27 +38,15 @@ lazy val frontend = project
     routesGenerator := InjectedRoutesGenerator,
     scalaJSProjects := clients,
     pipelineStages := Seq(scalaJSProd, gzip),
-    libraryDependencies ++= Seq(
-      "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
-      "org.webjars" % "jquery" % "1.11.1",
-      "com.typesafe.akka" %% "akka-cluster-tools" % "2.4.0-RC2",
-      "com.typesafe.akka" % "akka-slf4j_2.11" % "2.4.0-RC2",
-      "com.lihaoyi" %% "scalatags" % "0.5.2"
-    )
+    libraryDependencies ++= Dependencies.frontendLibs
   )
 
-lazy val client = project
-  .enablePlugins(ScalaJSPlugin, ScalaJSPlay)
-  .dependsOn(sharedJs)
+lazy val backend = project
+  .dependsOn(common)
   .settings(sharedSettings: _*)
   .settings(
-    persistLauncher := true,
-    persistLauncher in Test := false,
-    libraryDependencies ++= Seq(
-      "com.lihaoyi" %%% "scalatags" % "0.5.2",
-      "org.scala-js" %%% "scalajs-dom" % "0.8.2",
-      "org.monifu" %%% "monifu" % "1.0-M11"
-    )
+    fork := true,
+    libraryDependencies ++= Dependencies.backendLibs
   )
 
 lazy val shared = crossProject.crossType(CrossType.Pure)
