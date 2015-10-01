@@ -4,11 +4,12 @@ import boopickle.Default._
 import org.scalajs.dom
 import org.scalajs.dom._
 import org.scalajs.dom.ext.Ajax
-import org.scalajs.dom.html.{Div, Select}
+import org.scalajs.dom.html.{LI, Button, Div, Select}
+import org.scalajs.dom.raw.HTMLUListElement
 import tmt.common.{ImageRateControls, CanvasControls, PerSecControls}
 import tmt.images.ImageRendering
 import tmt.metrics.MetricsRendering
-import tmt.shared.models.{RoleMappings, PerSecMetric}
+import tmt.shared.models.{ConnectionDataSet, RoleMappings, PerSecMetric}
 
 import scala.async.Async._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -78,5 +79,15 @@ object WebsocketApp extends JSApp {
       val target = server2Select.value
       Ajax.post(s"$target/subscribe/$source")
     }
+
+    (0 to lis.length).foreach { index =>
+      val liNode = lis.item(index).asInstanceOf[LI]
+      val buttonNode = liNode.getElementsByTagName("button")(0).asInstanceOf[Button]
+      buttonNode.onclick = { e: Event =>
+        Ajax.post(s"${buttonNode.getAttribute("data")}")
+        ul1.removeChild(liNode)
+      }
+    }
+
   }
 }

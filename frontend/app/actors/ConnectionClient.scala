@@ -1,8 +1,8 @@
 package actors
 
 import akka.actor.{Props, Actor}
-import models.ConnectionDataSet
 import tmt.common.Messages
+import tmt.shared.models.ConnectionDataSet
 
 class ConnectionClient extends Actor {
 

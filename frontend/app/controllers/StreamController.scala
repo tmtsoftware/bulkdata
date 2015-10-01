@@ -10,6 +10,7 @@ import templates.PageFactory
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationLong
+import async.Async._
 
 @Singleton
 class StreamController @Inject()(
@@ -22,8 +23,11 @@ class StreamController @Inject()(
   private val roleMappings = roleMappingsFactory.fromConfig(appSettings.bindings)
   private val hostMappings = HostMappings(appSettings.hosts)
 
-  def streams() = Action {
-    Ok(pageFactory.showcase(roleMappings, hostMappings).render)
+  def streams() = Action.async {
+    async {
+      val connectionDataSet = await(clusterClientService.connections)
+      Ok(pageFactory.showcase(roleMappings, hostMappings, connectionDataSet).render)
+    }
   }
 
   def mappings() = Action {
@@ -33,7 +37,10 @@ class StreamController @Inject()(
 
   def connections() = Action.async {
     import upickle.default._
-    clusterClientService.connections.map(x => Ok(write(x)))
+    async {
+      val connectionDataSet = await(clusterClientService.connections)
+      Ok(write(connectionDataSet))
+    }
   }
 
   def throttle(serverName: String, delay: Long) = Action {

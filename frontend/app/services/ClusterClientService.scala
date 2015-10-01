@@ -6,10 +6,10 @@ import actors.ConnectionClient
 import akka.actor.ActorSystem
 import akka.cluster.client.{ClusterClientSettings, ClusterClient}
 import akka.util.Timeout
-import models.ConnectionDataSet
 import tmt.common.Messages
 import tmt.shared.Topics
 import akka.pattern.ask
+import tmt.shared.models.ConnectionDataSet
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
