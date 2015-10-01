@@ -7,11 +7,11 @@ import tmt.app.ActorConfigs
 import tmt.library.Connector
 
 abstract class ClusterReceptionistService[T](topic: String, actorConfigs: ActorConfigs) {
-  def wrap(ref: ActorRef): ActorRef
+  def wrap(sourceLinkedRef: ActorRef): ActorRef
 
   import actorConfigs._
-  private val (actorRef, _source) = Connector.coupling[T](Sink.publisher)
-  ClusterClientReceptionist(system).registerSubscriber(topic, wrap(actorRef))
+  private val (sourceLinkedRef, _source) = Connector.coupling[T](Sink.publisher)
+  ClusterClientReceptionist(system).registerSubscriber(topic, wrap(sourceLinkedRef))
 
   def source = _source
 }

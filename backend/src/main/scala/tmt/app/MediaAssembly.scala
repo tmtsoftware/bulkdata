@@ -3,11 +3,11 @@ package tmt.app
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import tmt.actors.{SubscriptionService, TickerService}
+import tmt.clients._
 import tmt.common.models.{Image, ImageMetric}
 import tmt.io._
-import tmt.clients._
 import tmt.server._
-import tmt.transformations.{MetricsTransformations, ImageTransformations}
+import tmt.transformations.{ImageTransformations, MetricsTransformations}
 
 class MediaAssembly(name: String, env: String = "dev") {
   import com.softwaremill.macwire._

@@ -10,16 +10,18 @@ import scala.concurrent.duration.FiniteDuration
 class TickerService(
   appSettings: AppSettings, actorConfigs: ActorConfigs
 ) extends ClusterReceptionistService[Ticker.Tick](Topics.Throttle, actorConfigs) {
+  
   import actorConfigs._
-  def wrap(ref: ActorRef) = system.actorOf(Ticker.props(appSettings.binding.name, appSettings.imageReadThrottle, ref))
+  def wrap(sourceLinkedRef: ActorRef) = 
+    system.actorOf(Ticker.props(appSettings.binding.name, appSettings.imageReadThrottle, sourceLinkedRef))
 }
 
-class Ticker(serverName: String, initialDelay: FiniteDuration, actorRef: ActorRef) extends Actor {
+class Ticker(serverName: String, initialDelay: FiniteDuration, sourceLinkedRef: ActorRef) extends Actor {
   import context.dispatcher
 
   val scheduler = context.system.scheduler
 
-  def startNewSchedule(delay: FiniteDuration) = scheduler.schedule(delay, delay, actorRef, Ticker.Tick)
+  def startNewSchedule(delay: FiniteDuration) = scheduler.schedule(delay, delay, sourceLinkedRef, Ticker.Tick)
 
   var currentSchedule = startNewSchedule(initialDelay)
 
@@ -35,5 +37,7 @@ object Ticker {
   trait Tick
   case object Tick extends Tick
 
-  def props(serverName: String, initialDelay: FiniteDuration, actorRef: ActorRef) = Props(new Ticker(serverName, initialDelay, actorRef))
+  def props(serverName: String, initialDelay: FiniteDuration, sourceLinkedRef: ActorRef) = Props(
+    new Ticker(serverName, initialDelay, sourceLinkedRef)
+  )
 }
