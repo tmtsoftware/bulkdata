@@ -2,7 +2,8 @@ package tmt.images
 
 import org.scalajs.dom._
 import org.scalajs.dom.html.Image
-import tmt.common.{CanvasControls, Stream, SharedConfigs}
+import tmt.common.{Stream, CanvasControls}
+import tmt.shared.SharedConfigs
 
 class Rendering(url: String) {
 

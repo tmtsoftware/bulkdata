@@ -4,7 +4,7 @@ import com.google.inject.Singleton
 import com.typesafe.config.ConfigObject
 import library.ConfigValueExtensions.RichConfigValue
 import play.api.libs.json.JsObject
-import tmt.common.models.RoleMappings
+import tmt.shared.models.RoleMappings
 
 @Singleton
 class RoleMappingsFactory {

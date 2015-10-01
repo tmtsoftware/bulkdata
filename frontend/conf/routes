@@ -1,5 +1,6 @@
 GET         /                                  controllers.StreamController.streams()
 GET         /mappings                          controllers.StreamController.mappings()
+GET         /connections                       controllers.StreamController.connections()
 
 POST        /:server/throttle/:delay           controllers.StreamController.throttle(server, delay: Long)
 POST        /:server/subscribe/:topic          controllers.StreamController.subscribe(server, topic)

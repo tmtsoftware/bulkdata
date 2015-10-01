@@ -9,8 +9,8 @@ import akka.stream.scaladsl.Source
 import akka.util.ByteString
 import tmt.actors.TickerService
 import tmt.app.{ActorConfigs, AppSettings}
-import tmt.common.models.Image
 import tmt.library.SourceExtensions.RichSource
+import tmt.shared.models.Image
 
 import scala.concurrent.Future
 

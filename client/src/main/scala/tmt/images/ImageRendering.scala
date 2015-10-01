@@ -2,7 +2,7 @@ package tmt.images
 
 import org.scalajs.dom._
 import org.scalajs.dom.raw.Blob
-import tmt.common.{CanvasControls, Stream}
+import tmt.common.{Stream, CanvasControls}
 
 import scala.concurrent.duration._
 import scala.scalajs.js

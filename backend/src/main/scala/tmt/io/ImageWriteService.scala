@@ -7,9 +7,8 @@ import akka.stream.io.SynchronousFileSink
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.app.{ActorConfigs, AppSettings}
-import tmt.common._
-import tmt.common.models.Image
 import tmt.library.SourceExtensions.RichSource
+import tmt.shared.models.Image
 
 import scala.concurrent.Future
 

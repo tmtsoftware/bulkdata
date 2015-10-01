@@ -8,6 +8,7 @@ import play.api.mvc.{Action, Controller}
 import services.ClusterClientService
 import templates.PageFactory
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationLong
 
 @Singleton
@@ -16,7 +17,7 @@ class StreamController @Inject()(
   clusterClientService: ClusterClientService,
   roleMappingsFactory: RoleMappingsFactory,
   pageFactory: PageFactory
-) extends Controller {
+)(implicit ec: ExecutionContext) extends Controller {
 
   private val roleMappings = roleMappingsFactory.fromConfig(appSettings.bindings)
   private val hostMappings = HostMappings(appSettings.hosts)
@@ -28,6 +29,11 @@ class StreamController @Inject()(
   def mappings() = Action {
     import upickle.default._
     Ok(write(roleMappings))
+  }
+
+  def connections() = Action.async {
+    import upickle.default._
+    clusterClientService.connections.map(x => Ok(write(x)))
   }
 
   def throttle(serverName: String, delay: Long) = Action {

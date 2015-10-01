@@ -2,6 +2,7 @@ package tmt.common
 
 import org.scalajs.dom.html._
 import org.scalajs.dom.{CanvasRenderingContext2D, URL, document}
+import tmt.shared.SharedConfigs
 
 import scala.scalajs.js
 import Helper._

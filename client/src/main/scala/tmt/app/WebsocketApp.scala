@@ -5,10 +5,10 @@ import org.scalajs.dom
 import org.scalajs.dom._
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.html.{Div, Select}
-import tmt.common.models.{PerSecMetric, RoleMappings}
-import tmt.common.{CanvasControls, ImageRateControls, PerSecControls}
+import tmt.common.{ImageRateControls, CanvasControls, PerSecControls}
 import tmt.images.ImageRendering
 import tmt.metrics.MetricsRendering
+import tmt.shared.models.{RoleMappings, PerSecMetric}
 
 import scala.async.Async._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -54,9 +54,9 @@ object WebsocketApp extends JSApp {
   }
 
   def connect(): Unit = async {
-    import tmt.common.SubscriptionControls._
     import upickle.default._
     import scalatags.JsDom.all._
+    import tmt.common.SubscriptionControls._
 
     val roleMappings = read[RoleMappings](await(Ajax.get("/mappings")).responseText)
 

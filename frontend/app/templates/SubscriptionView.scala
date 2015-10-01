@@ -1,6 +1,6 @@
 package templates
 
-import tmt.common.models.RoleMappings
+import tmt.shared.models.RoleMappings
 
 import scalatags.Text.all._
 import Helpers._

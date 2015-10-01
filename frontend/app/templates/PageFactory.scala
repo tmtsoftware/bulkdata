@@ -3,7 +3,7 @@ package templates
 import javax.inject.Singleton
 
 import models.HostMappings
-import tmt.common.models.RoleMappings
+import tmt.shared.models.RoleMappings
 
 @Singleton
 class PageFactory {

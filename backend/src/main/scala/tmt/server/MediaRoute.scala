@@ -5,10 +5,9 @@ import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.app.CustomDirectives
-import tmt.common._
-import tmt.common.models.Image
 import tmt.io.{ImageReadService, ImageWriteService, MovieReadService, MovieWriteService}
 import tmt.marshalling.BinaryMarshallers
+import tmt.shared.models.Image
 
 class MediaRoute(
   imageReadService: ImageReadService,

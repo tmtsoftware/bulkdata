@@ -2,7 +2,7 @@ package templates
 
 import models.HostMappings
 import templates.Helpers._
-import tmt.common.models.RoleMappings
+import tmt.shared.models.RoleMappings
 
 import scalatags.Text.all._
 

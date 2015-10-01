@@ -1,4 +1,4 @@
-package tmt.common.models
+package tmt.shared.models
 
 import boopickle.Default._
 

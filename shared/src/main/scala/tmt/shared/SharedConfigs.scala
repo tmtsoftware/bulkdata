@@ -1,4 +1,4 @@
-package tmt.common
+package tmt.shared
 
 import scala.concurrent.duration._
 

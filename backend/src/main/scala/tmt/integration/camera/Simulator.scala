@@ -2,7 +2,7 @@ package tmt.integration.camera
 
 import java.util.concurrent.Executors
 
-import tmt.common.SharedConfigs
+import tmt.shared.SharedConfigs
 
 import scala.util.control.NonFatal
 

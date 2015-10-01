@@ -2,8 +2,8 @@ package tmt.actors
 
 import akka.actor.{Actor, ActorRef, Props}
 import tmt.app.{ActorConfigs, AppSettings}
-import tmt.common.Topics
-import tmt.common.models.Messages
+import tmt.common.Messages
+import tmt.shared.Topics
 
 import scala.concurrent.duration.FiniteDuration
 
