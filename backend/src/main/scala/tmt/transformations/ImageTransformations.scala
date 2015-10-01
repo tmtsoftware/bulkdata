@@ -2,7 +2,7 @@ package tmt.transformations
 
 import akka.http.scaladsl.model.DateTime
 import akka.stream.scaladsl.Source
-import tmt.api.SubscriptionService
+import tmt.actors.SubscriptionService
 import tmt.app.ActorConfigs
 import tmt.common.models.{Image, ImageMetric}
 import tmt.io.ImageWriteService

@@ -1,4 +1,4 @@
-package tmt.api
+package tmt.actors
 
 import akka.actor.{Actor, ActorRef, Props}
 import akka.cluster.pubsub.DistributedPubSub

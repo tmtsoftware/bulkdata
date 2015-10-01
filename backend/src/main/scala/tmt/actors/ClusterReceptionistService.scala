@@ -1,4 +1,4 @@
-package tmt.api
+package tmt.actors
 
 import akka.actor.ActorRef
 import akka.cluster.client.ClusterClientReceptionist

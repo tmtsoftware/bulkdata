@@ -1,7 +1,7 @@
 package tmt.transformations
 
 import akka.stream.scaladsl.Source
-import tmt.api.SubscriptionService
+import tmt.actors.SubscriptionService
 import tmt.common.models.{CumulativeMetric, ImageMetric, PerSecMetric}
 
 import scala.concurrent.duration.DurationInt

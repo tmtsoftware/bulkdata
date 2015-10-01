@@ -2,7 +2,7 @@ package tmt.app
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import tmt.api.{SubscriptionService, TickerService}
+import tmt.actors.{SubscriptionService, TickerService}
 import tmt.common.models.{Image, ImageMetric}
 import tmt.io._
 import tmt.clients._

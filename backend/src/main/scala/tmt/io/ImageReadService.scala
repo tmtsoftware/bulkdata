@@ -7,7 +7,7 @@ import akka.http.scaladsl.model.ws.BinaryMessage
 import akka.stream.io.SynchronousFileSource
 import akka.stream.scaladsl.Source
 import akka.util.ByteString
-import tmt.api.TickerService
+import tmt.actors.TickerService
 import tmt.app.{ActorConfigs, AppSettings}
 import tmt.common.models.Image
 import tmt.library.SourceExtensions.RichSource
