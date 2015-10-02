@@ -2,17 +2,15 @@ package tmt.app
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import tmt.actors.{SingletonManager, SubscriptionService, TickerService}
+import tmt.actors.{SubscriptionService, TickerService}
 import tmt.clients._
 import tmt.io._
 import tmt.server._
-import tmt.shared.models.{ImageMetric, Image}
+import tmt.shared.models.{Image, ImageMetric}
 import tmt.transformations.{ImageTransformations, MetricsTransformations}
 
 class MediaAssembly(name: String, env: String = "dev") {
   import com.softwaremill.macwire._
-
-  wire[SingletonManager]
 
   lazy val configLoader = wire[ConfigLoader]
 

@@ -7,7 +7,7 @@ import akka.cluster.ddata._
 import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Subscribe, Unsubscribe}
 import tmt.app.{ActorConfigs, AppSettings}
-import tmt.common.Messages
+import tmt.common.{Keys, Messages}
 import tmt.shared.Topics
 
 class SubscriptionService[T](
@@ -27,14 +27,13 @@ class Subscription(serverName: String, sourceLinkedRef: ActorRef) extends Actor 
   def receive = {
     case Messages.Subscribe(`serverName`, topic)   =>
       mediator ! Subscribe(topic, sourceLinkedRef)
-      replicator ! Update(Subscription.DataKey, ORMultiMap.empty[String], WriteLocal)(_.addBinding(serverName, topic))
+      replicator ! Update(Keys.Connections, ORMultiMap.empty[String], WriteLocal)(_.addBinding(serverName, topic))
     case Messages.Unsubscribe(`serverName`, topic) =>
       mediator ! Unsubscribe(topic, sourceLinkedRef)
-      replicator ! Update(Subscription.DataKey, ORMultiMap.empty[String], WriteLocal)(_.removeBinding(serverName, topic))
+      replicator ! Update(Keys.Connections, ORMultiMap.empty[String], WriteLocal)(_.removeBinding(serverName, topic))
   }
 }
 
 object Subscription {
   def props(serverName: String, sourceLinkedRef: ActorRef) = Props(new Subscription(serverName, sourceLinkedRef))
-  val DataKey = ORMultiMapKey[String](Topics.Connections)
 }

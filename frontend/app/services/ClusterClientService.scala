@@ -1,14 +1,14 @@
 package services
 
-import javax.inject.{Singleton, Inject}
+import javax.inject.{Inject, Singleton}
 
-import actors.ConnectionClient
+import actors.ConnectionStore
 import akka.actor.ActorSystem
-import akka.cluster.client.{ClusterClientSettings, ClusterClient}
+import akka.cluster.client.{ClusterClient, ClusterClientSettings}
+import akka.pattern.ask
 import akka.util.Timeout
 import tmt.common.Messages
 import tmt.shared.Topics
-import akka.pattern.ask
 import tmt.shared.models.ConnectionDataSet
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
@@ -19,9 +19,7 @@ class ClusterClientService @Inject()(system: ActorSystem) {
   implicit val timeout = Timeout(2.seconds)
 
   private val clusterClient = system.actorOf(ClusterClient.props(ClusterClientSettings(system)))
-  private val connectionClient = system.actorOf(ConnectionClient.props())
-
-  clusterClient ! ClusterClient.Publish(Topics.Connections, Messages.Register(connectionClient))
+  private val connectionStore = system.actorOf(ConnectionStore.props())
 
   def throttle(serverName: String, delay: FiniteDuration) = {
     clusterClient ! ClusterClient.Publish(Topics.Throttle, Messages.UpdateDelay(serverName, delay))
@@ -35,5 +33,5 @@ class ClusterClientService @Inject()(system: ActorSystem) {
     clusterClient ! ClusterClient.Publish(Topics.Subscription, Messages.Unsubscribe(serverName, topic))
   }
 
-  def connections = (connectionClient ? ConnectionClient.GetConnections).mapTo[ConnectionDataSet]
+  def connections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionDataSet]
 }
