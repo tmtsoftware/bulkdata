@@ -12,7 +12,7 @@ import tmt.shared.Topics
 
 class SubscriptionService[T](
   appSettings: AppSettings, actorConfigs: ActorConfigs
-) extends ClusterReceptionistService[T](Topics.Subscription, actorConfigs) {
+) extends SourceActorLink[T](Topics.Subscription, actorConfigs) {
 
   import actorConfigs._
   def wrap(sourceLinkedRef: ActorRef) = 
