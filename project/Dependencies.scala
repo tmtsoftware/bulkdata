@@ -23,13 +23,15 @@ object Dependencies {
   val commonLibs = Seq(
     "com.beachape" %% "enumeratum" % "1.3.1",
     "com.typesafe" % "config" % "1.3.0",
-    "com.typesafe.akka" %% "akka-actor" % Versions.Akka
+    "com.typesafe.akka" %% "akka-cluster" % Versions.Akka,
+    "com.typesafe.akka" %% "akka-cluster-tools" % Versions.Akka,
+    "com.typesafe.akka" %% "akka-cluster-metrics" % Versions.Akka,
+    "com.typesafe.akka" %% "akka-distributed-data-experimental" % Versions.Akka
   )
 
   val frontendLibs = Seq(
     "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
     "org.webjars" % "jquery" % "1.11.1",
-    "com.typesafe.akka" %% "akka-cluster-tools" % Versions.Akka,
     "com.typesafe.akka" % "akka-slf4j_2.11" % Versions.Akka,
     "com.lihaoyi" %% "scalatags" % "0.5.2"
   )
@@ -39,10 +41,6 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-http-core-experimental" % Versions.Streams,
     "com.typesafe.akka" %% "akka-http-experimental" % Versions.Streams,
     "net.codingwell" %% "scala-guice" % "4.0.0",
-    "com.typesafe.akka" %% "akka-cluster" % Versions.Akka,
-    "com.typesafe.akka" %% "akka-cluster-tools" % Versions.Akka,
-    "com.typesafe.akka" %% "akka-cluster-metrics" % Versions.Akka,
-    "com.typesafe.akka" %% "akka-distributed-data-experimental" % Versions.Akka,
 
   //test
     "org.scalatest" %% "scalatest" % "2.2.5" % "test",
