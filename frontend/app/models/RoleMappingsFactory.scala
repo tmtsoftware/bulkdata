@@ -1,9 +1,11 @@
 package models
 
-import com.google.inject.Singleton
+import javax.inject.Singleton
+
 import com.typesafe.config.ConfigObject
-import library.ConfigValueExtensions.RichConfigValue
+import library.ConfigValueExtensions
 import play.api.libs.json.JsObject
+import ConfigValueExtensions.RichConfigValue
 import tmt.shared.models.RoleMappings
 
 @Singleton
@@ -12,7 +14,7 @@ class RoleMappingsFactory {
     val entries = bindings.as[JsObject].value.toSeq
     entries
       .collect {
-       case (k, v: JsObject) => Mapping((v \ "role").as[String], k)
+        case (k, v: JsObject) => Mapping((v \ "role").as[String], k)
       }
       .groupBy(_.role)
       .mapValues(_.map(_.serverName))

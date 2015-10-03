@@ -5,38 +5,40 @@ import javax.inject.{Inject, Singleton}
 import common.AppSettings
 import models.{RoleMappingsFactory, HostMappings}
 import play.api.mvc.{Action, Controller}
-import services.ClusterClientService
+import services.{RoleMappingsService, ClusterClientService}
 import templates.PageFactory
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationLong
 import async.Async._
+import upickle.default._
 
 @Singleton
 class StreamController @Inject()(
   appSettings: AppSettings,
   clusterClientService: ClusterClientService,
-  roleMappingsFactory: RoleMappingsFactory,
+  roleMappingsService: RoleMappingsService,
   pageFactory: PageFactory
 )(implicit ec: ExecutionContext) extends Controller {
 
-  private val roleMappings = roleMappingsFactory.fromConfig(appSettings.bindings)
   private val hostMappings = HostMappings(appSettings.hosts)
 
   def streams() = Action.async {
     async {
       val connectionDataSet = await(clusterClientService.connections)
-      Ok(pageFactory.showcase(roleMappings, hostMappings, connectionDataSet).render)
+      Ok(pageFactory.showcase(
+        roleMappingsService.onlineRoleMappings,
+        hostMappings,
+        connectionDataSet).render
+      )
     }
   }
 
   def mappings() = Action {
-    import upickle.default._
-    Ok(write(roleMappings))
+    Ok(write(roleMappingsService.onlineRoleMappings))
   }
 
   def connections() = Action.async {
-    import upickle.default._
     async {
       val connectionDataSet = await(clusterClientService.connections)
       Ok(write(connectionDataSet))

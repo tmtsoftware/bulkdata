@@ -17,10 +17,7 @@ class ConnectionStore extends Actor {
   }
 
   def receive = {
-    case g@Changed(Keys.Connections) =>
-      val entries = g.get(Keys.Connections).entries
-      val sanitizedEntries = entries.map { case (k, vs) => k -> vs.toSet }
-      connections = sanitizedEntries
+    case g@Changed(Keys.Connections)    => connections = g.get(Keys.Connections).entries
     case ConnectionStore.GetConnections => sender() ! ConnectionDataSet(connections)
   }
 }
