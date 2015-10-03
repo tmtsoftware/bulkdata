@@ -34,5 +34,5 @@ class ClusterClientService @Inject()(system: ActorSystem) {
     mediator ! Publish(Topics.Subscription, Messages.Unsubscribe(serverName, topic))
   }
 
-  def connections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionSet]
+  def allConnections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionSet]
 }

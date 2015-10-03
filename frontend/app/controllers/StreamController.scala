@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 import common.AppSettings
 import models.HostMappings
 import play.api.mvc.{Action, Controller}
-import services.{ClusterClientService, RoleMappingsService}
+import services.{ConnectionSetService, ClusterClientService, RoleMappingsService}
 import templates.PageFactory
 import upickle.default._
 
@@ -18,7 +18,8 @@ class StreamController @Inject()(
   appSettings: AppSettings,
   clusterClientService: ClusterClientService,
   roleMappingsService: RoleMappingsService,
-  pageFactory: PageFactory
+  pageFactory: PageFactory,
+  connectionSetService: ConnectionSetService
 )(implicit ec: ExecutionContext) extends Controller {
 
   private val hostMappings = HostMappings(appSettings.hosts)
@@ -28,7 +29,7 @@ class StreamController @Inject()(
       Ok(pageFactory.showcase(
         roleMappingsService.onlineRoleMappings,
         hostMappings,
-        await(clusterClientService.connections)).render
+        await(connectionSetService.connectionSet)).render
       )
     }
   }
@@ -39,7 +40,7 @@ class StreamController @Inject()(
 
   def connections() = Action.async {
     async {
-      val connectionDataSet = await(clusterClientService.connections)
+      val connectionDataSet = await(connectionSetService.connectionSet)
       Ok(write(connectionDataSet))
     }
   }

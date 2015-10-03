@@ -17,6 +17,12 @@ case class ConnectionSet(connections: Map[String, Set[String]]) {
       topic <- topics
     } yield (serverName, topic)
   }.sorted
+
+  def pruneBy(onlineRoles: Set[String]) = ConnectionSet {
+    connections.collect { case (role, serverNames) if onlineRoles.contains(role) =>
+      role -> serverNames.filter(onlineRoles)
+    }
+  }
 }
 
 object ConnectionSet {
