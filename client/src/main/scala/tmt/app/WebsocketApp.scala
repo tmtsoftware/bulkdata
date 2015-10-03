@@ -9,7 +9,7 @@ import org.scalajs.dom.raw.HTMLUListElement
 import tmt.common.{ImageRateControls, CanvasControls, PerSecControls}
 import tmt.images.ImageRendering
 import tmt.metrics.MetricsRendering
-import tmt.shared.models.{ConnectionDataSet, RoleMappings, PerSecMetric}
+import tmt.shared.models.{ConnectionSet, RoleMappings, PerSecMetric}
 
 import scala.async.Async._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -75,12 +75,18 @@ object WebsocketApp extends JSApp {
     populateOptions(role2, server2)
 
     button1.onclick = { e: Event =>
-      val source = server1Select.value
-      val target = server2Select.value
-      Ajax.post(s"$target/subscribe/$source")
+      val topic = server1Select.value
+      val serverName = server2Select.value
+      Ajax.post(s"$serverName/subscribe/$topic")
+      val newLi = li(
+        s"$serverName is subscribed to $topic",
+        button(data := s"/$serverName/unsubscribe/$topic")("unsubscribe")
+      )
+      ul1.appendChild(newLi.render)
+      addUnsubscribeCallback()
     }
 
-    (0 to lis.length).foreach { index =>
+    def addUnsubscribeCallback() = (0 to lis.length).foreach { index =>
       val liNode = lis.item(index).asInstanceOf[LI]
       val buttonNode = liNode.getElementsByTagName("button")(0).asInstanceOf[Button]
       buttonNode.onclick = { e: Event =>
@@ -89,5 +95,6 @@ object WebsocketApp extends JSApp {
       }
     }
 
+    addUnsubscribeCallback()
   }
 }

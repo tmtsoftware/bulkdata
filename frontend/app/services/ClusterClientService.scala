@@ -10,7 +10,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import tmt.common.Messages
 import tmt.shared.Topics
-import tmt.shared.models.ConnectionDataSet
+import tmt.shared.models.ConnectionSet
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
@@ -34,5 +34,5 @@ class ClusterClientService @Inject()(system: ActorSystem) {
     mediator ! Publish(Topics.Subscription, Messages.Unsubscribe(serverName, topic))
   }
 
-  def connections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionDataSet]
+  def connections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionSet]
 }

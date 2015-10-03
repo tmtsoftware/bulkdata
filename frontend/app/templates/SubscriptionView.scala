@@ -1,11 +1,11 @@
 package templates
 
-import tmt.shared.models.{ConnectionDataSet, RoleMappings}
+import tmt.shared.models.{ConnectionSet, RoleMappings}
 
 import scalatags.Text.all._
 import Helpers._
 
-class SubscriptionView(roleMappings: RoleMappings, connectionDataSet: ConnectionDataSet) extends View {
+class SubscriptionView(roleMappings: RoleMappings, connectionDataSet: ConnectionSet) extends View {
 
   def frag = div(
     serverSelection("role1", "server1"),

@@ -26,7 +26,8 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-cluster" % Versions.Akka,
     "com.typesafe.akka" %% "akka-cluster-tools" % Versions.Akka,
     "com.typesafe.akka" %% "akka-cluster-metrics" % Versions.Akka,
-    "com.typesafe.akka" %% "akka-distributed-data-experimental" % Versions.Akka
+    "com.typesafe.akka" %% "akka-distributed-data-experimental" % Versions.Akka,
+    "com.typesafe.akka" %% "akka-persistence" % Versions.Akka
   )
 
   val frontendLibs = Seq(
