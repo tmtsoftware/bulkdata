@@ -3,15 +3,15 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
-import models.{RoleMappingsFactory, HostMappings}
+import models.HostMappings
 import play.api.mvc.{Action, Controller}
-import services.{RoleMappingsService, ClusterClientService}
+import services.{ClusterClientService, RoleMappingsService}
 import templates.PageFactory
+import upickle.default._
 
+import scala.async.Async._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationLong
-import async.Async._
-import upickle.default._
 
 @Singleton
 class StreamController @Inject()(
@@ -25,11 +25,10 @@ class StreamController @Inject()(
 
   def streams() = Action.async {
     async {
-      val connectionDataSet = await(clusterClientService.connections)
       Ok(pageFactory.showcase(
         roleMappingsService.onlineRoleMappings,
         hostMappings,
-        connectionDataSet).render
+        await(clusterClientService.connections)).render
       )
     }
   }
