@@ -2,12 +2,12 @@ package tmt.shared.models
 
 case class ConnectionSet(connections: Map[String, Set[String]]) {
   def addConnection(serverName: String, topic: String) = copy {
-    val currentTopics = connections.getOrElse(serverName, Set.empty)
+    val currentTopics = getTopics(serverName)
     connections + (serverName -> (currentTopics + topic))
   }
 
   def removeConnection(serverName: String, topic: String) = copy {
-    val currentTopics = connections.getOrElse(serverName, Set.empty)
+    val currentTopics = getTopics(serverName)
     connections + (serverName -> (currentTopics - topic))
   }
 
@@ -23,6 +23,8 @@ case class ConnectionSet(connections: Map[String, Set[String]]) {
       role -> serverNames.filter(onlineRoles)
     }
   }
+
+  def getTopics(serverName: String) = connections.getOrElse(serverName, Set.empty)
 }
 
 object ConnectionSet {

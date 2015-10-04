@@ -9,7 +9,7 @@ import scala.concurrent.duration.FiniteDuration
 
 class TickerService(
   appSettings: AppSettings, actorConfigs: ActorConfigs
-) extends SourceActorLink[Ticker.Tick](Topics.Throttle, actorConfigs) {
+) extends SourceActorLink[Ticker.Tick](actorConfigs, Topics.Throttle) {
   
   import actorConfigs._
   def wrap(sourceLinkedRef: ActorRef) = 
