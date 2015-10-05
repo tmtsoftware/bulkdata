@@ -31,3 +31,4 @@ shared/.jvm
 .target
 bin/
 journal
+snapshots

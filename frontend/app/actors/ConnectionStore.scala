@@ -5,7 +5,7 @@ import akka.cluster.Cluster
 import akka.cluster.ClusterEvent._
 import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Publish, Subscribe}
-import akka.persistence.PersistentActor
+import akka.persistence.{SnapshotOffer, PersistentActor}
 import tmt.common.Messages
 import tmt.shared.Topics
 import tmt.shared.models.ConnectionSet
@@ -30,21 +30,27 @@ class ConnectionStore extends PersistentActor {
   }
 
   def receiveRecover = {
-    case event: Messages.Subscribe   => addConnection(event)
-    case event: Messages.Unsubscribe => removeConnection(event)
+    case SnapshotOffer(metadata, cs: ConnectionSet) => connectionSet = cs
   }
 
   def receiveCommand = {
-    case event: Messages.Subscribe      => persist(event)(addConnection)
-    case event: Messages.Unsubscribe    => persist(event)(removeConnection)
+    case event: Messages.Subscribe      => addConnection(event)
+    case event: Messages.Unsubscribe    => removeConnection(event)
     case x: MemberUp                    =>
       println("******: ", x)
-      scheduler.scheduleOnce(1.second, mediator, Publish(Topics.Connections, connectionSet))
+      scheduler.scheduleOnce(2.second, mediator, Publish(Topics.Connections, connectionSet))
     case ConnectionStore.GetConnections => sender() ! connectionSet
   }
 
-  def addConnection(event: Messages.Subscribe) = connectionSet = connectionSet.addConnection(event.serverName, event.topic)
-  def removeConnection(event: Messages.Unsubscribe) = connectionSet = connectionSet.removeConnection(event.serverName, event.topic)
+  def addConnection(event: Messages.Subscribe) = {
+    connectionSet = connectionSet.addConnection(event.serverName, event.topic)
+    saveSnapshot(connectionSet)
+  }
+
+  def removeConnection(event: Messages.Unsubscribe) = {
+    connectionSet = connectionSet.removeConnection(event.serverName, event.topic)
+    saveSnapshot(connectionSet)
+  }
 }
 
 object ConnectionStore {
