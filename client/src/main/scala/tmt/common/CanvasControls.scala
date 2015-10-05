@@ -36,13 +36,13 @@ object SubscriptionControls {
   val server1 = document.get[Div]("server1")
   val server2 = document.get[Div]("server2")
 
-  def server1Select = document.get[Select](s"${server1.id}-select")
-  def server2Select = document.get[Select](s"${server2.id}-select")
+  def server1Select() = document.get[Select](s"${server1.id}-select")
+  def server2Select() = document.get[Select](s"${server2.id}-select")
 
   val button1 = document.get[Button]("subscribe")
 
   val ul1 = document.get[UList]("connections")
-  val lis = ul1.getElementsByTagName("li")
+  def lis() = ul1.getElementsByTagName("li")
 }
 
 object Helper {

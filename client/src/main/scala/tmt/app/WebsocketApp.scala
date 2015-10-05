@@ -75,8 +75,8 @@ object WebsocketApp extends JSApp {
     populateOptions(role2, server2)
 
     button1.onclick = { e: Event =>
-      val topic = server1Select.value
-      val serverName = server2Select.value
+      val topic = server1Select().value
+      val serverName = server2Select().value
       Ajax.post(s"$serverName/subscribe/$topic")
       val newLi = li(
         s"$serverName is subscribed to $topic",
@@ -86,8 +86,8 @@ object WebsocketApp extends JSApp {
       addUnsubscribeCallback()
     }
 
-    def addUnsubscribeCallback() = (0 to lis.length).foreach { index =>
-      val liNode = lis.item(index).asInstanceOf[LI]
+    def addUnsubscribeCallback() = (0 until lis().length).foreach { index =>
+      val liNode = lis().item(index).asInstanceOf[LI]
       val buttonNode = liNode.getElementsByTagName("button")(0).asInstanceOf[Button]
       buttonNode.onclick = { e: Event =>
         Ajax.post(s"${buttonNode.getAttribute("data")}")
