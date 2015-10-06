@@ -30,19 +30,19 @@ object ImageRateControls {
 }
 
 object SubscriptionControls {
-  val role1 = document.get[Select]("role1")
-  val role2 = document.get[Select]("role2")
+  val selectRole1 = document.get[Select]("role1")
+  val selectRole2 = document.get[Select]("role2")
 
-  val server1 = document.get[Div]("server1")
-  val server2 = document.get[Div]("server2")
+  val divServer1 = document.get[Div]("server1")
+  val divServer2 = document.get[Div]("server2")
 
-  def server1Select() = document.get[Select](s"${server1.id}-select")
-  def server2Select() = document.get[Select](s"${server2.id}-select")
+  def selectServer1() = document.get[Select](s"${divServer1.id}-select")
+  def selectServer2() = document.get[Select](s"${divServer2.id}-select")
 
-  val button1 = document.get[Button]("subscribe")
+  val subscribeButton = document.get[Button]("subscribe")
 
-  val ul1 = document.get[UList]("connections")
-  val lis = ul1.getElementsByTagName("li")
+  val connectionsUl = document.get[UList]("connections")
+  val connectionsLis = connectionsUl.getElementsByTagName("li")
 }
 
 object Helper {

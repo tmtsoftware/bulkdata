@@ -15,6 +15,7 @@ object Dependencies {
   val clientLibs = Def.setting {
     Seq(
       "com.lihaoyi" %%% "scalatags" % "0.5.2",
+      "com.lihaoyi" %%% "scalarx" % "0.2.8",
       "org.scala-js" %%% "scalajs-dom" % "0.8.2",
       "org.monifu" %%% "monifu" % "1.0-M11"
     )

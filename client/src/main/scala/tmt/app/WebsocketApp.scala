@@ -61,38 +61,38 @@ object WebsocketApp extends JSApp {
 
     val roleMappings = read[RoleMappings](await(Ajax.get("/mappings")).responseText)
 
-    def populateOptions(role: Select, server: Div) = role.onchange = { e: Event =>
-      val servers = roleMappings.getServers(role.value)
-      val selectNode = select(id := s"${server.id}-select")(
+    def populateOptions(selectRole: Select, serverDiv: Div) = selectRole.onchange = { e: Event =>
+      val servers = roleMappings.getServers(selectRole.value)
+      val selectNode = select(id := s"${serverDiv.id}-select")(
         option(selected := true, disabled, hidden := true, value := "")("select-server"),
         servers.map(s => option(value := s, s))
       ).render
-      server.innerHTML = ""
-      server.appendChild(selectNode)
+      serverDiv.innerHTML = ""
+      serverDiv.appendChild(selectNode)
     }
 
-    populateOptions(role1, server1)
-    populateOptions(role2, server2)
+    populateOptions(selectRole1, divServer1)
+    populateOptions(selectRole2, divServer2)
 
-    button1.onclick = { e: Event =>
-      val topic = server1Select().value
-      val serverName = server2Select().value
+    subscribeButton.onclick = { e: Event =>
+      val topic = selectServer1().value
+      val serverName = selectServer2().value
       Ajax.post(s"$serverName/subscribe/$topic")
       val buttonNode = button(data := s"/$serverName/unsubscribe/$topic")("unsubscribe").render
       val liNode = li(s"$serverName is subscribed to $topic", buttonNode).render
       removeLi(liNode, buttonNode)
-      ul1.appendChild(liNode)
+      connectionsUl.appendChild(liNode)
     }
 
-    def addUnsubscribeCallback() = (0 until lis.length).foreach { index =>
-      val liNode = lis.item(index).asInstanceOf[LI]
+    def addUnsubscribeCallback() = (0 until connectionsLis.length).foreach { index =>
+      val liNode = connectionsLis.item(index).asInstanceOf[LI]
       val buttonNode = liNode.getElementsByTagName("button")(0).asInstanceOf[Button]
       removeLi(liNode, buttonNode)
     }
 
     def removeLi(liNode: LI, buttonNode: Button) = buttonNode.onclick = { e: Event =>
       Ajax.post(s"${buttonNode.getAttribute("data")}")
-      ul1.removeChild(liNode)
+      connectionsUl.removeChild(liNode)
     }
 
     addUnsubscribeCallback()
