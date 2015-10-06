@@ -42,7 +42,7 @@ object SubscriptionControls {
   val button1 = document.get[Button]("subscribe")
 
   val ul1 = document.get[UList]("connections")
-  def lis() = ul1.getElementsByTagName("li")
+  val lis = ul1.getElementsByTagName("li")
 }
 
 object Helper {
