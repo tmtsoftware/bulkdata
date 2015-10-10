@@ -20,22 +20,23 @@ object CollectionStrawMan1 {
     def iterator: Iterator[A]
   }
 
-  /** Base trait for instances that can construct a collection from an iterator */
-  trait FromIterator[+C[X] <: Iterable[X]] {
-    def fromIterator[B](it: Iterator[B]): C[B]
-  }
-
   /** Base trait for companion objects of collections */
-  trait IterableFactory[+C[X] <: Iterable[X]] extends FromIterator[C] {
+  trait IterableFactory[+C[X] <: Iterable[X]] {
+    def fromIterator[B](it: Iterator[B]): C[B]
+
     def empty[X]: C[X] = fromIterator(Iterator.empty)
     def apply[A](xs: A*): C[A] = fromIterator(Iterator(xs: _*))
   }
 
+  trait CanMake[+C[X] <: Iterable[X]] {
+    def factory: IterableFactory[C]
+  }
+
   /** Base trait for generic collections */
-  trait Iterable[+A] extends CanIterate[A] with FromIterator[Iterable]
+  trait Iterable[+A] extends CanIterate[A] with CanMake[Iterable]
 
   /** Base trait for sequence collections */
-  trait Seq[+A] extends Iterable[A] with FromIterator[Seq] {
+  trait Seq[+A] extends Iterable[A] with CanMake[Seq] {
     def apply(i: Int): A
     def length: Int
   }
@@ -52,7 +53,7 @@ object CollectionStrawMan1 {
     def isEmpty: Boolean = !iterator.hasNext
     def head: A = iterator.next
     def view: View[A] = new View(iterator)
-    def to[C[X] <: Iterable[X]](fi: FromIterator[C]): C[A] = fi.fromIterator(iterator)
+    def to[C[X] <: Iterable[X]](fi: IterableFactory[C]): C[A] = fi.fromIterator(iterator)
   }
 
   /** Transforms returning same collection type */
@@ -88,35 +89,36 @@ object CollectionStrawMan1 {
   }
 
   /** Implementation of MonoTransforms for all generic collections */
-  implicit class IterableMonoTransforms[A, C[X] <: Iterable[X]](val c: Iterable[A] with FromIterator[C])
+  implicit class IterableMonoTransforms[A, C[X] <: Iterable[X]](val c: Iterable[A] with CanMake[C])
     extends AnyVal with MonoTransforms[A, C[A]] {
     protected def iter = c.iterator
-    protected def fromIter(it: => Iterator[A]): C[A] = c.fromIterator(it)
+    protected def fromIter(it: => Iterator[A]): C[A] = c.factory.fromIterator(it)
   }
 
   /** Implementation of PolyTransforms for all generic collections */
-  implicit class IterablePolyTransforms[A, C[X] <: Iterable[X]](val c: Iterable[A] with FromIterator[C])
+  implicit class IterablePolyTransforms[A, C[X] <: Iterable[X]](val c: Iterable[A] with CanMake[C])
     extends AnyVal with PolyTransforms[A, C] {
     protected def iter = c.iterator
-    protected def fromIter[B](it: => Iterator[B]) = c.fromIterator(it)
+    protected def fromIter[B](it: => Iterator[B]) = c.factory.fromIterator(it)
   }
 
   /** Implementation of MonoTransformsForSeqs for all generic collections */
-  implicit class SeqMonoTransforms[A, C[X] <: Seq[X]](val c: Seq[A] with FromIterator[C])
+  implicit class SeqMonoTransforms[A, C[X] <: Seq[X]](val c: Seq[A] with CanMake[C])
     extends AnyVal with MonoTransformsOfSeqs[A, C[A]] {
     protected def iter = c.iterator
-    protected def fromIter(it: => Iterator[A]) = c.fromIterator(it)
+    protected def fromIter(it: => Iterator[A]) = c.factory.fromIterator(it)
   }
 
   /* --------- Concrete collection types ------------------------------- */
 
   /** Concrete collection type: List */
-  sealed trait List[+A] extends Seq[A] with FromIterator[List] {
+  sealed trait List[+A] extends Seq[A] with CanMake[List] {
     def isEmpty: Boolean
     def head: A
     def tail: List[A]
     def iterator = new ListIterator[A](this)
-    def fromIterator[B](it: Iterator[B]): List[B] = List.fromIterator(it)
+
+    def factory = List
     def apply(i: Int): A = {
       require(!isEmpty)
       if (i == 0) head else tail.apply(i - 1)
@@ -152,7 +154,7 @@ object CollectionStrawMan1 {
   }
 
   /** Concrete collection type: ArrayBuffer */
-  class ArrayBuffer[A] private (initElems: Array[AnyRef], initLength: Int) extends Seq[A] with FromIterator[ArrayBuffer] {
+  class ArrayBuffer[A] private (initElems: Array[AnyRef], initLength: Int) extends Seq[A] with CanMake[ArrayBuffer] {
     def this() = this(new Array[AnyRef](16), 0)
     private var elems: Array[AnyRef] = initElems
     private var start = 0
@@ -160,8 +162,9 @@ object CollectionStrawMan1 {
     def apply(i: Int) = elems(start + i).asInstanceOf[A]
     def length = limit - start
     def iterator = new ArrayBufferIterator[A](elems, start, length)
-    def fromIterator[B](it: Iterator[B]): ArrayBuffer[B] =
-      ArrayBuffer.fromIterator(it)
+
+    def factory = ArrayBuffer
+
     def +=(elem: A): this.type = {
       if (limit == elems.length) {
         if (start > 0) {
