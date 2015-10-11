@@ -13,10 +13,10 @@ case class ConnectionSet(connections: Map[String, Set[String]]) {
 
   def flatConnections = {
     for {
-      (serverName, topics) <- connections.toSeq
+      (serverName, topics) <- connections.toSet
       topic <- topics
-    } yield (serverName, topic)
-  }.sorted
+    } yield Connection(serverName, topic)
+  }
 
   def pruneBy(onlineRoles: Set[String]) = ConnectionSet {
     connections.collect { case (role, serverNames) if onlineRoles.contains(role) =>
@@ -30,3 +30,5 @@ case class ConnectionSet(connections: Map[String, Set[String]]) {
 object ConnectionSet {
   def empty = ConnectionSet(Map.empty)
 }
+
+case class Connection(server: String, topic: String)

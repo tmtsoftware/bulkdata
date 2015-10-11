@@ -10,7 +10,6 @@ class PageFactory {
   def showcase(roleMappings: RoleMappings, hostMappings: HostMappings, connectionDataSet: ConnectionSet) = new Page(
     "showcase",
     Seq(
-      new SubscriptionView(roleMappings, connectionDataSet).frag,
       new ThrottleView(roleMappings).frag,
       new StreamView(roleMappings, hostMappings).frag
     )

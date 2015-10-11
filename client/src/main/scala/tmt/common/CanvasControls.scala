@@ -5,7 +5,6 @@ import org.scalajs.dom.{CanvasRenderingContext2D, URL, document}
 import tmt.shared.SharedConfigs
 
 import scala.scalajs.js
-import Helper._
 
 object CanvasControls {
   val select = document.getElementById("source-selection").asInstanceOf[Select]
@@ -27,26 +26,4 @@ object ImageRateControls {
   val button = document.getElementById("change-rate").asInstanceOf[Button]
   val serverName = document.getElementById("server-name").asInstanceOf[Select]
   val newRate = document.getElementById("new-rate").asInstanceOf[Input]
-}
-
-object SubscriptionControls {
-  val selectRole1 = document.get[Select]("role1")
-  val selectRole2 = document.get[Select]("role2")
-
-  val divServer1 = document.get[Div]("server1")
-  val divServer2 = document.get[Div]("server2")
-
-  def selectServer1() = document.get[Select](s"${divServer1.id}-select")
-  def selectServer2() = document.get[Select](s"${divServer2.id}-select")
-
-  val subscribeButton = document.get[Button]("subscribe")
-
-  val connectionsUl = document.get[UList]("connections")
-  val connectionsLis = connectionsUl.getElementsByTagName("li")
-}
-
-object Helper {
-  implicit class RichDoc(val doc: Document) extends AnyVal {
-    def get[T](id: String) = doc.getElementById(id).asInstanceOf[T]
-  }
 }
