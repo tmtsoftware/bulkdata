@@ -1,10 +1,10 @@
-package tmt.app
+package tmt.views
 
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.html.Select
 import rx._
 import tmt.framework.Framework
-import Framework._
+import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.shared.models.{Connection, ConnectionSet, RoleMappings}
 

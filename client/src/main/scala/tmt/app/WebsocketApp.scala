@@ -8,7 +8,8 @@ import org.scalajs.dom.html._
 import tmt.common.{CanvasControls, ImageRateControls, PerSecControls}
 import tmt.images.ImageRendering
 import tmt.metrics.MetricsRendering
-import tmt.shared.models.{ConnectionSet, PerSecMetric, RoleMappings}
+import tmt.shared.models.{HostMappings, ConnectionSet, PerSecMetric, RoleMappings}
+import tmt.views.{StreamView, SubscriptionView}
 import upickle.default._
 
 import scala.async.Async._
@@ -19,7 +20,15 @@ import scala.scalajs.js.annotation.JSExport
 object WebsocketApp extends JSApp {
 
   @JSExport
-  override def main() = {
+  override def main() = async {
+    val roleMappings = read[RoleMappings](await(Ajax.get("/mappings")).responseText)
+    val connectionSet = read[ConnectionSet](await(Ajax.get("/connections")).responseText)
+    val hostMappings = read[HostMappings](await(Ajax.get("/hosts")).responseText)
+    val subscriptionDiv = new SubscriptionView(roleMappings, connectionSet).frag.render
+    val streamDiv = new StreamView(roleMappings, hostMappings).frag.render
+    document.body.appendChild(subscriptionDiv)
+    document.body.appendChild(streamDiv)
+
     render(PerSecControls.select) { socket =>
       MetricsRendering.render[PerSecMetric](socket, PerSecControls.span)
     }
@@ -27,7 +36,6 @@ object WebsocketApp extends JSApp {
       ImageRendering.drain(socket)
     }
     throttle()
-    connect()
   }
 
   def render(select: Select)(block: WebSocket => Unit): Unit = {
@@ -52,12 +60,5 @@ object WebsocketApp extends JSApp {
         println("success")
       }
     }
-  }
-
-  def connect() = async {
-    val roleMappings = read[RoleMappings](await(Ajax.get("/mappings")).responseText)
-    val connectionSet = read[ConnectionSet](await(Ajax.get("/connections")).responseText)
-    val div = new SubscriptionView(roleMappings, connectionSet).frag.render
-    document.body.appendChild(div)
   }
 }

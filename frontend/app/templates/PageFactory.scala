@@ -2,16 +2,14 @@ package templates
 
 import javax.inject.Singleton
 
-import models.HostMappings
-import tmt.shared.models.{ConnectionSet, RoleMappings}
+import tmt.shared.models.RoleMappings
 
 @Singleton
 class PageFactory {
-  def showcase(roleMappings: RoleMappings, hostMappings: HostMappings, connectionDataSet: ConnectionSet) = new Page(
+  def showcase(roleMappings: RoleMappings) = new Page(
     "showcase",
     Seq(
-      new ThrottleView(roleMappings).frag,
-      new StreamView(roleMappings, hostMappings).frag
+      new ThrottleView(roleMappings).frag
     )
   )
 }

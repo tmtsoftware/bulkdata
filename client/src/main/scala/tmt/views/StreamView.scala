@@ -1,11 +1,11 @@
-package templates
+package tmt.views
 
-import templates.Helpers._
 import tmt.shared.models.{HostMappings, RoleMappings}
 
-import scalatags.Text.all._
+import scalatags.JsDom.all._
+import tmt.framework.Helpers._
 
-class StreamView(roleMappings: RoleMappings, hostMappings: HostMappings) extends View {
+class StreamView(roleMappings: RoleMappings, hostMappings: HostMappings) {
   val frequencyServers = roleMappings.getServers("frequency")
   val sourceServers = roleMappings.getServers("source")
   
