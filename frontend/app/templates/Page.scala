@@ -6,7 +6,7 @@ import scalatags.Text.all._
 import scalatags.Text.{tags2 => t}
 import controllers.routes
 
-class Page(titleValue: String, fragments: Seq[Modifier]) {
+class Page(titleValue: String) {
   def page = html(
     head(
       t.title(titleValue),
@@ -16,7 +16,6 @@ class Page(titleValue: String, fragments: Seq[Modifier]) {
       script(`type` := "text/javascript", src := routes.Assets.at("lib/jquery/jquery.min.js").url)
     ),
     body(
-      fragments,
       raw(playscalajs.html.scripts("client").toString())
     )
   )

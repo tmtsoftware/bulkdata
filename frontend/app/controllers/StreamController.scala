@@ -4,9 +4,8 @@ import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
 import play.api.mvc.{Action, Controller}
-import services.{ConnectionSetService, ClusterClientService, RoleMappingsService}
-import templates.PageFactory
-import tmt.shared.models.HostMappings
+import services.{ClusterClientService, ConnectionSetService, RoleMappingsService}
+import templates.Page
 import upickle.default._
 
 import scala.async.Async._
@@ -18,12 +17,11 @@ class StreamController @Inject()(
   appSettings: AppSettings,
   clusterClientService: ClusterClientService,
   roleMappingsService: RoleMappingsService,
-  pageFactory: PageFactory,
   connectionSetService: ConnectionSetService
 )(implicit ec: ExecutionContext) extends Controller {
 
   def streams() = Action {
-    Ok(pageFactory.showcase(roleMappingsService.onlineRoleMappings).render)
+    Ok(new Page("showcase").render)
   }
 
   def mappings() = Action {
