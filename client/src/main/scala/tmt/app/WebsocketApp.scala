@@ -29,9 +29,6 @@ object WebsocketApp extends JSApp {
     document.body.appendChild(subscriptionDiv)
     document.body.appendChild(streamDiv)
 
-    render(PerSecControls.select) { socket =>
-      MetricsRendering.render[PerSecMetric](socket, PerSecControls.span)
-    }
     render(CanvasControls.select) { socket =>
       ImageRendering.drain(socket)
     }

@@ -1,14 +1,11 @@
 package tmt.views
 
 import org.scalajs.dom.ext.Ajax
-import org.scalajs.dom.html.Select
 import rx._
-import tmt.framework.Framework
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.shared.models.{Connection, ConnectionSet, RoleMappings}
 
-import scala.scalajs.js
 import scalatags.JsDom.all._
 
 class SubscriptionView(roleMappings: RoleMappings, connectionSet: ConnectionSet) {
@@ -65,8 +62,4 @@ class SubscriptionView(roleMappings: RoleMappings, connectionSet: ConnectionSet)
   def subscribe(connection: Connection) = Ajax.post(s"${connection.server}/subscribe/${connection.topic}")
 
   def unsubscribe(connection: Connection) = Ajax.post(s"${connection.server}/unsubscribe/${connection.topic}")
-
-  def setValue(selection: Var[String]): js.ThisFunction = { e: Select =>
-    selection() = e.value
-  }
 }
