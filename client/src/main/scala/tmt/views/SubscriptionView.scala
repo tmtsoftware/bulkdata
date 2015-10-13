@@ -5,7 +5,7 @@ import rx._
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.shared.models.{Connection, ConnectionSet, RoleMappings}
-
+import monifu.concurrent.Implicits.globalScheduler
 import scalatags.JsDom.all._
 
 class SubscriptionView(roleMappings: RoleMappings, connectionSet: ConnectionSet) {
@@ -50,8 +50,9 @@ class SubscriptionView(roleMappings: RoleMappings, connectionSet: ConnectionSet)
   }
 
   def addConnection() = {
-    subscribe(connection())
-    connections() = connections() + connection()
+    subscribe(connection()).onSuccess {
+      case _ => connections() = connections() + connection()
+    }
   }
 
   def removeConnection(connection: Connection) = {
