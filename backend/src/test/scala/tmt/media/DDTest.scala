@@ -2,13 +2,13 @@ package tmt.media
 
 import akka.stream.scaladsl.Source
 import org.scalatest.{MustMatchers, FunSuite}
-import tmt.app.MediaAssembly
+import tmt.app.Assembly
 
 import scala.concurrent.duration.DurationInt
 
 class DDTest extends FunSuite with MustMatchers {
 
-  val assembly = new MediaAssembly("test")
+  val assembly = new Assembly("test")
 
   test("demo") {
     val duration = 2.millis

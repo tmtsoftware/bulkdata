@@ -7,9 +7,9 @@ import tmt.clients._
 import tmt.io._
 import tmt.server._
 import tmt.shared.models.{Image, ImageMetric}
-import tmt.transformations.{ImageTransformations, MetricsTransformations}
+import tmt.transformations.{ImageProcessor, ImageTransformations, MetricsTransformations}
 
-class MediaAssembly(name: String, env: String = "dev") {
+class Assembly(name: String, env: String = "dev") {
   import com.softwaremill.macwire._
 
   lazy val configLoader = wire[ConfigLoader]
@@ -38,8 +38,11 @@ class MediaAssembly(name: String, env: String = "dev") {
   lazy val publisher              = wire[Publisher]
   lazy val imageSubscriber        = wire[SubscriptionService[Image]]
   lazy val metricSubscriber       = wire[SubscriptionService[ImageMetric]]
+
   lazy val imageTransformations   = wire[ImageTransformations]
   lazy val metricsTransformations = wire[MetricsTransformations]
+  lazy val imageProcessor         = wire[ImageProcessor]
+
   lazy val routeFactory           = wire[RouteFactory]
   lazy val routeInstances         = wire[RouteInstances]
   lazy val serverFactory          = wire[ServerFactory]

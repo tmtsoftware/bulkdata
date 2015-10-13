@@ -6,7 +6,15 @@ lazy val sharedSettings = Seq(
   scalaVersion := scalaV,
   transitiveClassifiers in Global := Seq(Artifact.SourceClassifier),
   updateOptions := updateOptions.value.withCachedResolution(true),
-  libraryDependencies ++= Dependencies.sharedLibs.value
+  libraryDependencies ++= Dependencies.sharedLibs.value,
+  scalacOptions ++= Seq(
+    "-deprecation",
+    "-unchecked",
+    "-feature",
+    "-Xlint",
+    "-Ywarn-dead-code",
+    "-encoding", "UTF-8" // yes, this is 2 args
+  )
 ) ++ net.virtualvoid.sbt.graph.Plugin.graphSettings
 
 lazy val client = project

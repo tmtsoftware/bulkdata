@@ -9,7 +9,7 @@ object Main extends App {
 }
 
 class Main(serverName: String, env: String) {
-  val assembly = new MediaAssembly(serverName, env)
+  val assembly = new Assembly(serverName, env)
   val server = assembly.serverFactory.make()
   val binding = Await.result(server.run(), 1.second)
   
