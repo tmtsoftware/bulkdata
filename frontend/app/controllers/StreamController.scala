@@ -4,7 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
 import play.api.mvc.{Action, Controller}
-import services.{ClusterClientService, ConnectionSetService, RoleMappingsService}
+import services.{ValidationFailedException, ClusterClientService, ConnectionSetService, RoleMappingsService}
 import templates.Page
 import upickle.default._
 
@@ -46,7 +46,10 @@ class StreamController @Inject()(
 
   def subscribe(serverName: String, topic: String) = Action {
     clusterClientService.subscribe(serverName, topic)
-    Accepted("ok")
+      .map(_ => Accepted("ok"))
+      .recover {
+      case ValidationFailedException(msg) => BadGateway(msg)
+    }.get
   }
 
   def unsubscribe(serverName: String, topic: String) = Action {
