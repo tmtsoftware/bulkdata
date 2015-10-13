@@ -7,7 +7,7 @@ object Dependencies {
     Seq(
       "me.chrons" %%% "boopickle" % "1.1.0",
       "com.softwaremill.macwire" %% "macros" % "1.0.7",
-      "com.lihaoyi" %%% "upickle" % "0.3.6",
+      "com.github.benhutchison" %%% "prickle" % "1.1.9",
       "org.scala-lang.modules" %% "scala-async" % "0.9.5"
     )
   }

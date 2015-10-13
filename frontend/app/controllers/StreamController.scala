@@ -6,7 +6,8 @@ import common.AppSettings
 import play.api.mvc.{Action, Controller}
 import services.{ClusterClientService, ConnectionSetService, RoleMappingsService}
 import templates.Page
-import upickle.default._
+import tmt.shared.models.Role
+import prickle._
 
 import scala.async.Async._
 import scala.concurrent.ExecutionContext
@@ -25,17 +26,17 @@ class StreamController @Inject()(
   }
 
   def mappings() = Action {
-    Ok(write(roleMappingsService.onlineRoleMappings))
+    Ok(Pickle.intoString(roleMappingsService.onlineRoleMappings))
   }
 
   def hosts() = Action {
-    Ok(write(appSettings.hosts))
+    Ok(Pickle.intoString(appSettings.hosts))
   }
 
   def connections() = Action.async {
     async {
       val connectionDataSet = await(connectionSetService.connectionSet)
-      Ok(write(connectionDataSet))
+      Ok(Pickle.intoString(connectionDataSet))
     }
   }
 

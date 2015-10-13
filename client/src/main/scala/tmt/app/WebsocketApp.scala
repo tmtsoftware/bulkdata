@@ -7,7 +7,7 @@ import tmt.common.CanvasControls
 import tmt.images.ImageRendering
 import tmt.shared.models.{ConnectionSet, HostMappings, RoleMappings}
 import tmt.views.{StreamView, SubscriptionView, ThrottleView}
-import upickle.default._
+import prickle._
 
 import scala.async.Async._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -18,9 +18,9 @@ object WebsocketApp extends JSApp {
 
   @JSExport
   override def main() = async {
-    val roleMappings = read[RoleMappings](await(Ajax.get("/mappings")).responseText)
-    val connectionSet = read[ConnectionSet](await(Ajax.get("/connections")).responseText)
-    val hostMappings = read[HostMappings](await(Ajax.get("/hosts")).responseText)
+    val roleMappings = Unpickle[RoleMappings].fromString(await(Ajax.get("/mappings")).responseText).get
+    val connectionSet = Unpickle[ConnectionSet].fromString(await(Ajax.get("/connections")).responseText).get
+    val hostMappings = Unpickle[HostMappings].fromString(await(Ajax.get("/hosts")).responseText).get
 
     val subscriptionDiv = new SubscriptionView(roleMappings, connectionSet).frag.render
     val streamDiv = new StreamView(roleMappings, hostMappings).frag.render

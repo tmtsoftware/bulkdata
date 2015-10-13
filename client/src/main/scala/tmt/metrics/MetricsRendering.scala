@@ -23,8 +23,8 @@ object MetricsRendering {
   }
 
   Obs(stream) {
-    import upickle.default._
-    stream().foreach(metric => frequency() = s"frequency: " + write(metric))
+    import prickle._
+    stream().foreach(metric => frequency() = s"frequency: " + Pickle.intoString(metric))
   }
 
   Obs(frequencyNode, skipInitial = true) {
