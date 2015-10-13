@@ -20,13 +20,13 @@ class ImageProcessor {
 
   def rotate(image: Image) = async {
     val bufferedImage = ImageIO.read(new ByteArrayInputStream(image.bytes))
-    val rotatedBufferedImage = Scalr.rotate(bufferedImage, Rotation.CW_90)
+    val rotatedBufferedImage = Scalr.rotate(bufferedImage, Rotation.FLIP_VERT)
     makeNewImage(image.name, rotatedBufferedImage)
   }(imageProcessingEc)
 
   private def makeNewImage(name: String, rotatedBufferedImage: BufferedImage): Image = {
     val baos = new ByteArrayOutputStream()
-    ImageIO.write(rotatedBufferedImage, "jpg", baos)
+    ImageIO.write(rotatedBufferedImage, "jpeg", baos)
     baos.flush()
     val rotatedImage = Image(name, baos.toByteArray)
     baos.close()
