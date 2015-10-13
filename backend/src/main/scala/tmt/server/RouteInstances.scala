@@ -1,11 +1,11 @@
 package tmt.server
 
 import akka.util.ByteString
-import tmt.library.Role
 import tmt.app.{AppSettings, ActorConfigs}
 import tmt.io.ImageReadService
 import tmt.library.SourceExtensions.RichSource
 import tmt.marshalling.BinaryMarshallers
+import tmt.shared.models.Role
 import tmt.transformations.{ImageTransformations, MetricsTransformations}
 
 class RouteInstances(

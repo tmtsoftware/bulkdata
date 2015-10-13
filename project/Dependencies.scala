@@ -22,7 +22,6 @@ object Dependencies {
   }
 
   val commonLibs = Seq(
-    "com.beachape" %% "enumeratum" % "1.3.1",
     "com.typesafe" % "config" % "1.3.0",
     "com.typesafe.akka" %% "akka-cluster" % Versions.Akka,
     "com.typesafe.akka" %% "akka-cluster-tools" % Versions.Akka,

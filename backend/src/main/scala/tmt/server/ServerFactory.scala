@@ -1,7 +1,7 @@
 package tmt.server
 
-import tmt.library.Role
 import tmt.app.{ActorConfigs, AppSettings}
+import tmt.shared.models.Role
 
 class ServerFactory(
   routeInstances: RouteInstances,
