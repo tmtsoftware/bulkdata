@@ -2,12 +2,12 @@ package tmt.shared.models
 
 import prickle.{PicklerPair, CompositePickler}
 
-sealed abstract class Role(maybeConsumes: Option[ItemType], maybeProduces: Option[ItemType]) {
+sealed abstract class Role(val maybeInput: Option[ItemType], val maybeOutput: Option[ItemType]) {
   def entryName: String
 }
-sealed abstract class SourceRole(val entryName: String, val produces: ItemType) extends Role(None, Some(produces))
-sealed abstract class SinkRole(val entryName: String, val consumes: ItemType) extends Role(Some(consumes), None)
-sealed abstract class FlowRole(val entryName: String, val consumes: ItemType, val produces: ItemType) extends Role(Some(consumes), Some(produces))
+sealed abstract class SourceRole(val entryName: String, val output: ItemType) extends Role(None, Some(output))
+sealed abstract class SinkRole(val entryName: String, val input: ItemType) extends Role(Some(input), None)
+sealed abstract class FlowRole(val entryName: String, val input: ItemType, val output: ItemType) extends Role(Some(input), Some(output))
 
 object Role {
   case object Source  extends SourceRole("source", ItemType.Image)

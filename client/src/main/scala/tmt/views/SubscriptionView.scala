@@ -4,11 +4,11 @@ import org.scalajs.dom.ext.Ajax
 import rx._
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
-import tmt.shared.models.{Role, Connection, ConnectionSet, RoleMappings}
+import tmt.shared.models.{Role, Connection, ConnectionSet, RoleMappingSet}
 
 import scalatags.JsDom.all._
 
-class SubscriptionView(roleMappings: RoleMappings, connectionSet: ConnectionSet) {
+class SubscriptionView(roleMappings: RoleMappingSet, connectionSet: ConnectionSet) {
 
   val serverName = Var("")
   val topicName = Var("")
@@ -43,7 +43,7 @@ class SubscriptionView(roleMappings: RoleMappings, connectionSet: ConnectionSet)
       Rx {
         select(onchange := setValue(item))(
           optionHint("select-server"),
-          makeOptions(roleMappings.getServers(Role.withName(role())))
+          makeOptions(roleMappings.getServersByRole(Role.withName(role())))
         )
       }
     )

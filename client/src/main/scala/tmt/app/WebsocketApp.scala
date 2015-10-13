@@ -5,7 +5,7 @@ import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.html._
 import tmt.common.CanvasControls
 import tmt.images.ImageRendering
-import tmt.shared.models.{ConnectionSet, HostMappings, RoleMappings}
+import tmt.shared.models.{ConnectionSet, HostMappings, RoleMappingSet}
 import tmt.views.{StreamView, SubscriptionView, ThrottleView}
 import prickle._
 
@@ -18,7 +18,7 @@ object WebsocketApp extends JSApp {
 
   @JSExport
   override def main() = async {
-    val roleMappings = Unpickle[RoleMappings].fromString(await(Ajax.get("/mappings")).responseText).get
+    val roleMappings = Unpickle[RoleMappingSet].fromString(await(Ajax.get("/mappings")).responseText).get
     val connectionSet = Unpickle[ConnectionSet].fromString(await(Ajax.get("/connections")).responseText).get
     val hostMappings = Unpickle[HostMappings].fromString(await(Ajax.get("/hosts")).responseText).get
 
