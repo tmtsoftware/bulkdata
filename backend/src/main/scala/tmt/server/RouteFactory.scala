@@ -7,21 +7,23 @@ import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.app.{ActorConfigs, AppSettings, CustomDirectives, Types}
 import tmt.library.SourceExtensions.RichSource
-import tmt.marshalling.BFormat
+import tmt.marshalling.{BinaryMarshallers, BFormat}
 import tmt.shared.models.Image
 
-class RouteFactory(actorConfigs: ActorConfigs, publisher: Publisher, appSettings: AppSettings) extends CustomDirectives {
+class RouteFactory(actorConfigs: ActorConfigs, publisher: Publisher, appSettings: AppSettings)
+  extends CustomDirectives with BinaryMarshallers {
 
   import actorConfigs._
 
   def images(topic: String, dataSource: Source[Image, Any]): Route = {
-    val multicast = dataSource.hotMulticast
-    makeRoute(topic, multicast, multicast.map(x => ByteString(x.bytes)))
+    val images = dataSource.hotMulticast
+    val bytes = images.map(x => ByteString(x.bytes))
+    makeRoute(topic, images, bytes)
   }
 
   def generic[T: Types.Stream: BFormat](topic: String, dataSource: Source[T, Any]): Route = {
-    val multicast = dataSource.hotMulticast
-    makeRoute(topic, multicast, multicast)
+    val items = dataSource.hotMulticast
+    makeRoute(topic, items, items)
   }
 
   private def makeRoute[T: Types.Stream, S: BFormat](
