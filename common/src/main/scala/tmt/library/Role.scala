@@ -17,6 +17,7 @@ object Role extends Enum[Role] {
   case object Metric  extends FlowRole("metric", ItemType.Image, ItemType.Metric)
   case object Accumulator  extends FlowRole("accumulator", ItemType.Metric, ItemType.Accumulation)
   case object Frequency  extends FlowRole("frequency", ItemType.Metric, ItemType.Frequency)
+  case object Rotator  extends FlowRole("rotator", ItemType.Image, ItemType.Image)
 }
 
 sealed abstract class ItemType(override val entryName: String) extends EnumEntry

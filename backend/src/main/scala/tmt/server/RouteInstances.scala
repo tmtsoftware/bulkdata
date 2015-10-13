@@ -30,5 +30,6 @@ class RouteInstances(
     case Role.Metric      => routeFactory.make(serverName, imageTransformations.imageMetrics)
     case Role.Accumulator => routeFactory.make(serverName, metricsTransformations.cumulativeMetrics)
     case Role.Frequency   => routeFactory.make(serverName, metricsTransformations.perSecMetrics)
+    case Role.Rotator     => routeFactory.make(serverName, imageTransformations.rotatedImages)
   }
 }
