@@ -45,6 +45,8 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-http-core-experimental" % Versions.Streams,
     "com.typesafe.akka" %% "akka-http-experimental" % Versions.Streams,
     "net.codingwell" %% "scala-guice" % "4.0.0",
+    "org.scala-lang.modules" %% "scala-async" % "0.9.5",
+    "org.imgscalr" % "imgscalr-lib" % "4.2",
 
     //test
     "org.scalatest" %% "scalatest" % "2.2.5" % "test",
