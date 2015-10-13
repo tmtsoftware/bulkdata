@@ -15,7 +15,6 @@ object Role extends Enum[Role] {
   case object Filter  extends FlowRole("filter", ItemType.Image, ItemType.Image)
 
   case object Metric  extends FlowRole("metric", ItemType.Image, ItemType.Metric)
-  case object Accumulator  extends FlowRole("accumulator", ItemType.Metric, ItemType.Accumulation)
   case object Frequency  extends FlowRole("frequency", ItemType.Metric, ItemType.Frequency)
   case object Rotator  extends FlowRole("rotator", ItemType.Image, ItemType.Image)
 }
@@ -27,6 +26,5 @@ object ItemType extends Enum[Role] {
 
   case object Image extends ItemType("image")
   case object Metric extends ItemType("metric")
-  case object Accumulation extends ItemType("accumulation")
   case object Frequency extends ItemType("frequency")
 }
