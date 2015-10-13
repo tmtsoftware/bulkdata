@@ -2,7 +2,7 @@ package tmt.library
 
 import enumeratum.{Enum, EnumEntry}
 
-sealed abstract class Role(maybeConsumes: Option[ItemType], maybeProduces: Option[ItemType]) extends EnumEntry
+sealed abstract class Role(val maybeConsumes: Option[ItemType], val maybeProduces: Option[ItemType]) extends EnumEntry
 sealed abstract class SourceRole(override val entryName: String, val produces: ItemType) extends Role(None, Some(produces))
 sealed abstract class SinkRole(override val entryName: String, val consumes: ItemType) extends Role(Some(consumes), None)
 sealed abstract class FlowRole(override val entryName: String, val consumes: ItemType, val produces: ItemType) extends Role(Some(consumes), Some(produces))

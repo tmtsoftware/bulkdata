@@ -8,4 +8,10 @@ case class RoleMappings(mappings: Map[String, Seq[String]]) {
       role -> serverNames.filter(onlineRoles)
     }
   }
+  def roleOf(serverName: String) = {
+    mappings.find { mapping =>
+      val servers = mapping._2
+      servers.contains(serverName)
+    }.map(_._1)
+  }
 }
