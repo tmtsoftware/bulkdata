@@ -4,10 +4,9 @@ import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
 import play.api.mvc.{Action, Controller}
+import prickle._
 import services.{ClusterClientService, ConnectionSetService, RoleMappingsService}
 import templates.Page
-import tmt.shared.models.Role
-import prickle._
 
 import scala.async.Async._
 import scala.concurrent.ExecutionContext

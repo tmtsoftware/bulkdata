@@ -6,7 +6,7 @@ import com.typesafe.config.ConfigObject
 import library.ConfigValueExtensions
 import play.api.libs.json.JsObject
 import ConfigValueExtensions.RichConfigValue
-import tmt.shared.models.RoleMappings
+import tmt.shared.models.{Role, RoleMappings}
 
 @Singleton
 class RoleMappingsFactory {
@@ -14,11 +14,11 @@ class RoleMappingsFactory {
     val entries = bindings.as[JsObject].value.toSeq
     entries
       .collect {
-        case (k, v: JsObject) => Mapping((v \ "role").as[String], k)
+        case (k, v: JsObject) => Mapping(Role.withName((v \ "role").as[String]), k)
       }
       .groupBy(_.role)
       .mapValues(_.map(_.serverName))
   }
 
-  private case class Mapping(role: String, serverName: String)
+  private case class Mapping(role: Role, serverName: String)
 }

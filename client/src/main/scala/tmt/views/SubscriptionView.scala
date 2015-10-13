@@ -4,7 +4,7 @@ import org.scalajs.dom.ext.Ajax
 import rx._
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
-import tmt.shared.models.{Connection, ConnectionSet, RoleMappings}
+import tmt.shared.models.{Role, Connection, ConnectionSet, RoleMappings}
 
 import scalatags.JsDom.all._
 
@@ -38,12 +38,12 @@ class SubscriptionView(roleMappings: RoleMappings, connectionSet: ConnectionSet)
     div(
       select(onchange := setValue(role))(
         optionHint("select role"),
-        makeOptions(roleMappings.roles)
+        makeOptions(roleMappings.roles.map(_.entryName))
       ),
       Rx {
         select(onchange := setValue(item))(
           optionHint("select-server"),
-          makeOptions(roleMappings.getServers(role()))
+          makeOptions(roleMappings.getServers(Role.withName(role())))
         )
       }
     )
