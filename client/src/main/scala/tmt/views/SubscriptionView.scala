@@ -14,7 +14,7 @@ class SubscriptionView(roleIndex: RoleIndex, connectionSet: ConnectionSet) {
   val topicName = Var("")
   val serverName = Var("")
 
-  val matchingServers = Rx(roleIndex.getMatchingServers(topicName()))
+  val matchingServers = Rx(roleIndex.compatibleConsumers(topicName()))
   
   val connection = Rx(Connection(serverName(), topicName()))
   val connections = Var(connectionSet.flatConnections)
