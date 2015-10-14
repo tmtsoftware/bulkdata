@@ -3,13 +3,13 @@ package tmt.views
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.metrics.MetricsRendering
-import tmt.shared.models.{ItemType, Role, HostMappings, RoleMappingSet}
+import tmt.shared.models.{ItemType, Role, HostMappings, RoleIndex}
 
 import scalatags.JsDom.all._
 
-class StreamView(roleMappings: RoleMappingSet, hostMappings: HostMappings) {
-  val frequencyServers = roleMappings.getServersByRole(Role.Frequency)
-  val sourceServers = roleMappings.getServersByOutputType(ItemType.Image)
+class StreamView(roleIndex: RoleIndex, hostMappings: HostMappings) {
+  val sourceServers = roleIndex.outputTypeIndex.getServers(ItemType.Image)
+  val frequencyServers = roleIndex.outputTypeIndex.getServers(ItemType.Frequency)
 
   def frag = {
     div(

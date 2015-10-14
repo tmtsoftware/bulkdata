@@ -5,7 +5,7 @@ import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.html._
 import tmt.common.CanvasControls
 import tmt.images.ImageRendering
-import tmt.shared.models.{ConnectionSet, HostMappings, RoleMappingSet}
+import tmt.shared.models.{ConnectionSet, HostMappings, RoleIndex}
 import tmt.views.{StreamView, SubscriptionView, ThrottleView}
 import prickle._
 
@@ -18,13 +18,13 @@ object WebsocketApp extends JSApp {
 
   @JSExport
   override def main() = async {
-    val roleMappings = Unpickle[RoleMappingSet].fromString(await(Ajax.get("/mappings")).responseText).get
+    val roleIndex = Unpickle[RoleIndex].fromString(await(Ajax.get("/mappings")).responseText).get
     val connectionSet = Unpickle[ConnectionSet].fromString(await(Ajax.get("/connections")).responseText).get
     val hostMappings = Unpickle[HostMappings].fromString(await(Ajax.get("/hosts")).responseText).get
 
-    val subscriptionDiv = new SubscriptionView(roleMappings, connectionSet).frag.render
-    val streamDiv = new StreamView(roleMappings, hostMappings).frag.render
-    val throttleDiv = new ThrottleView(roleMappings).frag.render
+    val subscriptionDiv = new SubscriptionView(roleIndex, connectionSet).frag.render
+    val streamDiv = new StreamView(roleIndex, hostMappings).frag.render
+    val throttleDiv = new ThrottleView(roleIndex).frag.render
 
     document.body.appendChild(throttleDiv)
     document.body.appendChild(subscriptionDiv)

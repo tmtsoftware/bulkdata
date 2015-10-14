@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 import common.AppSettings
 import play.api.mvc.{Action, Controller}
 import prickle._
-import services.{ClusterClientService, ConnectionSetService, RoleMappingsService}
+import services.{ClusterClientService, ConnectionSetService, RoleIndexService}
 import templates.Page
 
 import scala.async.Async._
@@ -16,7 +16,7 @@ import scala.concurrent.duration.DurationLong
 class StreamController @Inject()(
   appSettings: AppSettings,
   clusterClientService: ClusterClientService,
-  roleMappingsService: RoleMappingsService,
+  roleIndexService: RoleIndexService,
   connectionSetService: ConnectionSetService
 )(implicit ec: ExecutionContext) extends Controller {
 
@@ -25,7 +25,7 @@ class StreamController @Inject()(
   }
 
   def mappings() = Action {
-    Ok(Pickle.intoString(roleMappingsService.onlineRoleMappings))
+    Ok(Pickle.intoString(roleIndexService.onlineRoleIndex))
   }
 
   def hosts() = Action {

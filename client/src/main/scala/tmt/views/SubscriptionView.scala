@@ -4,11 +4,14 @@ import org.scalajs.dom.ext.Ajax
 import rx._
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
-import tmt.shared.models.{Role, Connection, ConnectionSet, RoleMappingSet}
+import tmt.shared.models._
 
 import scalatags.JsDom.all._
 
-class SubscriptionView(roleMappings: RoleMappingSet, connectionSet: ConnectionSet) {
+class SubscriptionView(roleIndex: RoleIndex, connectionSet: ConnectionSet) {
+
+  val itemTypeValue = Var("")
+  val itemType = Rx(ItemType.withName(itemTypeValue()))
 
   val serverName = Var("")
   val topicName = Var("")
@@ -19,7 +22,22 @@ class SubscriptionView(roleMappings: RoleMappingSet, connectionSet: ConnectionSe
   val sortedConnections = Rx(connections().toSeq.sortBy(c => (c.server, c.topic)))
 
   def frag = div(
-    selectOf(topicName), label("Subscribed by"), selectOf(serverName),
+    select(onchange := setValue(itemTypeValue))(
+      optionHint(s"select item type"),
+      makeOptions(roleIndex.itemTypes.map(_.entryName))
+    ),
+    Rx {
+      select(onchange := setValue(topicName))(
+        optionHint(s"select output server"),
+        makeOptions(roleIndex.outputTypeIndex.getServers(itemType()))
+      )
+    },
+    Rx {
+      select(onchange := setValue(serverName))(
+        optionHint(s"select input server"),
+        makeOptions(roleIndex.inputTypeIndex.getServers(itemType()))
+      )
+    },
     button(onclick := {() => addConnection()})("Connect"),
     Rx {
       ul(id := "connections")(
@@ -32,22 +50,6 @@ class SubscriptionView(roleMappings: RoleMappingSet, connectionSet: ConnectionSe
       )
     }
   )
-
-  def selectOf(item: Var[String]) = {
-    val role = Var("")
-    div(
-      select(onchange := setValue(role))(
-        optionHint("select role"),
-        makeOptions(roleMappings.roles.map(_.entryName))
-      ),
-      Rx {
-        select(onchange := setValue(item))(
-          optionHint("select-server"),
-          makeOptions(roleMappings.getServersByRole(Role.withName(role())))
-        )
-      }
-    )
-  }
 
   def addConnection() = {
     subscribe(connection())
