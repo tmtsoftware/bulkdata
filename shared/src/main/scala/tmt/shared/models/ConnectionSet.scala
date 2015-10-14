@@ -11,12 +11,10 @@ case class ConnectionSet(connections: Map[String, Set[String]]) {
     connections + (serverName -> (currentTopics - topic))
   }
 
-  def flatConnections = {
-    for {
-      (serverName, topics) <- connections.toSet
-      topic <- topics
-    } yield Connection(serverName, topic)
-  }
+  def flatConnections = for {
+    (serverName, topics) <- connections.toSeq
+    topic <- topics
+  } yield Connection(serverName, topic)
 
   def pruneBy(onlineRoles: Set[String]) = ConnectionSet {
     connections.collect { case (role, serverNames) if onlineRoles.contains(role) =>
