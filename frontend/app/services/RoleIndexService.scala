@@ -4,6 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
 import models.RoleIndexFactory
+import tmt.shared.models.ItemType
 
 @Singleton
 class RoleIndexService @Inject()(
@@ -12,20 +13,13 @@ class RoleIndexService @Inject()(
   clusterMetadataService: ClusterMetadataService) {
 
   private val roleIndex = roleIndexFactory.fromConfig(appSettings.bindings)
+
   def onlineRoleIndex = roleIndex.pruneBy(clusterMetadataService.onlineRoles)
 
   def validate(serverName: String, topic: String) = {
-    if(serverName == topic) {
-      false
-    }
-    else {
-      for {
-        inputRole <- onlineRoleIndex.serverNameIndex.getRole(serverName)
-        inputType <- inputRole.maybeInput
-        outRole <- onlineRoleIndex.serverNameIndex.getRole(topic)
-        outType <- outRole.maybeOutput
-      } yield outType == inputType
-    }.getOrElse(false)
+    lazy val inputType = onlineRoleIndex.serverNameIndex.getRole(serverName).input
+    lazy val outputType = onlineRoleIndex.serverNameIndex.getRole(topic).output
+    (serverName != topic) && (inputType != ItemType.Empty) && (inputType == outputType)
   }
 
 }
