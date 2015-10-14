@@ -4,6 +4,8 @@ import prickle.{PicklerPair, CompositePickler}
 
 sealed abstract class Role(val maybeInput: Option[ItemType], val maybeOutput: Option[ItemType]) {
   def entryName: String
+  def isProducer = maybeOutput.isDefined
+  def isConsumer = maybeInput.isDefined
 }
 
 object Role {

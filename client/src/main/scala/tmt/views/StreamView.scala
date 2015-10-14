@@ -3,7 +3,7 @@ package tmt.views
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.metrics.MetricsRendering
-import tmt.shared.models.{ItemType, Role, HostMappings, RoleIndex}
+import tmt.shared.models.{HostMappings, ItemType, RoleIndex}
 
 import scalatags.JsDom.all._
 

@@ -3,12 +3,28 @@ package tmt.shared.models
 case class RoleIndex(mappings: Seq[RoleMapping]) {
   private val index = mappings.groupBy(_.role).mapValues(_.map(_.server))
 
-  val outputTypeIndex = ItemTypeIndex.from(this, _.maybeOutput)
-  val inputTypeIndex = ItemTypeIndex.from(this, _.maybeInput)
+  val inputTypeIndex = ItemTypeIndex.from(mappings, _.maybeInput)
+  val outputTypeIndex = ItemTypeIndex.from(mappings, _.maybeOutput)
+  val serverNameIndex = ServerNameIndex(mappings)
+
   val itemTypes = (outputTypeIndex.itemTypes ++ inputTypeIndex.itemTypes).distinct.sortBy(_.entryName)
 
+  def getMatchingServers(server: String) =  {
+    val outputType = serverNameIndex.getOutputType(server)
+    inputTypeIndex.getServers(outputType).filterNot(_ == server) //filter to avoid cycles
+  }
+
   def getServers(role: Role) = index.getOrElse(role, Seq.empty)
+  def producers = mappings.collect {
+    case RoleMapping(role, server) if role.isProducer => server
+  }
   def pruneBy(onlineRoles: Set[String]) = RoleIndex(mappings.filter(_.isOnline(onlineRoles)))
+}
+
+case class ServerNameIndex(mappings: Seq[RoleMapping]) {
+  private val index = mappings.map(x => x.server -> x.role).toMap
+  def getRole(server: String) = index.get(server)
+  def getOutputType(server: String) = index.get(server).flatMap(_.maybeOutput).getOrElse(ItemType.Invalid)
 }
 
 case class ItemTypeIndex(entries: Seq[ItemTypeMapping]) {
@@ -18,9 +34,9 @@ case class ItemTypeIndex(entries: Seq[ItemTypeMapping]) {
 }
 
 object ItemTypeIndex {
-  def from(roleIndex: RoleIndex, f: Role => Option[ItemType]) = ItemTypeIndex {
+  def from(mappings: Seq[RoleMapping], f: Role => Option[ItemType]) = ItemTypeIndex {
     for {
-      RoleMapping(role, server) <- roleIndex.mappings
+      RoleMapping(role, server) <- mappings
       input <- f(role).toSeq
     } yield ItemTypeMapping(input, server)
   }

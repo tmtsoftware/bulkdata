@@ -15,7 +15,7 @@ import tmt.shared.models.ConnectionSet
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
 @Singleton
-class ClusterClientService @Inject()(system: ActorSystem) {
+class ClusterClientService @Inject()(roleIndexService: RoleIndexService)(implicit system: ActorSystem) {
 
   implicit val timeout = Timeout(2.seconds)
 
@@ -27,7 +27,10 @@ class ClusterClientService @Inject()(system: ActorSystem) {
   }
 
   def subscribe(serverName: String, topic: String) = {
-    mediator ! Publish(Topics.Subscription, Messages.Subscribe(serverName, topic))
+    if(roleIndexService.validate(serverName, topic))
+      mediator ! Publish(Topics.Subscription, Messages.Subscribe(serverName, topic))
+    else
+      throw new RuntimeException(s"$serverName can not subscribe $topic due to validation failure")
   }
 
   def unsubscribe(serverName: String, topic: String) = {

@@ -7,35 +7,30 @@ import tmt.framework.Helpers._
 import tmt.shared.models._
 
 import scalatags.JsDom.all._
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 
 class SubscriptionView(roleIndex: RoleIndex, connectionSet: ConnectionSet) {
-
-  val itemTypeValue = Var("")
-  val itemType = Rx(ItemType.withName(itemTypeValue()))
 
   val topicName = Var("")
   val serverName = Var("")
 
+  val matchingServers = Rx(roleIndex.getMatchingServers(topicName()))
+  
   val connection = Rx(Connection(serverName(), topicName()))
-
   val connections = Var(connectionSet.flatConnections)
 
   def frag = div(
-    select(onchange := setValue(itemTypeValue))(
-      optionHint(s"select item type"),
-      makeOptions(roleIndex.itemTypes.map(_.entryName))
-    ), br, br,
     Rx {
       select(onchange := setValue(topicName))(
         optionHint(s"select output server"),
-        makeOptions(roleIndex.outputTypeIndex.getServers(itemType()))
+        makeOptions(roleIndex.producers)
       )
     },
     "====>",
     Rx {
       select(onchange := setValue(serverName))(
         optionHint(s"select input server"),
-        makeOptions(roleIndex.inputTypeIndex.getServers(itemType()).filterNot(_ == topicName()))
+        makeOptions(matchingServers())
       )
     },
     button(onclick := {() => addConnection()})("Connect"),
@@ -52,8 +47,9 @@ class SubscriptionView(roleIndex: RoleIndex, connectionSet: ConnectionSet) {
   )
 
   def addConnection() = {
-    subscribe(connection())
-    connections() = (connections() :+ connection()).distinct
+    subscribe(connection()).onSuccess {
+      case x if x.status == 202 =>  connections() = (connections() :+ connection()).distinct
+    }
   }
 
   def removeConnection(connection: Connection) = {
