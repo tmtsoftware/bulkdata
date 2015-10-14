@@ -2,7 +2,6 @@ package tmt.views
 
 import org.scalajs.dom.ext.Ajax
 import rx._
-import rx.ops._
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.shared.models._

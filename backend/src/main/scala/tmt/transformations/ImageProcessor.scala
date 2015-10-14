@@ -8,15 +8,18 @@ import javax.inject.Singleton
 
 import org.imgscalr.Scalr
 import org.imgscalr.Scalr.Rotation
+import tmt.app.AppSettings
 import tmt.shared.models.Image
 
 import scala.concurrent.ExecutionContext
 import async.Async._
 
 @Singleton
-class ImageProcessor {
+class ImageProcessor(appSettings: AppSettings) {
 
-  private val imageProcessingEc = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(15))
+  private val imageProcessingEc = ExecutionContext.fromExecutorService(
+    Executors.newFixedThreadPool(appSettings.imageProcessingThreadPoolSize)
+  )
 
   def rotate(image: Image) = async {
     val bufferedImage = ImageIO.read(new ByteArrayInputStream(image.bytes))

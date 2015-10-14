@@ -3,13 +3,14 @@ package tmt.transformations
 import akka.http.scaladsl.model.DateTime
 import akka.stream.scaladsl.Source
 import tmt.actors.SubscriptionService
-import tmt.app.ActorConfigs
+import tmt.app.{AppSettings, ActorConfigs}
 import tmt.io.ImageWriteService
 import tmt.shared.models.{Image, ImageMetric}
 
 class ImageTransformations(
   imageWriteService: ImageWriteService,
   actorConfigs: ActorConfigs,
+  appSettings: AppSettings,
   imageSubscriber: SubscriptionService[Image], 
   imageRotationUtility: ImageProcessor) {
 
@@ -25,5 +26,5 @@ class ImageTransformations(
 
   lazy val imageMetrics = images.map(image => ImageMetric(image.name, image.size, DateTime.now.clicks))
 
-  lazy val rotatedImages = images.mapAsync(4)(imageRotationUtility.rotate)
+  lazy val rotatedImages = images.mapAsync(appSettings.imageProcessingParallelism)(imageRotationUtility.rotate)
 }

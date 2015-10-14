@@ -26,6 +26,9 @@ class AppSettings(actorConfigs: ActorConfigs) {
 
   val imageReadThrottle = config.getDuration("image-read-throttle").toMillis.millis
 
+  val imageProcessingThreadPoolSize = config.getInt("image-processing.thread-pool-size")
+  val imageProcessingParallelism = config.getInt("image-processing.parallelism")
+
   val env = config.getString("env")
 
   object binding {
