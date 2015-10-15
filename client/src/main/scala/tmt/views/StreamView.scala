@@ -23,14 +23,20 @@ class StreamView(roleIndex: RoleIndex, hostMappings: HostMappings) {
         span(id := "per-sec")(MetricsRendering.frequency)
       ),
       div(
-        label("Image Source"),
-        select(id := "source-selection")(
-          optionHint("select-node"),
-          makeOptions2(sourceServers.map(hostMappings.getHost), sourceServers)
-        ),
-        br,
-        canvas(id := "canvas")
+        streamSelectionView("source-selection1", "canvas1"),
+        streamSelectionView("source-selection2", "canvas2")
       )
     )
+  }
+
+  private def streamSelectionView(selectionId: String, canvasId: String) = {
+    div(
+      label("Image Source"),
+      select(id := selectionId)(
+        optionHint("select-node"),
+        makeOptions2(sourceServers.map(hostMappings.getHost), sourceServers)
+      ),
+      canvas(id := canvasId, width := "500px", height := "500px")
+    )(float := "left", width := "550px", height := "550px")
   }
 }

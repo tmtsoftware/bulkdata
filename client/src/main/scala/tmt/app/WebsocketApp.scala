@@ -30,13 +30,18 @@ object WebsocketApp extends JSApp {
     document.body.appendChild(subscriptionDiv)
     document.body.appendChild(streamDiv)
 
-    render(CanvasControls.select) { socket =>
-      ImageRendering.drain(socket)
-    }
+    handleSelection(CanvasControls.select1, CanvasControls.canvas1)
+    handleSelection(CanvasControls.select2, CanvasControls.canvas2)
 
   }
 
-  def render(select: Select)(block: WebSocket => Unit): Unit = {
+  private def handleSelection(select: Select, canvas: Canvas) = {
+    render(select) { socket =>
+      ImageRendering.drain(socket, canvas)
+    }
+  }
+
+  private def render(select: Select)(block: WebSocket => Unit): Unit = {
     var socket: WebSocket = null
     select.onchange = { e: Event =>
       if (socket != null) socket.close()
