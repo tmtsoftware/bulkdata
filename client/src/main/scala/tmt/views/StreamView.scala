@@ -10,6 +10,7 @@ import scalatags.JsDom.all._
 class StreamView(roleIndex: RoleIndex, hostMappings: HostMappings) {
   val sourceServers = roleIndex.outputTypeIndex.getServers(ItemType.Image)
   val frequencyServers = roleIndex.outputTypeIndex.getServers(ItemType.Frequency)
+  import tmt.common.Constants._
 
   def frag = {
     div(
@@ -29,6 +30,7 @@ class StreamView(roleIndex: RoleIndex, hostMappings: HostMappings) {
     )
   }
 
+
   private def streamSelectionView(selectionId: String, canvasId: String) = {
     div(
       label("Image Source"),
@@ -36,7 +38,7 @@ class StreamView(roleIndex: RoleIndex, hostMappings: HostMappings) {
         optionHint("select-node"),
         makeOptions2(sourceServers.map(hostMappings.getHost), sourceServers)
       ),
-      canvas(id := canvasId, width := "500px", height := "500px")
-    )(float := "left", width := "550px", height := "550px")
+      canvas(id := canvasId, width := s"${canvasWidth}px", height := s"${canvasHeight}px")
+    )(float := "left", width := s"${canvasWidth + 50}px", height := s"${canvasHeight + 50}px")
   }
 }

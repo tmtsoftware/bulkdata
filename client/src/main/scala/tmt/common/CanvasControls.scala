@@ -1,8 +1,7 @@
 package tmt.common
 
 import org.scalajs.dom.html._
-import org.scalajs.dom.{CanvasRenderingContext2D, URL, document}
-import tmt.shared.SharedConfigs
+import org.scalajs.dom.{URL, document}
 
 import scala.scalajs.js
 
@@ -13,11 +12,11 @@ object CanvasControls {
   val canvas1 = document.getElementById("canvas1").asInstanceOf[Canvas]
   val canvas2 = document.getElementById("canvas2").asInstanceOf[Canvas]
 
-  canvas1.width = SharedConfigs.imageWidth
-  canvas1.height = SharedConfigs.imageHeight
+  canvas1.width = Constants.canvasWidth
+  canvas1.height = Constants.canvasHeight
 
-  canvas2.width = SharedConfigs.imageWidth
-  canvas2.height = SharedConfigs.imageHeight
+  canvas2.width = Constants.canvasWidth
+  canvas2.height = Constants.canvasHeight
 
   val URL = js.Dynamic.global.window.URL.asInstanceOf[URL]
 }

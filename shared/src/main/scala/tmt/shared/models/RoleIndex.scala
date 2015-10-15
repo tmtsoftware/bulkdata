@@ -3,8 +3,8 @@ package tmt.shared.models
 case class RoleIndex(mappings: Seq[RoleMapping]) {
   private val index = mappings.groupBy(_.role).mapValues(_.map(_.server))
 
-  val inputTypeIndex = new ItemTypeIndex(mappings, _.input)
-  val outputTypeIndex = new ItemTypeIndex(mappings, _.output)
+  val inputTypeIndex = ItemTypeIndex(mappings, _.input)
+  val outputTypeIndex = ItemTypeIndex(mappings, _.output)
   val serverNameIndex = ServerNameIndex(mappings)
 
   def compatibleConsumers(producer: String) =  {
@@ -26,7 +26,7 @@ case class ServerNameIndex(mappings: Seq[RoleMapping]) {
   def getRole(server: String) = index.getOrElse(server, Role.Empty)
 }
 
-class ItemTypeIndex(mappings: Seq[RoleMapping], f: Role => ItemType) {
+case class ItemTypeIndex(mappings: Seq[RoleMapping], f: Role => ItemType) {
   private val index = mappings.groupBy(x => f(x.role)).mapValues(_.map(_.server))
   def getServers(itemType: ItemType) = index.getOrElse(itemType, Seq.empty)
 }

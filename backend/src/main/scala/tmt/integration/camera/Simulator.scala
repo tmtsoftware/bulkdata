@@ -2,13 +2,13 @@ package tmt.integration.camera
 
 import java.util.concurrent.Executors
 
-import tmt.shared.SharedConfigs
-
+import scala.concurrent.duration._
 import scala.util.control.NonFatal
 
 class Simulator[T](producer: Iterator[T]) {
+  private val delay = 1.milli
+
   private val singleThreadScheduler = Executors.newScheduledThreadPool(1)
-  private val delay = SharedConfigs.delay
 
   def subscribe(listener: Listener[T]) = singleThreadScheduler.scheduleAtFixedRate(
     runnable(listener),
