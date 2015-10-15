@@ -17,6 +17,14 @@ object MetricsRendering {
 
   val metricSocket = Var(Option.empty[WebSocket])
 
+  Obs(frequencyNode, skipInitial = true) {
+    metricSocket().foreach(_.close())
+    val node = frequencyNode()
+    val newSocket = new WebSocket(node)
+    newSocket.binaryType = "arraybuffer"
+    metricSocket() = Some(newSocket)
+  }
+
   val stream = metricSocket.map {
     case None         => Observable.empty
     case Some(socket) => Stream.socket(socket).map(MetricsRendering.makeItem)
@@ -25,14 +33,6 @@ object MetricsRendering {
   Obs(stream) {
     import prickle._
     stream().foreach(metric => frequency() = s"frequency: " + Pickle.intoString(metric))
-  }
-
-  Obs(frequencyNode, skipInitial = true) {
-    metricSocket().foreach(_.close())
-    val node = frequencyNode()
-    val newSocket = new WebSocket(node)
-    newSocket.binaryType = "arraybuffer"
-    metricSocket() = Some(newSocket)
   }
 
   def makeItem(messageEvent: MessageEvent) = {

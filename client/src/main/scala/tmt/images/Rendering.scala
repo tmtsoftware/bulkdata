@@ -2,7 +2,7 @@ package tmt.images
 
 import org.scalajs.dom._
 import org.scalajs.dom.html.{Canvas, Image}
-import tmt.common.{CanvasControls, Constants, Stream}
+import tmt.common.{Constants, Stream}
 
 class Rendering(url: String) {
 
@@ -18,7 +18,7 @@ class Rendering(url: String) {
     val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
 
     ctx.drawImage(img, 0, 0, Constants.canvasWidth, Constants.canvasHeight)
-    CanvasControls.URL.revokeObjectURL(img.src)
+    Constants.URL.revokeObjectURL(img.src)
   }
 
 }

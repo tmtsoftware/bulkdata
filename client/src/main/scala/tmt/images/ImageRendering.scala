@@ -3,14 +3,31 @@ package tmt.images
 import org.scalajs.dom._
 import org.scalajs.dom.html.Canvas
 import org.scalajs.dom.raw.Blob
-import tmt.common.{Stream, CanvasControls}
+import rx._
+import tmt.common.{Constants, Stream}
 
 import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 import monifu.concurrent.Implicits.globalScheduler
 
-object ImageRendering {
+class ImageRendering {
+
+  val imageNode = Var("")
+  val imageSocket = Var(Option.empty[WebSocket])
+
+  Obs(imageNode, skipInitial = true) {
+    imageSocket().foreach(_.close())
+    val node = imageNode()
+    val newSocket = new WebSocket(node)
+    newSocket.binaryType = "arraybuffer"
+    imageSocket() = Some(newSocket)
+  }
+
+  def drawOn(cvs: Canvas) = Obs(imageSocket) {
+    imageSocket().foreach(socket => drain(socket, cvs))
+  }
+  
   def drain(socket: WebSocket, canvas: Canvas) = Stream.socket(socket)
     .map(makeUrl)
     .map(new Rendering(_))
@@ -22,6 +39,6 @@ object ImageRendering {
     val arrayBuffer = messageEvent.data.asInstanceOf[ArrayBuffer]
     val properties = js.Dynamic.literal("type" -> "image/jpeg").asInstanceOf[BlobPropertyBag]
     val blob = new Blob(js.Array(arrayBuffer), properties)
-    CanvasControls.URL.createObjectURL(blob)
+    Constants.URL.createObjectURL(blob)
   }
 }

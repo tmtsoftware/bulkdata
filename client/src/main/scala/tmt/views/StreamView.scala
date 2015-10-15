@@ -2,6 +2,7 @@ package tmt.views
 
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
+import tmt.images.ImageRendering
 import tmt.metrics.MetricsRendering
 import tmt.shared.models.{HostMappings, ItemType, RoleIndex}
 
@@ -32,13 +33,16 @@ class StreamView(roleIndex: RoleIndex, hostMappings: HostMappings) {
 
 
   private def streamSelectionView(selectionId: String, canvasId: String) = {
+    val ImageRendering = new ImageRendering
+    val cvs = canvas(id := canvasId, widthA := canvasWidth, heightA := canvasHeight).render
+    ImageRendering.drawOn(cvs)
     div(
       label("Image Source"),
-      select(id := selectionId)(
+      select(id := selectionId, onchange := setValue(ImageRendering.imageNode))(
         optionHint("select-node"),
         makeOptions2(sourceServers.map(hostMappings.getHost), sourceServers)
       ),
-      canvas(id := canvasId, width := s"${canvasWidth}px", height := s"${canvasHeight}px")
+      cvs
     )(float := "left", width := s"${canvasWidth + 50}px", height := s"${canvasHeight + 50}px")
   }
 }

@@ -2,12 +2,9 @@ package tmt.app
 
 import org.scalajs.dom._
 import org.scalajs.dom.ext.Ajax
-import org.scalajs.dom.html._
-import tmt.common.CanvasControls
-import tmt.images.ImageRendering
+import prickle._
 import tmt.shared.models.{ConnectionSet, HostMappings, RoleIndex}
 import tmt.views.{StreamView, SubscriptionView, ThrottleView}
-import prickle._
 
 import scala.async.Async._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
@@ -29,25 +26,5 @@ object WebsocketApp extends JSApp {
     document.body.appendChild(throttleDiv)
     document.body.appendChild(subscriptionDiv)
     document.body.appendChild(streamDiv)
-
-    handleSelection(CanvasControls.select1, CanvasControls.canvas1)
-    handleSelection(CanvasControls.select2, CanvasControls.canvas2)
-
-  }
-
-  private def handleSelection(select: Select, canvas: Canvas) = {
-    render(select) { socket =>
-      ImageRendering.drain(socket, canvas)
-    }
-  }
-
-  private def render(select: Select)(block: WebSocket => Unit): Unit = {
-    var socket: WebSocket = null
-    select.onchange = { e: Event =>
-      if (socket != null) socket.close()
-      socket = new WebSocket(select.value)
-      socket.binaryType = "arraybuffer"
-      block(socket)
-    }
   }
 }
