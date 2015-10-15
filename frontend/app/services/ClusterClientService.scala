@@ -11,8 +11,7 @@ import akka.util.Timeout
 import tmt.common.Messages
 import tmt.shared.Topics
 import tmt.shared.models.ConnectionSet
-
-import scala.concurrent.duration.{DurationInt, FiniteDuration}
+import scala.concurrent.duration.{DurationLong, DurationInt}
 
 @Singleton
 class ClusterClientService @Inject()(roleIndexService: RoleIndexService)(implicit system: ActorSystem) {
@@ -22,8 +21,8 @@ class ClusterClientService @Inject()(roleIndexService: RoleIndexService)(implici
   private val mediator = DistributedPubSub(system).mediator
   private val connectionStore = system.actorOf(ConnectionStore.props())
 
-  def throttle(serverName: String, delay: FiniteDuration) = {
-    mediator ! Publish(Topics.Throttle, Messages.UpdateDelay(serverName, delay))
+  def throttle(serverName: String, ratePerSecond: Long) = {
+    mediator ! Publish(Topics.Throttle, Messages.UpdateDelay(serverName, delay(ratePerSecond)))
   }
 
   def subscribe(serverName: String, topic: String) = {
@@ -38,4 +37,8 @@ class ClusterClientService @Inject()(roleIndexService: RoleIndexService)(implici
   }
 
   def allConnections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionSet]
+
+  private def delay(ratePerSecond: Long) = {
+    (1000/ratePerSecond).millis
+  }
 }

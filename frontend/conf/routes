@@ -3,7 +3,7 @@ GET         /hosts                             controllers.StreamController.host
 GET         /mappings                          controllers.StreamController.mappings()
 GET         /connections                       controllers.StreamController.connections()
 
-POST        /:server/throttle/:delay           controllers.StreamController.throttle(server, delay: Long)
+POST        /:server/throttle/:ratePerSecond   controllers.StreamController.throttle(server, ratePerSecond: Long)
 POST        /:server/subscribe/:topic          controllers.StreamController.subscribe(server, topic)
 POST        /:server/unsubscribe/:topic        controllers.StreamController.unsubscribe(server, topic)
 

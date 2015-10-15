@@ -39,8 +39,8 @@ class StreamController @Inject()(
     }
   }
 
-  def throttle(serverName: String, delay: Long) = Action {
-    clusterClientService.throttle(serverName, delay.millis)
+  def throttle(serverName: String, ratePerSecond: Long) = Action {
+    clusterClientService.throttle(serverName, ratePerSecond)
     Accepted("ok")
   }
 
