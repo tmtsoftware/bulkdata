@@ -21,6 +21,10 @@ case class RoleIndex(mappings: Seq[RoleMapping]) {
   def pruneBy(onlineRoles: Set[String]) = RoleIndex(mappings.filter(_.isOnline(onlineRoles)))
 }
 
+object RoleIndex {
+  def empty = RoleIndex(Seq.empty)
+}
+
 case class ServerNameIndex(mappings: Seq[RoleMapping]) {
   private val index = mappings.map(x => x.server -> x.role).toMap
   def getRole(server: String) = index.getOrElse(server, Role.Empty)

@@ -16,14 +16,14 @@ class StreamView(roleIndex: RoleIndex, hostMappings: HostMappings) {
   def frag = {
     div(
       div(
-        label("Frequency Computing Node"),
+        "Frequency Computing Node",
         select(onchange := setValue(MetricsRendering.frequencyNode))(
-          optionHint("select-node"),
-          makeOptions2(frequencyServers.map(hostMappings.getHost), frequencyServers)
+          optionHint("select"),
+          makeOptions2(frequencyServers.map(hostMappings.getHost), frequencyServers, "")
         ),
         br,
         span(id := "per-sec")(MetricsRendering.frequency)
-      ),
+      ), br,
       div(
         streamSelectionView("source-selection1", "canvas1"),
         streamSelectionView("source-selection2", "canvas2")
@@ -37,10 +37,10 @@ class StreamView(roleIndex: RoleIndex, hostMappings: HostMappings) {
     val cvs = canvas(id := canvasId, widthA := canvasWidth, heightA := canvasHeight).render
     ImageRendering.drawOn(cvs)
     div(
-      label("Image Source"),
+      "Image Source",
       select(id := selectionId, onchange := setValue(ImageRendering.imageNode))(
-        optionHint("select-node"),
-        makeOptions2(sourceServers.map(hostMappings.getHost), sourceServers)
+        optionHint("select"),
+        makeOptions2(sourceServers.map(hostMappings.getHost), sourceServers, "")
       ),
       cvs
     )(float := "left", width := s"${canvasWidth + 50}px", height := s"${canvasHeight + 50}px")

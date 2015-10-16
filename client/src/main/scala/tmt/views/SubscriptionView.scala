@@ -9,28 +9,30 @@ import tmt.shared.models._
 import scalatags.JsDom.all._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 
-class SubscriptionView(roleIndex: RoleIndex, connectionSet: ConnectionSet) {
+class SubscriptionView(roleIndex: Rx[RoleIndex], connectionSet: ConnectionSet) {
 
   val topicName = Var("")
   val serverName = Var("")
 
-  val matchingServers = Rx(roleIndex.compatibleConsumers(topicName()))
-  
+  val matchingServers = Rx(roleIndex().compatibleConsumers(topicName()))
+  val producers = Rx(roleIndex().producers)
+
   val connection = Rx(Connection(serverName(), topicName()))
   val connections = Var(connectionSet.flatConnections)
 
   def frag = div(
+    "Make Connection",
     Rx {
       select(onchange := setValue(topicName))(
         optionHint(s"select output server"),
-        makeOptions(roleIndex.producers)
+        makeOptions(producers(), topicName())
       )
     },
     "====>",
     Rx {
       select(onchange := setValue(serverName))(
         optionHint(s"select input server"),
-        makeOptions(matchingServers())
+        makeOptions(matchingServers(), serverName())
       )
     },
     button(onclick := {() => addConnection()})("Connect"),

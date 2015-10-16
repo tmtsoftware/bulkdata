@@ -6,3 +6,7 @@ case class HostMappings(hosts: Map[String, String]) {
     s"ws://$host/$topic"
   }
 }
+
+object HostMappings {
+  def empty = HostMappings(Map.empty)
+}
