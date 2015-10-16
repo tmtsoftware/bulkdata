@@ -22,12 +22,8 @@ object WebsocketApp extends JSApp {
     val poller = new Poller()
     poller.schedule(delay)
 
-    val roleIndex = Unpickle[RoleIndex].fromString(await(Ajax.get("/mappings")).responseText).get
-    val connectionSet = Unpickle[ConnectionSet].fromString(await(Ajax.get("/connections")).responseText).get
-    val hostMappings = Unpickle[HostMappings].fromString(await(Ajax.get("/hosts")).responseText).get
-
     val subscriptionDiv = new SubscriptionView(poller.roleIndex, poller.connectionSet).frag.render
-    val streamDiv = new StreamView(roleIndex, hostMappings).frag.render
+    val streamDiv = new StreamView(poller.roleIndex, poller.hostMappings).frag.render
     val throttleDiv = new ThrottleView(poller.roleIndex).frag.render
 
     document.body.appendChild(throttleDiv)
