@@ -9,10 +9,7 @@ import scalatags.JsDom.all._
 object Helpers {
   val optionHint = option(selected := true, disabled, hidden := true, value := "")
 
-  def makeOptions(values: Seq[String], selectedValue: String) = {
-    println("make options called")
-    makeOptions2(values, values, selectedValue)
-  }
+  def makeOptions(values: Seq[String], selectedValue: String) = makeOptions2(values, values, selectedValue)
 
   def makeOptions2(values: Seq[String], labels: Seq[String], selectedValue: String) = values.zip(labels).map {
     case (`selectedValue`, l)=>

@@ -9,7 +9,7 @@ import tmt.shared.models._
 import scalatags.JsDom.all._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 
-class SubscriptionView(roleIndex: Rx[RoleIndex], connectionSet: ConnectionSet) {
+class SubscriptionView(roleIndex: Rx[RoleIndex], connectionSet: Rx[ConnectionSet]) {
 
   val topicName = Var("")
   val serverName = Var("")
@@ -18,7 +18,12 @@ class SubscriptionView(roleIndex: Rx[RoleIndex], connectionSet: ConnectionSet) {
   val producers = Rx(roleIndex().producers)
 
   val connection = Rx(Connection(serverName(), topicName()))
-  val connections = Var(connectionSet.flatConnections)
+
+  val connections = Var(Seq.empty[Connection])
+
+  Obs(connectionSet) {
+    connections() = connectionSet().flatConnections
+  }
 
   def frag = div(
     "Make Connection",
