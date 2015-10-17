@@ -2,27 +2,26 @@ package tmt.views
 
 import org.scalajs.dom.ext.Ajax
 import rx._
+import tmt.app.ViewData
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.shared.models._
 
-import scalatags.JsDom.all._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scalatags.JsDom.all._
 
-class SubscriptionView(roleIndex: Rx[RoleIndex], connectionSet: Rx[ConnectionSet]) {
+class SubscriptionView(dataStore: ViewData) {
 
   val topicName = Var("")
   val serverName = Var("")
-
-  val matchingServers = Rx(roleIndex().compatibleConsumers(topicName()))
-  val producers = Rx(roleIndex().producers)
+  val consumers = dataStore.consumersOf(topicName)
 
   val connection = Rx(Connection(serverName(), topicName()))
 
   val connections = Var(Seq.empty[Connection])
 
-  Obs(connectionSet) {
-    connections() = connectionSet().flatConnections
+  Obs(dataStore.connectionSet) {
+    connections() = dataStore.connectionSet().flatConnections
   }
 
   def frag = div(
@@ -30,14 +29,14 @@ class SubscriptionView(roleIndex: Rx[RoleIndex], connectionSet: Rx[ConnectionSet
     Rx {
       select(onchange := setValue(topicName))(
         optionHint(s"select output server"),
-        makeOptions(producers(), topicName())
+        makeOptions(dataStore.producers(), topicName())
       )
     },
     "====>",
     Rx {
       select(onchange := setValue(serverName))(
         optionHint(s"select input server"),
-        makeOptions(matchingServers(), serverName())
+        makeOptions(consumers(), serverName())
       )
     },
     button(onclick := {() => addConnection()})("Connect"),

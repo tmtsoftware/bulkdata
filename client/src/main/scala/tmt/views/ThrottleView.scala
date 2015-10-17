@@ -2,24 +2,22 @@ package tmt.views
 
 import org.scalajs.dom.ext.Ajax
 import rx._
-import tmt.shared.models.{Role, RoleIndex}
+import tmt.app.{ViewData, DataStore}
+import tmt.framework.Framework._
+import tmt.framework.Helpers._
 
 import scalatags.JsDom.all._
-import tmt.framework.Helpers._
-import tmt.framework.Framework._
 
-class ThrottleView(roleIndex: Var[RoleIndex]) {
-
+class ThrottleView(dataStore: ViewData) {
   val server = Var("")
   val rate = Var("")
-  val servers = Rx(roleIndex().getServers(Role.Source))
 
   def frag = div(
     "Throttle",
     Rx {
       select(id := "server-name", onchange := setValue(server))(
         optionHint(s"select source"),
-        makeOptions(servers(), server())
+        makeOptions(dataStore.sourceServers(), server())
       )
     },
     input(`type` := "text", id := "new-rate", placeholder := "new rate", onchange := setValue(rate)),
