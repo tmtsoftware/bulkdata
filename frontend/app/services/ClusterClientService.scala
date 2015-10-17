@@ -10,7 +10,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import tmt.common.Messages
 import tmt.shared.Topics
-import tmt.shared.models.ConnectionSet
+import tmt.shared.models.{Connection, ConnectionSet}
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
@@ -26,15 +26,17 @@ class ClusterClientService @Inject()(roleIndexService: RoleIndexService)(implici
     mediator ! Publish(Topics.Throttle, Messages.UpdateDelay(serverName, delay))
   }
 
-  def subscribe(serverName: String, topic: String) = {
-    if(roleIndexService.validate(serverName, topic))
-      mediator ! Publish(Topics.Subscription, Messages.Subscribe(serverName, topic))
+  def subscribe(connection: Connection) = {
+    if(roleIndexService.validate(connection))
+      mediator ! Publish(Topics.Subscription, Messages.Subscribe(connection))
     else
-      throw new RuntimeException(s"$serverName can not subscribe $topic due to validation failure")
+      throw new RuntimeException(
+        s"${connection.server} can not subscribe ${connection.topic} due to validation failure"
+      )
   }
 
-  def unsubscribe(serverName: String, topic: String) = {
-    mediator ! Publish(Topics.Subscription, Messages.Unsubscribe(serverName, topic))
+  def unsubscribe(connection: Connection) = {
+    mediator ! Publish(Topics.Subscription, Messages.Unsubscribe(connection))
   }
 
   def allConnections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionSet]

@@ -43,12 +43,12 @@ class ConnectionStore extends PersistentActor {
   }
 
   def addConnection(event: Messages.Subscribe) = {
-    connectionSet = connectionSet.addConnection(event.serverName, event.topic)
+    connectionSet = connectionSet.addConnection(event.connection)
     saveSnapshot(connectionSet)
   }
 
   def removeConnection(event: Messages.Unsubscribe) = {
-    connectionSet = connectionSet.removeConnection(event.serverName, event.topic)
+    connectionSet = connectionSet.removeConnection(event.connection)
     saveSnapshot(connectionSet)
   }
 }

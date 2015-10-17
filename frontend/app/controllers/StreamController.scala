@@ -7,6 +7,7 @@ import play.api.mvc.{Action, Controller}
 import prickle._
 import services.{ClusterClientService, ConnectionSetService, RoleIndexService}
 import templates.Page
+import tmt.shared.models.Connection
 
 import scala.async.Async._
 import scala.concurrent.ExecutionContext
@@ -45,12 +46,12 @@ class StreamController @Inject()(
   }
 
   def subscribe(serverName: String, topic: String) = Action {
-    clusterClientService.subscribe(serverName, topic)
+    clusterClientService.subscribe(Connection(serverName, topic))
     Accepted("ok")
   }
 
   def unsubscribe(serverName: String, topic: String) = Action {
-    clusterClientService.unsubscribe(serverName, topic)
+    clusterClientService.unsubscribe(Connection(serverName, topic))
     Accepted("ok")
   }
 }

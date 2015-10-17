@@ -21,7 +21,7 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
   val connections = Var(Seq.empty[Connection])
 
   Obs(dataStore.connectionSet) {
-    connections() = dataStore.connectionSet().flatConnections
+    connections() = dataStore.connectionSet().connections.toSeq.distinct
   }
 
   def frag = div(

@@ -1,32 +1,23 @@
 package tmt.shared.models
 
-case class ConnectionSet(connections: Map[String, Set[String]]) {
-  def addConnection(serverName: String, topic: String) = copy {
-    val currentTopics = getTopics(serverName)
-    connections + (serverName -> (currentTopics + topic))
-  }
+case class ConnectionSet(connections: Set[Connection]) {
+  lazy val index = connections.groupBy(_.server).mapValues(_.map(_.topic))
 
-  def removeConnection(serverName: String, topic: String) = copy {
-    val currentTopics = getTopics(serverName)
-    connections + (serverName -> (currentTopics - topic))
-  }
+  def getTopics(serverName: String) = index.getOrElse(serverName, Set.empty)
 
-  def flatConnections = for {
-    (serverName, topics) <- connections.toSeq
-    topic <- topics
-  } yield Connection(serverName, topic)
+  def addConnection(connection: Connection) = ConnectionSet(connections + connection)
+  def removeConnection(connection: Connection) = ConnectionSet(connections - connection)
 
-  def pruneBy(onlineRoles: Set[String]) = ConnectionSet {
-    connections.collect { case (role, serverNames) if onlineRoles.contains(role) =>
-      role -> serverNames.filter(onlineRoles)
-    }
-  }
-
-  def getTopics(serverName: String) = connections.getOrElse(serverName, Set.empty)
+  def pruneBy(onlineRoles: Set[String]) = ConnectionSet(
+    connections.filter(_.isOnline(onlineRoles))
+  )
 }
 
 object ConnectionSet {
-  def empty = ConnectionSet(Map.empty)
+  def empty = ConnectionSet(Set.empty)
 }
 
-case class Connection(server: String, topic: String)
+case class Connection(server: String, topic: String) {
+  def isOnline(onlineRoles: Set[String]) =
+    onlineRoles.contains(server) && onlineRoles.contains(topic)
+}
