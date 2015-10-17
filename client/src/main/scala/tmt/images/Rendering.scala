@@ -17,7 +17,7 @@ class Rendering(url: String) {
   def render(canvas: Canvas) = {
     val ctx = canvas.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
 
-    ctx.drawImage(img, 0, 0, Constants.canvasWidth, Constants.canvasHeight)
+    ctx.drawImage(img, 0, 0, Constants.CanvasWidth, Constants.CanvasHeight)
     Constants.URL.revokeObjectURL(img.src)
   }
 

@@ -1,5 +1,6 @@
 package tmt.images
 
+import monifu.concurrent.Scheduler
 import org.scalajs.dom._
 import org.scalajs.dom.html.Canvas
 import org.scalajs.dom.raw.Blob
@@ -9,9 +10,8 @@ import tmt.common.{Constants, Stream}
 import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
-import monifu.concurrent.Implicits.globalScheduler
 
-class ImageRendering {
+class ImageRendering(implicit scheduler: Scheduler) {
 
   val imageNode = Var("")
   val imageSocket = Var(Option.empty[WebSocket])

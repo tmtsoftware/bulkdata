@@ -1,6 +1,7 @@
 package tmt.metrics
 
 import boopickle.Default
+import monifu.concurrent
 import monifu.reactive.Observable
 import org.scalajs.dom._
 import rx._
@@ -9,9 +10,8 @@ import tmt.common.Stream
 import tmt.shared.models.PerSecMetric
 
 import scala.scalajs.js.typedarray.{ArrayBuffer, TypedArrayBuffer}
-import monifu.concurrent.Implicits.globalScheduler
 
-object MetricsRendering {
+class MetricsRendering(implicit scheduler: concurrent.Scheduler) {
   val frequencyNode = Var("")
   val frequency = Var("")
 
@@ -27,7 +27,7 @@ object MetricsRendering {
 
   val stream = metricSocket.map {
     case None         => Observable.empty
-    case Some(socket) => Stream.socket(socket).map(MetricsRendering.makeItem)
+    case Some(socket) => Stream.socket(socket).map(makeItem)
   }
 
   Obs(stream) {

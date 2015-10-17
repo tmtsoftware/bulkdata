@@ -2,13 +2,13 @@ package tmt.views
 
 import org.scalajs.dom.ext.Ajax
 import rx._
-import tmt.app.{ViewData, DataStore}
+import tmt.app.ViewData
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 
 import scalatags.JsDom.all._
 
-class ThrottleView(dataStore: ViewData) {
+class ThrottleView(dataStore: ViewData) extends View {
   val server = Var("")
   val rate = Var("")
 

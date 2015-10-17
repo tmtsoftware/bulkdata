@@ -7,10 +7,10 @@ import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.shared.models._
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.concurrent.ExecutionContext
 import scalatags.JsDom.all._
 
-class SubscriptionView(dataStore: ViewData) {
+class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) extends View {
 
   val topicName = Var("")
   val serverName = Var("")
