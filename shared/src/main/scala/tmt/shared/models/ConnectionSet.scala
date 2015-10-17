@@ -5,8 +5,8 @@ case class ConnectionSet(connections: Set[Connection]) {
 
   def getTopics(serverName: String) = index.getOrElse(serverName, Set.empty)
 
-  def addConnection(connection: Connection) = ConnectionSet(connections + connection)
-  def removeConnection(connection: Connection) = ConnectionSet(connections - connection)
+  def add(connection: Connection) = ConnectionSet(connections + connection)
+  def remove(connection: Connection) = ConnectionSet(connections - connection)
 
   def pruneBy(onlineRoles: Set[String]) = ConnectionSet(
     connections.filter(_.isOnline(onlineRoles))

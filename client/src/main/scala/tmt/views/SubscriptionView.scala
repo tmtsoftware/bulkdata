@@ -18,10 +18,10 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
 
   val connection = Rx(Connection(serverName(), topicName()))
 
-  val connections = Var(Seq.empty[Connection])
+  val connectionSet = Var(ConnectionSet.empty)
 
   Obs(dataStore.connectionSet) {
-    connections() = dataStore.connectionSet().connections.toSeq.distinct
+    connectionSet() = dataStore.connectionSet()
   }
 
   def frag = div(
@@ -42,7 +42,7 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
     button(onclick := {() => addConnection()})("Connect"),
     Rx {
       ul(id := "connections")(
-        connections().map { c  =>
+        connectionSet().connections.toSeq.map { c  =>
           li(
             s"${c.topic} ===> ${c.server}",
             button(onclick := {() => removeConnection(c)})("unsubscribe")
@@ -54,13 +54,13 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
 
   def addConnection() = {
     subscribe(connection()).onSuccess {
-      case x if x.status == 202 =>  connections() = (connections() :+ connection()).distinct
+      case x if x.status == 202 =>  connectionSet() = connectionSet().add(connection())
     }
   }
 
   def removeConnection(connection: Connection) = {
     unsubscribe(connection)
-    connections() = connections().filterNot(_ == connection)
+    connectionSet() = connectionSet().remove(connection)
   }
 
   def subscribe(connection: Connection) = Ajax.post(s"${connection.server}/subscribe/${connection.topic}")
