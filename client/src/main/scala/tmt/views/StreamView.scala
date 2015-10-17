@@ -20,9 +20,9 @@ class StreamView(dataStore: ViewData)(implicit scheduler: Scheduler) extends Vie
       div(
         "Frequency Computing Node",
         Rx {
-            select(onchange := setValue(metricsRendering.frequencyNode))(
+            select(onchange := setValue(metricsRendering.wsUrl))(
             optionHint("select"),
-            makeOptions2(dataStore.frequencyWsUrls(), dataStore.frequencyServers(), metricsRendering.frequencyNode())
+            makeOptions2(dataStore.frequencyWsUrls(), dataStore.frequencyServers(), metricsRendering.wsUrl())
           )
         },
         br,
@@ -36,15 +36,15 @@ class StreamView(dataStore: ViewData)(implicit scheduler: Scheduler) extends Vie
   }
 
   private def streamSelectionView(selectionId: String, canvasId: String) = {
-    val ImageRendering = new ImageRendering
+    val imageRendering = new ImageRendering
     val cvs = canvas(id := canvasId, widthA := CanvasWidth, heightA := CanvasHeight).render
-    ImageRendering.drawOn(cvs)
+    imageRendering.drawOn(cvs)
     div(
       "Image Source",
       Rx {
-        select(id := selectionId, onchange := setValue(ImageRendering.imageNode))(
+        select(id := selectionId, onchange := setValue(imageRendering.wsUrl))(
           optionHint("select"),
-          makeOptions2(dataStore.imageWsUrls(), dataStore.imageServers(), ImageRendering.imageNode())
+          makeOptions2(dataStore.imageWsUrls(), dataStore.imageServers(), imageRendering.wsUrl())
         )
       },
       cvs

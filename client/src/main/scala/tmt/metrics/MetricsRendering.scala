@@ -7,25 +7,15 @@ import org.scalajs.dom._
 import rx._
 import rx.ops._
 import tmt.common.Stream
+import tmt.framework.WebsocketRx
 import tmt.shared.models.PerSecMetric
 
 import scala.scalajs.js.typedarray.{ArrayBuffer, TypedArrayBuffer}
 
-class MetricsRendering(implicit scheduler: concurrent.Scheduler) {
-  val frequencyNode = Var("")
+class MetricsRendering(implicit scheduler: concurrent.Scheduler) extends WebsocketRx {
   val frequency = Var("")
 
-  val metricSocket = Var(Option.empty[WebSocket])
-
-  Obs(frequencyNode, skipInitial = true) {
-    metricSocket().foreach(_.close())
-    val node = frequencyNode()
-    val newSocket = new WebSocket(node)
-    newSocket.binaryType = "arraybuffer"
-    metricSocket() = Some(newSocket)
-  }
-
-  val stream = metricSocket.map {
+  val stream = webSocket.map {
     case None         => Observable.empty
     case Some(socket) => Stream.socket(socket).map(makeItem)
   }
