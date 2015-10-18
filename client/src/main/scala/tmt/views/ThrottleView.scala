@@ -21,7 +21,12 @@ class ThrottleView(dataStore: ViewData) extends View {
       )
     },
     input(`type` := "text", id := "new-rate", placeholder := "new rate", onchange := setValue(rate)),
-    button(id := "change-rate", `type` := "button", onclick := {() => Ajax.post(s"${server()}/throttle/${rate()}")})("Change"),
+    button(id := "change-rate", `type` := "button", onclick := {() => throttle(server(), rate())})(
+      "Change"
+    ),
     br, br
   )
+
+  def throttle(server: String, rate: String) = Ajax.post(s"$server/throttle/$rate")
+
 }
