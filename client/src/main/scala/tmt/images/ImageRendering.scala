@@ -5,6 +5,7 @@ import org.scalajs.dom._
 import org.scalajs.dom.html.Canvas
 import org.scalajs.dom.raw.Blob
 import rx._
+import tmt.app.ViewData
 import tmt.common.{Constants, Stream}
 import tmt.framework.WebsocketRx
 
@@ -12,7 +13,7 @@ import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 
-class ImageRendering(implicit scheduler: Scheduler) extends WebsocketRx {
+class ImageRendering(viewData: ViewData)(implicit scheduler: Scheduler) extends WebsocketRx(viewData) {
 
   def drawOn(cvs: Canvas) = Obs(webSocket) {
     webSocket().foreach(socket => drain(socket, cvs))

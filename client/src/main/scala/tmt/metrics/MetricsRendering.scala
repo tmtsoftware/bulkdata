@@ -6,13 +6,14 @@ import monifu.reactive.Observable
 import org.scalajs.dom._
 import rx._
 import rx.ops._
+import tmt.app.ViewData
 import tmt.common.Stream
 import tmt.framework.WebsocketRx
 import tmt.shared.models.PerSecMetric
 
 import scala.scalajs.js.typedarray.{ArrayBuffer, TypedArrayBuffer}
 
-class MetricsRendering(implicit scheduler: concurrent.Scheduler) extends WebsocketRx {
+class MetricsRendering(viewData: ViewData)(implicit scheduler: concurrent.Scheduler) extends WebsocketRx(viewData) {
   val frequency = Var("")
 
   val stream = webSocket.map {
