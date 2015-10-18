@@ -25,6 +25,7 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
             makeOptions(viewData.frequencyServers(), metricsRendering.wsServer())
           )
         },
+        button(onclick := {() => metricsRendering.setUrl()})("Set"),
         br,
         span(id := "per-sec")(metricsRendering.frequency)
       ), br,
@@ -47,6 +48,7 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
           makeOptions(viewData.imageServers(), imageRendering.wsServer())
         )
       },
+      button(onclick := {() => imageRendering.setUrl()})("Set"),
       cvs
     )(float := "left", width := s"${CanvasWidth + 50}px", height := s"${CanvasHeight + 50}px")
   }

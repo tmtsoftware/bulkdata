@@ -6,15 +6,27 @@ import tmt.app.ViewData
 
 abstract class WebsocketRx(viewData: ViewData) {
   val wsServer = Var("")
-  val wsUrl = viewData.wsUrlOf(wsServer)
+  val wsUrl = Var("")
   val webSocket = Var(Option.empty[WebSocket])
 
-  Obs(wsUrl) {
+  Obs(wsUrl, skipInitial = true) {
     webSocket().foreach(_.close())
-    wsUrl().foreach { url =>
-      val newSocket = new WebSocket(url)
-      newSocket.binaryType = "arraybuffer"
-      webSocket() = Some(newSocket)
+    val newSocket = new WebSocket(wsUrl())
+    newSocket.binaryType = "arraybuffer"
+    webSocket() = Some(newSocket)
+  }
+
+  def setUrl() = {
+    val maybeUrl = viewData.hostMappings().getHost(wsServer())
+    maybeUrl.foreach { url =>
+      wsUrl() = url
     }
   }
+
+  Obs(viewData.diffs) {
+    if (viewData.diffs() contains wsServer()) {
+      setUrl()
+    }
+  }
+
 }
