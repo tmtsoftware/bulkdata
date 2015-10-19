@@ -9,10 +9,7 @@ case class RoleIndex(mappings: Seq[RoleMapping]) {
 
   def compatibleConsumers(producer: String) =  {
     val outputType = serverNameIndex.getRole(producer).output
-    println("first producer", producer)
-    val not = inputTypeIndex.getServers(outputType).filterNot(_ == producer)
-    println("consumers", not)
-    not //filter itself to avoid cycles
+    inputTypeIndex.getServers(outputType).filterNot(_ == producer) //filter itself to avoid cycles
   }
 
   def getServers(role: Role) = index.getOrElse(role, Seq.empty)
