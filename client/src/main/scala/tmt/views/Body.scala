@@ -6,6 +6,6 @@ import scalatags.JsDom.all._
 class Body(views: View*) {
   def attach() = {
     val modifiers = views.map(_.frag)
-    document.body.appendChild(div(modifiers: _*).render)
+    document.body.appendChild(div(`class` := "row", modifiers).render)
   }
 }

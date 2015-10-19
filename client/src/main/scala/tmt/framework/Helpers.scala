@@ -17,4 +17,28 @@ object Helpers {
   def setValue(selection: Var[String]): js.ThisFunction = { e: Select =>
     selection() = e.value
   }
+
+  def setSource(websocketRx: WebsocketRx, labelToUpdate: Label) = {
+    websocketRx.setUrl()
+    labelToUpdate.textContent = websocketRx.wsServer()
+  }
+
+  def makeOptions1(dropdownText: String, labels: Seq[String], onchange: String => Unit, selectedValue: String) = {
+    val _dropdownText  = if(selectedValue != "") selectedValue else dropdownText
+    val button1 = button(
+      `type` := "button",
+      `class` := "btn btn-default dropdown-toggle",
+      "data-toggle".attr := "dropdown")(_dropdownText + " ")(
+        span(`class` := "caret")
+      ).render
+
+    div(`class` := "dropdown",
+      button1,
+      ul(`class` := "dropdown-menu"){
+        labels.map { label =>
+          li(a(href := "#", onclick := {() => onchange(label); button1.textContent = label + " \u25BE"})(label))
+        }
+      }
+    )
+  }
 }

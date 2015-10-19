@@ -13,20 +13,48 @@ class ThrottleView(dataStore: ViewData) extends View {
   val rate = Var("")
 
   def frag = div(
-    "Throttle",
-    Rx {
-      select(id := "server-name", onchange := setValue(server))(
-        optionHint(s"select source"),
-        makeOptions(dataStore.sourceServers(), server())
-      )
-    },
-    input(`type` := "text", id := "new-rate", placeholder := "new rate", onchange := setValue(rate)),
-    button(id := "change-rate", `type` := "button", onclick := {() => throttle(server(), rate())})(
+    label("Change input rate"),
+    hr(Styles.hr),
+    Rx { makeOptions1("select source", dataStore.sourceServers(), server() = _, server())},
+    input(`type` := "text", placeholder := "new rate", `class` := "input-sm form-control" , onchange := setValue(rate))(Styles.input),
+    button(`type` := "button", onclick := {() => throttle(server(), rate())})(
       "Change"
-    ),
+    )(Styles.button),
     br, br
-  )
+  )(Styles.leftDiv)
 
   def throttle(server: String, rate: String) = Ajax.post(s"$server/throttle/$rate")
 
+}
+
+object Styles {
+  val leftDiv = {
+    Seq(
+      margin := "10px",
+      padding := "5px"
+    )
+  }
+
+
+  val hr = {
+    Seq(
+      marginTop := "5px",
+      marginBottom := "10px"
+    )
+  }
+
+  val normalFontWeight = {
+    fontWeight := "400"
+  }
+
+  val input = marginTop := "10px"
+
+  val button = {
+    Seq(
+      width := "100%",
+      height := "30px",
+      marginTop := "10px",
+      borderRadius := "5px"
+    )
+  }
 }

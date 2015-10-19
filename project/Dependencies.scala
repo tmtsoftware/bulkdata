@@ -36,7 +36,8 @@ object Dependencies {
     "com.lihaoyi" %% "scalatags" % "0.5.2",
     "com.typesafe.akka" %% "akka-persistence" % Versions.Akka,
     "org.iq80.leveldb" % "leveldb" % "0.7",
-    "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8"
+    "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
+    "org.webjars" % "bootstrap" % "3.3.5"
   )
 
   val backendLibs = Seq(
