@@ -9,7 +9,10 @@ case class RoleIndex(mappings: Seq[RoleMapping]) {
 
   def compatibleConsumers(producer: String) =  {
     val outputType = serverNameIndex.getRole(producer).output
-    inputTypeIndex.getServers(outputType).filterNot(_ == producer) //filter itself to avoid cycles
+    println("first producer", producer)
+    val not = inputTypeIndex.getServers(outputType).filterNot(_ == producer)
+    println("consumers", not)
+    not //filter itself to avoid cycles
   }
 
   def getServers(role: Role) = index.getOrElse(role, Seq.empty)
@@ -27,7 +30,7 @@ object RoleIndex {
 
 case class ServerNameIndex(mappings: Seq[RoleMapping]) {
   private val index = mappings.map(x => x.server -> x.role).toMap
-  def getRole(server: String) = index.getOrElse(server, Role.Empty)
+  def getRole(server: String) = index.getOrElse(server, Role.Invalid)
 }
 
 case class ItemTypeIndex(mappings: Seq[RoleMapping], f: Role => ItemType) {
