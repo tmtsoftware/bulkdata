@@ -40,4 +40,8 @@ class ClusterClientService @Inject()(roleIndexService: RoleIndexService)(implici
   }
 
   def allConnections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionSet]
+
+  def resetConnections() = {
+    mediator ! Publish(Topics.Subscription, Messages.ResetConnections())
+  }
 }

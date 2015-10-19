@@ -5,7 +5,7 @@ import akka.cluster.Cluster
 import akka.cluster.ClusterEvent._
 import akka.cluster.pubsub.DistributedPubSub
 import akka.cluster.pubsub.DistributedPubSubMediator.{Publish, Subscribe}
-import akka.persistence.{SnapshotOffer, PersistentActor}
+import akka.persistence.{SnapshotSelectionCriteria, SnapshotOffer, PersistentActor}
 import tmt.common.Messages
 import tmt.shared.Topics
 import tmt.shared.models.ConnectionSet
@@ -34,9 +34,10 @@ class ConnectionStore extends PersistentActor {
   }
 
   def receiveCommand = {
-    case event: Messages.Subscribe      => addConnection(event)
-    case event: Messages.Unsubscribe    => removeConnection(event)
-    case x: MemberUp                    =>
+    case event: Messages.Subscribe        => addConnection(event)
+    case event: Messages.Unsubscribe      => removeConnection(event)
+    case event: Messages.ResetConnections => connectionSet = ConnectionSet.empty; deleteSnapshots(SnapshotSelectionCriteria())
+    case x: MemberUp                      =>
       println("******: ", x)
       scheduler.scheduleOnce(2.second, mediator, Publish(Topics.Connections, connectionSet))
     case ConnectionStore.GetConnections => sender() ! connectionSet

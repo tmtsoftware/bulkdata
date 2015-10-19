@@ -8,4 +8,5 @@ object Messages {
   case class UpdateDelay(serverName: String, value: FiniteDuration)
   case class Subscribe(connection: Connection)
   case class Unsubscribe(connection: Connection)
+  case class ResetConnections()
 }
