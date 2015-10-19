@@ -1,10 +1,12 @@
 package tmt.views
 
 import monifu.concurrent.Scheduler
+import org.scalajs.dom.html.Label
 import rx._
 import tmt.app.ViewData
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
+import tmt.framework.WebsocketRx
 import tmt.images.ImageRendering
 import tmt.metrics.MetricsRendering
 
@@ -16,6 +18,7 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
   val metricsRendering = new MetricsRendering(viewData)
 
   def frag = {
+    val selectedServer = label().render
     div(
       div(
         "Frequency Computing Node",
@@ -25,7 +28,9 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
             makeOptions(viewData.frequencyServers(), metricsRendering.wsServer())
           )
         },
-        button(onclick := {() => metricsRendering.setUrl()})("Set"),
+        button(onclick := {() => setSource(metricsRendering, selectedServer)})("Set"),
+        br,
+        selectedServer,
         br,
         span(id := "per-sec")(metricsRendering.frequency)
       ), br,
@@ -39,6 +44,8 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
   private def streamSelectionView(selectionId: String, canvasId: String) = {
     val imageRendering = new ImageRendering(viewData)
     val cvs = canvas(id := canvasId, widthA := CanvasWidth, heightA := CanvasHeight).render
+    val canvasLabel = label().render
+
     imageRendering.drawOn(cvs)
     div(
       "Image Source",
@@ -48,8 +55,14 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
           makeOptions(viewData.imageServers(), imageRendering.wsServer())
         )
       },
-      button(onclick := {() => imageRendering.setUrl()})("Set"),
+      button(onclick := {() => setSource(imageRendering, canvasLabel)})("Set"), br,
+      canvasLabel,
       cvs
     )(float := "left", width := s"${CanvasWidth + 50}px", height := s"${CanvasHeight + 50}px")
+  }
+
+  private def setSource(websocketRx: WebsocketRx, labelToUpdate: Label) = {
+    websocketRx.setUrl()
+    labelToUpdate.textContent = websocketRx.wsServer()
   }
 }
