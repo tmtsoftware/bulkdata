@@ -14,11 +14,11 @@ object Role {
   case object Frequency  extends Role("frequency", ItemType.Metric, ItemType.Frequency)
   case object Rotator  extends Role("rotator", ItemType.Image, ItemType.Image)
 
-  case object Empty extends Role("empty", ItemType.Empty, ItemType.Empty)
+  case object Invalid extends Role("invalid", ItemType.Invalid, ItemType.Invalid)
 
-  val values: Seq[Role] = Seq(Source, Copier, Filter, Metric, Frequency, Rotator, Empty)
+  val values: Seq[Role] = Seq(Source, Copier, Filter, Metric, Frequency, Rotator, Invalid)
 
-  def withName(name: String) = values.find(_.entryName == name).getOrElse(Empty)
+  def withName(name: String) = values.find(_.entryName == name).getOrElse(Invalid)
 
   implicit val rolePickler: PicklerPair[Role] = CompositePickler[Role]
     .concreteType[Source.type]
@@ -27,7 +27,7 @@ object Role {
     .concreteType[Metric.type]
     .concreteType[Frequency.type]
     .concreteType[Rotator.type]
-    .concreteType[Empty.type]
+    .concreteType[Invalid.type]
 
 }
 
@@ -40,14 +40,16 @@ object ItemType {
   case object Metric extends ItemType("metric")
   case object Frequency extends ItemType("frequency")
   case object Empty extends ItemType("empty")
+  case object Invalid extends ItemType("invalid")
 
-  val values: Seq[ItemType] = Seq(Image, Metric, Frequency, Empty)
+  val values: Seq[ItemType] = Seq(Image, Metric, Frequency, Empty, Invalid)
 
-  def withName(name: String) = values.find(_.entryName == name).getOrElse(Empty)
+  def withName(name: String) = values.find(_.entryName == name).getOrElse(Invalid)
 
   implicit val itemTypePickler = CompositePickler[ItemType]
     .concreteType[Image.type]
     .concreteType[Metric.type]
     .concreteType[Frequency.type]
     .concreteType[Empty.type]
+    .concreteType[Invalid.type]
 }

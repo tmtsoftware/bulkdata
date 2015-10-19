@@ -27,7 +27,7 @@ object RoleIndex {
 
 case class ServerNameIndex(mappings: Seq[RoleMapping]) {
   private val index = mappings.map(x => x.server -> x.role).toMap
-  def getRole(server: String) = index.getOrElse(server, Role.Empty)
+  def getRole(server: String) = index.getOrElse(server, Role.Invalid)
 }
 
 case class ItemTypeIndex(mappings: Seq[RoleMapping], f: Role => ItemType) {
