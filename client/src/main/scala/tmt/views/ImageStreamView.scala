@@ -13,7 +13,7 @@ class ImageStreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends
 
   import tmt.common.Constants._
   def frag = {
-    div(`class` := "col-lg-7",
+    div(`class` := "col-lg-8",
       streamSelectionView("source-selection1", "canvas1"),
       streamSelectionView("source-selection2", "canvas2")
     )
