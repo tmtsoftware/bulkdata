@@ -33,6 +33,6 @@ object Helpers {
           li(a(href := "#", onclick := {() => onchange(label); button1.textContent = label + " \u25BE"})(label))
         }
       }
-    )
+    )(float := "left")
   }
 }
