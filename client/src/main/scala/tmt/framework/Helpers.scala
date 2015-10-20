@@ -23,8 +23,9 @@ object Helpers {
     labelToUpdate.textContent = websocketRx.wsServer()
   }
 
-  def makeOptions1(dropdownText: String, labels: Seq[String], onchange: String => Unit, selectedValue: String) = {
-    val _dropdownText  = if(selectedValue != "") selectedValue else dropdownText
+  def makeOptions1(dropdownText: String, values: Seq[String], onchange: String => Unit, selectedValue: String) = {
+    def validSelection = selectedValue != "" && values.contains(selectedValue)
+    val _dropdownText  = if(validSelection) selectedValue else dropdownText
     val button1 = button(
       `type` := "button",
       `class` := "btn btn-default dropdown-toggle",
@@ -35,7 +36,7 @@ object Helpers {
     div(`class` := "dropdown",
       button1,
       ul(`class` := "dropdown-menu"){
-        labels.map { label =>
+        values.map { label =>
           li(a(href := "#", onclick := {() => onchange(label); button1.textContent = label + " \u25BE"})(label))
         }
       }
