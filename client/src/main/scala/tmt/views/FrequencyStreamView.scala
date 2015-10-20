@@ -16,7 +16,7 @@ class FrequencyStreamView(viewData: ViewData)(implicit scheduler: Scheduler) ext
   def frag = div(`class` := "col-lg-2",
     label("Frequency Computing Node"),
     hr(Styles.hr),
-    Rx { makeOptions1("select", viewData.frequencyServers(), metricsRendering.wsServer() = _, metricsRendering.wsServer()) },
+    Rx { makeOptions("select", viewData.frequencyServers(), metricsRendering.wsServer() = _, metricsRendering.wsServer()) },
     button(onclick := {() => setSource(metricsRendering, selectedServer)}, `class` := "btn btn-block btn-default active")("Set")(Styles.topMargin),
     br,
     selectedServer,

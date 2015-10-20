@@ -15,7 +15,7 @@ class ThrottleView(dataStore: ViewData) extends View {
   def frag = div(
     label("Change input rate"),
     hr(Styles.hr),
-    Rx { makeOptions1("select source", dataStore.sourceServers(), server() = _, server())},
+    Rx { makeOptions("select source", dataStore.sourceServers(), server() = _, server())},
     input(`type` := "text", placeholder := "new rate", `class` := "form-control" , onchange := setValue(rate))(Styles.topMargin),
     button(onclick := {() => throttle(server(), rate())}, `class` := "btn btn-block btn-default active")("Change")(Styles.topMargin),
     br, br

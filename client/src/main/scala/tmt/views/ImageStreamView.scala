@@ -26,14 +26,8 @@ class ImageStreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends
 
     imageRendering.drawOn(cvs)
     div(
-      "Image Source",
-      Rx {
-        select(id := selectionId, onchange := setValue(imageRendering.wsServer))(
-          optionHint("select"),
-          makeOptions(viewData.imageServers(), imageRendering.wsServer())
-        )
-      },
-      button(onclick := {() => setSource(imageRendering, canvasLabel)})("Set"),
+      Rx{ makeOptions("select", viewData.imageServers(), imageRendering.wsServer()= _, imageRendering.wsServer()) },
+      button(onclick := {() => setSource(imageRendering, canvasLabel)}, `class` := "btn btn-default active")("Set"),
       canvasLabel,
       cvs
     )(float := "left", width := s"${CanvasWidth + 50}px", height := s"${CanvasHeight + 50}px")

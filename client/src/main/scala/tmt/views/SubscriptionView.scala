@@ -27,9 +27,9 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
   def frag = div(
     label("Make Connection"),
     hr(Styles.hr),
-    Rx { makeOptions1("select output server", dataStore.producers(), topicName() = _, topicName()) },
+    Rx { makeOptions("select output server", dataStore.producers(), topicName() = _, topicName()) },
     label("Subscribed by")(Styles.normalFontWeight),
-    Rx{ makeOptions1("select input server", consumers(), serverName() = _, serverName()) },
+    Rx{ makeOptions("select input server", consumers(), serverName() = _, serverName()) },
     button(onclick := {() => addConnection()}, `class` := "btn btn-block btn-default active")("Connect")(Styles.topMargin),
     Rx {
       ul(id := "connections")(
