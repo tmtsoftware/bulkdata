@@ -25,30 +25,23 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
   }
 
   def frag = div(
-    "Make Connection",
-    Rx {
-      select(onchange := setValue(topicName))(
-        optionHint(s"select output server"),
-        makeOptions(dataStore.producers(), topicName())
-      )
-    },
-    "====>",
-    Rx {
-      select(onchange := setValue(serverName))(
-        optionHint(s"select input server"),
-        makeOptions(consumers(), serverName())
-      )
-    },
-    button(onclick := {() => addConnection()})("Connect"),
+    label("Make Connection"),
+    hr(Styles.hr),
+    Rx { makeOptions1("select output server", dataStore.producers(), topicName() = _, topicName()) },
+    label("Subscribed by")(Styles.normalFontWeight),
+    Rx{ makeOptions1("select input server", consumers(), serverName() = _, serverName()) },
+    button(onclick := {() => addConnection()}, `class` := "btn btn-block btn-default active")("Connect")(Styles.topMargin),
     Rx {
       ul(id := "connections")(
         connectionSet().connections.toSeq.map { c  =>
           li(
-            s"${c.topic} ===> ${c.server}",
-            button(onclick := {() => removeConnection(c)})("unsubscribe")
+            label(c.server)(width := "80px", Styles.normalFontWeight),
+            label("\u2192")(width := "30px", Styles.normalFontWeight),
+            label(c.topic)(width := "80px", Styles.normalFontWeight),
+            a(onclick := {() => removeConnection(c)}, href := "#")("undo")
           )
         }
-      )
+      )(Styles.ul)
     }
   )
 

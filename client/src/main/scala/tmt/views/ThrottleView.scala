@@ -16,26 +16,16 @@ class ThrottleView(dataStore: ViewData) extends View {
     label("Change input rate"),
     hr(Styles.hr),
     Rx { makeOptions1("select source", dataStore.sourceServers(), server() = _, server())},
-    input(`type` := "text", placeholder := "new rate", `class` := "input-sm form-control" , onchange := setValue(rate))(Styles.input),
-    button(`type` := "button", onclick := {() => throttle(server(), rate())})(
-      "Change"
-    )(Styles.button),
+    input(`type` := "text", placeholder := "new rate", `class` := "form-control" , onchange := setValue(rate))(Styles.topMargin),
+    button(onclick := {() => throttle(server(), rate())}, `class` := "btn btn-block btn-default active")("Change")(Styles.topMargin),
     br, br
-  )(Styles.leftDiv)
+  )
 
   def throttle(server: String, rate: String) = Ajax.post(s"$server/throttle/$rate")
 
 }
 
 object Styles {
-  val leftDiv = {
-    Seq(
-      margin := "10px",
-      padding := "5px"
-    )
-  }
-
-
   val hr = {
     Seq(
       marginTop := "5px",
@@ -47,14 +37,13 @@ object Styles {
     fontWeight := "400"
   }
 
-  val input = marginTop := "10px"
+  val topMargin = marginTop := "10px"
 
-  val button = {
+  val ul = {
     Seq(
-      width := "100%",
-      height := "30px",
-      marginTop := "10px",
-      borderRadius := "5px"
+      listStyle := "none",
+      padding := "0",
+      margin := "0"
     )
   }
 }
