@@ -9,9 +9,6 @@ import collection.JavaConverters._
 class ConfigLoader {
 
   def load(name: String, env: String) = {
-    println(InetAddress.getLocalHost.getHostName)
-    println(InetAddress.getLocalHost.getHostAddress)
-    println("********************")
     NetworkInterface.getNetworkInterfaces.asScala.foreach { inter =>
       println("^^^^^^^^^^^^^^^^^^^^^^", inter.getName)
       inter.getInetAddresses.asScala.foreach { inet =>
