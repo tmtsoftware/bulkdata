@@ -36,8 +36,8 @@ class AppSettings(actorConfigs: ActorConfigs) {
     val name = config.getString("binding.name")
     val role = config.getString("binding.role")
     val hostname = config.getString("binding.hostname")
-    val httpPort = config.getInt("binding.http-port")
-    val httpAddress = new InetSocketAddress(hostname, httpPort)
-    val roleMapping = RoleMapping(Role.withName(role), name, hostname, httpPort)
+    val externalIp = config.getString("binding.externalIp")
+    val httpAddress = new InetSocketAddress(hostname, 0)
+    def roleMapping(httpPort: Int) = RoleMapping(Role.withName(role), name, externalIp, httpPort)
   }
 }

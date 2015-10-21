@@ -9,12 +9,12 @@ import tmt.server._
 import tmt.shared.models.{Image, ImageMetric}
 import tmt.transformations.{ImageProcessor, ImageTransformations, MetricsTransformations}
 
-class Assembly(name: String, env: String = "dev") {
+class Assembly(role: String, serverName: String, env: String, seedName: Option[String]) {
   import com.softwaremill.macwire._
 
   lazy val configLoader = wire[ConfigLoader]
 
-  lazy val system = ActorSystem("ClusterSystem", configLoader.load(name, env))
+  lazy val system = ActorSystem("ClusterSystem", configLoader.load(role, serverName, env, seedName))
   lazy val ec     = system.dispatcher
   lazy val mat    = ActorMaterializer()(system)
 
@@ -50,6 +50,4 @@ class Assembly(name: String, env: String = "dev") {
   lazy val serverFactory          = wire[ServerFactory]
 
   lazy val tickerService = wire[TickerService]
-
-  lazy val binding = appSettings.binding.httpAddress
 }

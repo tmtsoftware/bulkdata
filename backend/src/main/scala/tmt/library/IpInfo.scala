@@ -7,12 +7,15 @@ object IpInfo {
 
   private val url = new URL("http://checkip.amazonaws.com")
 
-  def privateIp = InetAddress.getLocalHost.getHostAddress
+  def privateIp(env: String) = env match {
+    case "prod" => InetAddress.getLocalHost.getHostAddress
+    case _      => "127.0.0.1"
+  }
 
-  def externalIp(mode: String) = mode match {
+  def externalIp(env: String) = env match {
     case "prod" =>
       val reader = new InputStreamReader(url.openStream())
       new BufferedReader(reader).readLine()
-    case _      => privateIp
+    case _      => privateIp(env)
   }
 }

@@ -40,3 +40,11 @@ case class RoleMapping(role: Role, server: String, externalIp: String, httpPort:
   def websocketUrl = s"ws://$externalIp:$httpPort/$server"
   def isOnline(onlineRoles: Set[String]) = onlineRoles(role.entryName) && onlineRoles(server)
 }
+
+case class RoleMappingS(role: String, server: String, externalIp: String, httpPort: Int) {
+  def toRoleMapping = RoleMapping(Role.withName(role), server, externalIp, httpPort)
+}
+
+object RoleMappingS {
+  def fromRoleMapping(m: RoleMapping) = RoleMappingS(m.role.entryName, m.server, m.externalIp, m.httpPort)
+}

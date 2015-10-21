@@ -11,7 +11,7 @@ class Publisher(actorConfigs: ActorConfigs) {
   private val mediator = DistributedPubSub(system).mediator
 
   def publish(topic: String, xs: Source[Any, Any]) = xs.runForeach { x =>
-//    println(s"publishing: $topic: $x")
+    println(s"publishing: $topic: $x")
     mediator ! Publish(topic, x)
   }
 }

@@ -8,6 +8,4 @@ import play.api.Configuration
 class AppSettings @Inject()(configuration: Configuration) {
   private val config = configuration.underlying
   val env = config.getString("env")
-
-  val bindings = config.getObject("bindings")
 }
