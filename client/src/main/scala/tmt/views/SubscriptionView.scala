@@ -3,6 +3,7 @@ package tmt.views
 import org.scalajs.dom.ext.Ajax
 import rx._
 import tmt.app.ViewData
+import tmt.css.Styles
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.shared.models._
@@ -24,20 +25,23 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
     connectionSet() = dataStore.connectionSet()
   }
 
+  val leftArrow = "\u2192"
+
   def frag = div(
     label("Make Connection"),
     hr(Styles.hr),
-    Rx { makeOptions("select output server", dataStore.producers(), topicName() = _, topicName()) },
+    Rx { makeOptions("select output server", dataStore.producers(), topicName() = _, topicName(), "100%") },
     label("Subscribed by")(Styles.normalFontWeight),
-    Rx{ makeOptions("select input server", consumers(), serverName() = _, serverName()) },
+    Rx{ makeOptions("select input server", consumers(), serverName() = _, serverName(), "100%") },
     button(onclick := {() => addConnection()}, `class` := "btn btn-block btn-default active")("Connect")(Styles.topMargin),
+    br,
     Rx {
       ul(id := "connections")(
         connectionSet().connections.toSeq.map { c  =>
           li(
-            label(c.server)(width := "80px", Styles.normalFontWeight),
-            label("\u2192")(width := "30px", Styles.normalFontWeight),
-            label(c.topic)(width := "80px", Styles.normalFontWeight),
+            label(c.server)(Styles.connectionNodeLabel),
+            label(leftArrow)(Styles.arrowLabel),
+            label(c.topic)(Styles.connectionNodeLabel),
             a(onclick := {() => removeConnection(c)}, href := "#")("undo")
           )
         }

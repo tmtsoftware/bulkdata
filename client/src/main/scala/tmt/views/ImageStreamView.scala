@@ -13,7 +13,7 @@ class ImageStreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends
 
   import tmt.common.Constants._
   def frag = {
-    div(`class` := "col-lg-8",
+    div(`class` := "col-lg-8", textAlign := "center",
       streamSelectionView("source-selection1", "canvas1"),
       streamSelectionView("source-selection2", "canvas2")
     )
@@ -21,7 +21,7 @@ class ImageStreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends
 
   private def streamSelectionView(selectionId: String, canvasId: String) = {
     val imageRendering = new ImageRendering(viewData)
-    val cvs = canvas(id := canvasId, widthA := CanvasWidth, heightA := CanvasHeight).render
+    val cvs = canvas(id := canvasId, widthA := CanvasWidth, heightA := CanvasHeight)(backgroundColor := "#f1f1f1").render
     val canvasLabel = label().render
 
     imageRendering.drawOn(cvs)
@@ -29,7 +29,11 @@ class ImageStreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends
       Rx{ makeOptions("select", viewData.imageServers(), imageRendering.wsServer()= _, imageRendering.wsServer()) },
       button(onclick := {() => setSource(imageRendering, canvasLabel)}, `class` := "btn btn-default active")("Set"),
       canvasLabel,
-      cvs
-    )(float := "left", width := s"${CanvasWidth + 50}px", height := s"${CanvasHeight + 50}px")
+      br,
+      br,
+      cvs,
+      br,
+      br
+    )
   }
 }
