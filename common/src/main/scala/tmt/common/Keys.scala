@@ -1,8 +1,9 @@
 package tmt.common
 
-import akka.cluster.ddata.ORMultiMapKey
+import akka.cluster.ddata.{LWWMapKey, ORMultiMapKey}
 import tmt.shared.Topics
+import tmt.shared.models.RoleMapping
 
 object Keys {
-  val Connections = ORMultiMapKey[String](Topics.Connections)
+  val Nodes = LWWMapKey[RoleMapping](Topics.Nodes)
 }

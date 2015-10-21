@@ -3,23 +3,24 @@ package services
 import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
-import models.RoleIndexFactory
 import tmt.shared.models.{Connection, ItemType}
+import scala.async.Async._
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RoleIndexService @Inject()(
-  roleIndexFactory: RoleIndexFactory,
   appSettings: AppSettings,
-  clusterMetadataService: ClusterMetadataService) {
+  clusterMetadataService: ClusterMetadataService)(implicit ec: ExecutionContext) {
 
-  private val roleIndex = roleIndexFactory.fromConfig(appSettings.bindings)
+  def onlineRoleIndex = async {
+    await(clusterMetadataService.clusterNodes).pruneBy(clusterMetadataService.onlineRoles)
+  }
 
-  def onlineRoleIndex = roleIndex.pruneBy(clusterMetadataService.onlineRoles)
-
-  def validate(connection: Connection) = {
+  def validate(connection: Connection) = async {
     val Connection(serverName, topic) = connection
-    lazy val inputType = onlineRoleIndex.serverNameIndex.getRole(serverName).input
-    lazy val outputType = onlineRoleIndex.serverNameIndex.getRole(topic).output
+    val serverNameIndex = await(onlineRoleIndex).serverNameIndex
+    val inputType = serverNameIndex.getRole(serverName).input
+    val outputType = serverNameIndex.getRole(topic).output
     (serverName != topic) && (inputType != ItemType.Empty) && (inputType == outputType)
   }
 

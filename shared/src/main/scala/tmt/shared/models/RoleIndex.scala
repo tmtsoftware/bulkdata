@@ -15,7 +15,7 @@ case class RoleIndex(mappings: Seq[RoleMapping]) {
   def getServers(role: Role) = index.getOrElse(role, Seq.empty)
 
   def producers = mappings.collect {
-    case RoleMapping(role, server) if role.output.nonEmpty => server
+    case RoleMapping(role, server, _, _) if role.output.nonEmpty => server
   }
 
   def pruneBy(onlineRoles: Set[String]) = RoleIndex(mappings.filter(_.isOnline(onlineRoles)))
@@ -26,8 +26,9 @@ object RoleIndex {
 }
 
 case class ServerNameIndex(mappings: Seq[RoleMapping]) {
-  private val index = mappings.map(x => x.server -> x.role).toMap
-  def getRole(server: String) = index.getOrElse(server, Role.Empty)
+  private val index = mappings.map(x => x.server -> x).toMap
+  def getRole(server: String) = index.get(server).map(_.role).getOrElse(Role.Empty)
+  def getHost(topic: String) = index.get(topic).map(_.websocketUrl)
 }
 
 case class ItemTypeIndex(mappings: Seq[RoleMapping], f: Role => ItemType) {
@@ -35,6 +36,7 @@ case class ItemTypeIndex(mappings: Seq[RoleMapping], f: Role => ItemType) {
   def getServers(itemType: ItemType) = index.getOrElse(itemType, Seq.empty)
 }
 
-case class RoleMapping(role: Role, server: String) {
+case class RoleMapping(role: Role, server: String, externalIp: String, httpPort: Int) {
+  def websocketUrl = s"ws://$externalIp:$httpPort/$server"
   def isOnline(onlineRoles: Set[String]) = onlineRoles(role.entryName) && onlineRoles(server)
 }

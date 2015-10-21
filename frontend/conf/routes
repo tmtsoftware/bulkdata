@@ -1,5 +1,4 @@
 GET         /                                  controllers.StreamController.streams()
-GET         /hosts                             controllers.StreamController.hosts()
 GET         /mappings                          controllers.StreamController.mappings()
 GET         /connections                       controllers.StreamController.connections()
 

@@ -17,7 +17,7 @@ abstract class WebsocketRx(viewData: ViewData) {
   }
 
   def setUrl() = {
-    val maybeUrl = viewData.hostMappings().getHost(wsServer())
+    val maybeUrl = viewData.roleIndex().serverNameIndex.getHost(wsServer())
     maybeUrl.foreach { url =>
       wsUrl() = url
     }

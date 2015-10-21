@@ -4,6 +4,7 @@ import java.net.InetSocketAddress
 
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.Uri
+import tmt.shared.models.{RoleMapping, Role}
 import scala.concurrent.duration.DurationLong
 import scala.util.Try
 
@@ -37,5 +38,6 @@ class AppSettings(actorConfigs: ActorConfigs) {
     val hostname = config.getString("binding.hostname")
     val httpPort = config.getInt("binding.http-port")
     val httpAddress = new InetSocketAddress(hostname, httpPort)
+    val roleMapping = RoleMapping(Role.withName(role), name, hostname, httpPort)
   }
 }

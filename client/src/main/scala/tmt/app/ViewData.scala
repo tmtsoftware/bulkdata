@@ -3,7 +3,7 @@ package tmt.app
 import rx._
 import tmt.shared.models._
 
-class ViewData(val roleIndex: Rx[RoleIndex], val connectionSet: Rx[ConnectionSet], val hostMappings: Rx[HostMappings]) {
+class ViewData(val roleIndex: Rx[RoleIndex], val connectionSet: Rx[ConnectionSet]) {
   val producers = Rx(roleIndex().producers)
   def consumersOf(topicName: Rx[String]) = Rx(roleIndex().compatibleConsumers(topicName()))
 
@@ -22,8 +22,8 @@ class ViewData(val roleIndex: Rx[RoleIndex], val connectionSet: Rx[ConnectionSet
     result
   }
 
-  val imageWsUrls = Rx(imageServers().map(hostMappings().getHost))
-  val frequencyWsUrls = Rx(frequencyServers().map(hostMappings().getHost))
+  val imageWsUrls = Rx(imageServers().map(roleIndex().serverNameIndex.getHost))
+  val frequencyWsUrls = Rx(frequencyServers().map(roleIndex().serverNameIndex.getHost))
 
   val sourceServers = Rx(roleIndex().getServers(Role.Source))
 }

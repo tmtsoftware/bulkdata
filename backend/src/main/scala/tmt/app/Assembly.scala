@@ -22,6 +22,8 @@ class Assembly(name: String, env: String = "dev") {
 
   lazy val appSettings: AppSettings = wire[AppSettings]
 
+  lazy val nodeInfoPublisher = wire[NodeInfoPublisher]
+
   lazy val producer = wire[Producer]
 
   lazy val imageReadService: ImageReadService = wire[ImageReadService]

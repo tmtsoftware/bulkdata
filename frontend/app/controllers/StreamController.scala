@@ -25,12 +25,10 @@ class StreamController @Inject()(
     Ok(new Page("showcase").render)
   }
 
-  def mappings() = Action {
-    Ok(Pickle.intoString(roleIndexService.onlineRoleIndex))
-  }
-
-  def hosts() = Action {
-    Ok(Pickle.intoString(appSettings.hosts))
+  def mappings() = Action.async {
+    async {
+      Ok(Pickle.intoString(await(roleIndexService.onlineRoleIndex)))
+    }
   }
 
   def connections() = Action.async {
@@ -45,9 +43,11 @@ class StreamController @Inject()(
     Accepted("ok")
   }
 
-  def subscribe(serverName: String, topic: String) = Action {
-    clusterClientService.subscribe(Connection(serverName, topic))
-    Accepted("ok")
+  def subscribe(serverName: String, topic: String) = Action.async {
+    async {
+      await(clusterClientService.subscribe(Connection(serverName, topic)))
+      Accepted("ok")
+    }
   }
 
   def unsubscribe(serverName: String, topic: String) = Action {
