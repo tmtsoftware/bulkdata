@@ -3,6 +3,7 @@ package tmt.views
 import org.scalajs.dom.ext.Ajax
 import rx._
 import tmt.app.ViewData
+import tmt.css.Styles
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 
@@ -13,17 +14,11 @@ class ThrottleView(dataStore: ViewData) extends View {
   val rate = Var("")
 
   def frag = div(
-    "Throttle",
-    Rx {
-      select(id := "server-name", onchange := setValue(server))(
-        optionHint(s"select wavefront"),
-        makeOptions(dataStore.wavefrontServers(), server())
-      )
-    },
-    input(`type` := "text", id := "new-rate", placeholder := "new rate", onchange := setValue(rate)),
-    button(id := "change-rate", `type` := "button", onclick := {() => throttle(server(), rate())})(
-      "Change"
-    ),
+    label("Throttle"),
+    hr(Styles.hr),
+    Rx { makeOptions("select wavefront", dataStore.wavefrontServers(), server() = _, server(), "100%")},
+    input(`type` := "text", placeholder := "new rate", `class` := "form-control" , onchange := setValue(rate))(Styles.topMargin),
+    button(onclick := {() => throttle(server(), rate())}, `class` := "btn btn-block btn-default active")("Change")(Styles.topMargin),
     br, br
   )
 
