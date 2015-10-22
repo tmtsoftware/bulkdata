@@ -16,9 +16,15 @@ class ThrottleView(dataStore: ViewData) extends View {
   def frag = div(
     label("Throttle"),
     hr(Styles.hr),
-    Rx { makeOptions("select wavefront", dataStore.wavefrontServers(), server() = _, server(), "100%")},
-    input(`type` := "text", placeholder := "new rate", `class` := "form-control" , onchange := setValue(rate))(Styles.topMargin),
-    button(onclick := {() => throttle(server(), rate())}, `class` := "btn btn-block btn-default active")("Change")(Styles.topMargin),
+    Rx {
+      makeOptions("select wavefront", dataStore.wavefrontServers(), server)
+    },
+    input(`class` := "form-control")(
+      `type` := "text", placeholder := "new rate", onchange := setValue(rate)
+    )(Styles.topMargin),
+    button(`class` := "btn btn-block btn-default active")(
+      onclick := {() => throttle(server(), rate())}
+    )("Change")(Styles.topMargin),
     br, br
   )
 

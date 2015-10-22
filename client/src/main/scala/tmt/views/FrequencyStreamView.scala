@@ -14,14 +14,18 @@ class FrequencyStreamView(viewData: ViewData)(implicit scheduler: Scheduler) ext
   val metricsRendering = new MetricsRendering(viewData)
   val selectedServer = label().render
 
-  def frag = div(`class` := "col-lg-2",
+  def frag = div(`class` := "col-lg-2")(
     label("Frequency Computing Node"),
     hr(Styles.hr),
-    Rx { makeOptions("select", viewData.frequencyServers(), metricsRendering.wsServer() = _, metricsRendering.wsServer(), "100%") },
-    button(onclick := {() => setSource(metricsRendering, selectedServer)}, `class` := "btn btn-block btn-default active")("Set")(Styles.topMargin),
+    Rx {
+      makeOptions("select", viewData.frequencyServers(), metricsRendering.wsServer)
+    },
+    button(`class` := "btn btn-block btn-default active")(
+      onclick := {() => setSource(metricsRendering, selectedServer)}
+    )("Set")(Styles.topMargin),
     br,
     selectedServer,
     br,
-    span(id := "per-sec")(metricsRendering.frequency)
+    span(metricsRendering.frequency)
   )(Styles.frequencyStreamView)
 }
