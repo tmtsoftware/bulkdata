@@ -12,19 +12,6 @@ object Styles {
   )
   val normalFontWeight = fontWeight := "400"
   val topMargin = marginTop := "10px"
-  val ul = Seq(
-    listStyle := "none",
-    padding := "0",
-    margin := "0"
-  )
-  val connectionNodeLabel = Seq(
-    width := "80px",
-    Styles.normalFontWeight
-  )
-  val arrowLabel = Seq(
-    width := "30px",
-    Styles.normalFontWeight
-  )
   val controlsView = Seq(
     leftFloat,
     width := "16%"
