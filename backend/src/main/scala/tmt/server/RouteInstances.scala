@@ -1,7 +1,7 @@
 package tmt.server
 
 import tmt.app.{ActorConfigs, AppSettings}
-import tmt.io.ImageReadService
+import tmt.io.WavefrontReadService
 import tmt.library.SourceExtensions.RichSource
 import tmt.marshalling.BinaryMarshallers
 import tmt.shared.models.Role
@@ -12,7 +12,7 @@ class RouteInstances(
   imageTransformations: ImageTransformations,
   metricsTransformations: MetricsTransformations,
   actorConfigs: ActorConfigs,
-  imageReadService: ImageReadService,
+  wavefrontReadService: WavefrontReadService,
   appSettings: AppSettings
 ) extends BinaryMarshallers {
 
@@ -21,11 +21,11 @@ class RouteInstances(
   val serverName = appSettings.binding.name
 
   def find(role: Role) = role match {
-    case Role.Source    => routeFactory.images(serverName, imageReadService.sendImages.hotMulticast)
+    case Role.Wavefront => routeFactory.images(serverName, wavefrontReadService.sendImages.hotMulticast)
     case Role.Rotator   => routeFactory.images(serverName, imageTransformations.rotatedImages)
 
-    case Role.Copier    => routeFactory.generic(serverName, imageTransformations.copiedImages)
-    case Role.Filter    => routeFactory.generic(serverName, imageTransformations.filteredImages)
+    case Role.Copier => routeFactory.generic(serverName, imageTransformations.copiedImages)
+    case Role.Filter => routeFactory.generic(serverName, imageTransformations.filteredImages)
 
     case Role.Metric    => routeFactory.generic(serverName, imageTransformations.imageMetrics)
     case Role.Frequency => routeFactory.generic(serverName, metricsTransformations.perSecMetrics)

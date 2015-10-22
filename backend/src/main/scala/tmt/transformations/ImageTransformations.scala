@@ -4,11 +4,11 @@ import akka.http.scaladsl.model.DateTime
 import akka.stream.scaladsl.Source
 import tmt.actors.SubscriptionService
 import tmt.app.{AppSettings, ActorConfigs}
-import tmt.io.ImageWriteService
+import tmt.io.WavefrontWriteService
 import tmt.shared.models.{Image, ImageMetric}
 
 class ImageTransformations(
-  imageWriteService: ImageWriteService,
+  wavefrontWriteService: WavefrontWriteService,
   actorConfigs: ActorConfigs,
   appSettings: AppSettings,
   imageSubscriber: SubscriptionService[Image], 
@@ -21,7 +21,7 @@ class ImageTransformations(
   lazy val filteredImages = images.filter(_.name.contains("9"))
 
   lazy val copiedImages = images.mapAsync(1) { image =>
-    imageWriteService.copyImage(image).map(_ => image)
+    wavefrontWriteService.copyImage(image).map(_ => image)
   }
 
   lazy val imageMetrics = images.map(image => ImageMetric(image.name, image.size, DateTime.now.clicks))

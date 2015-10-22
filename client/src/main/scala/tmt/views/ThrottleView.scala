@@ -16,8 +16,8 @@ class ThrottleView(dataStore: ViewData) extends View {
     "Throttle",
     Rx {
       select(id := "server-name", onchange := setValue(server))(
-        optionHint(s"select source"),
-        makeOptions(dataStore.sourceServers(), server())
+        optionHint(s"select wavefront"),
+        makeOptions(dataStore.wavefrontServers(), server())
       )
     },
     input(`type` := "text", id := "new-rate", placeholder := "new rate", onchange := setValue(rate)),

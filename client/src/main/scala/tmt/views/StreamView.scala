@@ -27,23 +27,23 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
         },
         button(onclick := {() => metricsRendering.setUrl()})("Set"),
         br,
-        span(id := "per-sec")(metricsRendering.frequency)
+        span(metricsRendering.frequency)
       ), br,
       div(
-        streamSelectionView("source-selection1", "canvas1"),
-        streamSelectionView("source-selection2", "canvas2")
+        streamSelectionView(),
+        streamSelectionView()
       )
     )
   }
 
-  private def streamSelectionView(selectionId: String, canvasId: String) = {
+  private def streamSelectionView() = {
     val imageRendering = new ImageRendering(viewData)
-    val cvs = canvas(id := canvasId, widthA := CanvasWidth, heightA := CanvasHeight).render
+    val cvs = canvas(widthA := CanvasWidth, heightA := CanvasHeight).render
     imageRendering.drawOn(cvs)
     div(
       "Image Source",
       Rx {
-        select(id := selectionId, onchange := setValue(imageRendering.wsServer))(
+        select(onchange := setValue(imageRendering.wsServer))(
           optionHint("select"),
           makeOptions(viewData.imageServers(), imageRendering.wsServer())
         )

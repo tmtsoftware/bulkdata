@@ -14,7 +14,7 @@ import tmt.shared.models.Image
 
 import scala.concurrent.Future
 
-class ImageReadService(actorConfigs: ActorConfigs, settings: AppSettings, producer: Producer, tickerService: TickerService) {
+class WavefrontReadService(actorConfigs: ActorConfigs, settings: AppSettings, producer: Producer, tickerService: TickerService) {
 
   val ticks = tickerService.source
   

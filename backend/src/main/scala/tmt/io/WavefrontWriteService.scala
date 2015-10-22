@@ -12,7 +12,7 @@ import tmt.shared.models.Image
 
 import scala.concurrent.Future
 
-class ImageWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
+class WavefrontWriteService(actorConfigs: ActorConfigs, settings: AppSettings) {
 
   import actorConfigs._
 

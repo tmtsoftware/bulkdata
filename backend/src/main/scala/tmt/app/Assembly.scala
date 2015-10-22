@@ -26,10 +26,10 @@ class Assembly(role: String, serverName: String, env: String, seedName: Option[S
 
   lazy val producer = wire[Producer]
 
-  lazy val imageReadService: ImageReadService = wire[ImageReadService]
-  lazy val movieReadService                   = wire[MovieReadService]
-  lazy val imageWriteService                  = wire[ImageWriteService]
-  lazy val movieWriteService                  = wire[MovieWriteService]
+  lazy val wavefrontReadService: WavefrontReadService = wire[WavefrontReadService]
+  lazy val wavefrontWriteService                      = wire[WavefrontWriteService]
+  lazy val movieReadService                           = wire[MovieReadService]
+  lazy val movieWriteService                          = wire[MovieWriteService]
 
   lazy val producingClientFactory = wire[ProducingClientFactory]
   lazy val consumingClientFactory = wire[ConsumingClientFactory]

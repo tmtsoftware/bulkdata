@@ -5,14 +5,14 @@ import akka.http.scaladsl.server.Route
 import akka.stream.scaladsl.{Sink, Source}
 import akka.util.ByteString
 import tmt.app.CustomDirectives
-import tmt.io.{ImageReadService, ImageWriteService, MovieReadService, MovieWriteService}
+import tmt.io.{WavefrontReadService, WavefrontWriteService, MovieReadService, MovieWriteService}
 import tmt.marshalling.BinaryMarshallers
 import tmt.shared.models.Image
 
 class MediaRoute(
-  imageReadService: ImageReadService,
+  wavefrontReadService: WavefrontReadService,
+  wavefrontWriteService: WavefrontWriteService,
   movieReadService: MovieReadService,
-  imageWriteService: ImageWriteService,
   movieWriteService: MovieWriteService
 ) extends BinaryMarshallers with CustomDirectives {
 
@@ -43,12 +43,12 @@ class MediaRoute(
   lazy val imageRoute: Route = {
     path("images" / "bytes") {
       get {
-        handleWebsocketMessages(Sink.ignore, imageReadService.sendMessages) ~
-        complete(imageReadService.sendBytes)
+        handleWebsocketMessages(Sink.ignore, wavefrontReadService.sendMessages) ~
+        complete(wavefrontReadService.sendBytes)
       } ~
       post {
         entity(as[Source[ByteString, Any]]) { byteStrings =>
-          onSuccess(imageWriteService.copyBytes(byteStrings)) {
+          onSuccess(wavefrontWriteService.copyBytes(byteStrings)) {
             complete("copied")
           }
         }
@@ -56,11 +56,11 @@ class MediaRoute(
     } ~
     path("images" / "objects") {
       get {
-        complete(imageReadService.sendImages)
+        complete(wavefrontReadService.sendImages)
       } ~
       post {
         entity(as[Source[Image, Any]]) { images =>
-          onSuccess(imageWriteService.copyImages(images)) {
+          onSuccess(wavefrontWriteService.copyImages(images)) {
             complete("copied")
           }
         }
