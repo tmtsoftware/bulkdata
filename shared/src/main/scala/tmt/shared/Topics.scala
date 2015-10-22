@@ -5,4 +5,5 @@ object Topics {
   val Subscription = "subscription"
   val Connections = "connections"
   val Nodes = "nodes"
+  val ScienceImages = "science-images"
 }

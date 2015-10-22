@@ -1,29 +1,31 @@
 package tmt.shared.models
 
 case class NodeSet(nodes: Seq[Node]) {
-  def compatibleConsumers(producer: String) = nodes.collectFirst {
-    case Node(producerRole, `producer`, _, _) => nodes.collect {
+  val pipelineNodes = nodes.filterNot(_.role == Role.ImageSource)
+
+  def compatibleConsumers(producer: String) = pipelineNodes.collectFirst {
+    case Node(producerRole, `producer`, _, _) => pipelineNodes.collect {
       case Node(role, name, _, _) if producerRole.output == role.input && name != producer => name
     }
   }.toSeq.flatten
 
-  def getRole(name: String) = nodes.collectFirst {
+  def getRole(name: String) = pipelineNodes.collectFirst {
     case Node(role, `name`, _, _) => role
   }.getOrElse(Role.Empty)
 
-  def getNames(role: Role) = nodes.collect {
+  def getNames(role: Role) = pipelineNodes.collect {
     case Node(`role`, name, _, _) => name
   }
 
-  def getNames(outputType: ItemType) = nodes.collect {
+  def getNames(outputType: ItemType) = pipelineNodes.collect {
     case Node(role, name, _, _) if role.output == outputType => name 
   }
 
-  def getHost(name: String) = nodes.collectFirst {
+  def getHost(name: String) = pipelineNodes.collectFirst {
     case n@Node(_, `name`, externalIp, httpPort) => s"ws://$externalIp:$httpPort/$name"  
   }
 
-  def producers = nodes.collect {
+  def producers = pipelineNodes.collect {
     case Node(role, server, _, _) if role.output.nonEmpty => server
   }
 

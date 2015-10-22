@@ -21,8 +21,10 @@ class RouteInstances(
   val serverName = appSettings.binding.name
 
   def find(role: Role) = role match {
-    case Role.Wavefront => routeFactory.images(serverName, wavefrontReadService.sendImages.hotMulticast)
-    case Role.Rotator   => routeFactory.images(serverName, imageTransformations.rotatedImages)
+    case Role.ImageSource => routeFactory.scienceImages
+
+    case Role.Wavefront => routeFactory.wavefront(serverName, wavefrontReadService.sendImages.hotMulticast)
+    case Role.Rotator   => routeFactory.wavefront(serverName, imageTransformations.rotatedImages)
 
     case Role.Copier => routeFactory.generic(serverName, imageTransformations.copiedImages)
     case Role.Filter => routeFactory.generic(serverName, imageTransformations.filteredImages)

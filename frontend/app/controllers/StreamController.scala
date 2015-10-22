@@ -4,7 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import common.AppSettings
 import play.api.mvc.{Action, Controller}
-import prickle._
+import prickle.Pickle
 import services.{ClusterClientService, ConnectionSetService, NodeSetService}
 import templates.Page
 import tmt.shared.models.Connection

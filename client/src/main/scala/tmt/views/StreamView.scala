@@ -41,7 +41,7 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
     val cvs = canvas(widthA := CanvasWidth, heightA := CanvasHeight).render
     imageRendering.drawOn(cvs)
     div(
-      "Image Source",
+      "Wavefront",
       Rx {
         select(onchange := setValue(imageRendering.wsServer))(
           optionHint("select"),

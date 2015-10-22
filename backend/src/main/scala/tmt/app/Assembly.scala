@@ -28,8 +28,8 @@ class Assembly(role: String, serverName: String, env: String, seedName: Option[S
 
   lazy val wavefrontReadService: WavefrontReadService = wire[WavefrontReadService]
   lazy val wavefrontWriteService                      = wire[WavefrontWriteService]
-  lazy val movieReadService                           = wire[MovieReadService]
-  lazy val movieWriteService                          = wire[MovieWriteService]
+  lazy val movieReadService                           = wire[ScienceImageReadService]
+  lazy val movieWriteService                          = wire[ScienceImageWriteService]
 
   lazy val producingClientFactory = wire[ProducingClientFactory]
   lazy val consumingClientFactory = wire[ConsumingClientFactory]

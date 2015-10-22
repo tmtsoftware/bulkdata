@@ -1,7 +1,7 @@
 package tmt.app
 
 import com.typesafe.config._
-import tmt.library.ConfigObjectExtensions.{RichConfig, RichConfigObject}
+import tmt.library.ConfigObjectExtensions.RichConfig
 import tmt.library.IpInfo
 
 class ConfigLoader {
