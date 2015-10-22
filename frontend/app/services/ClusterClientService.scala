@@ -17,7 +17,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
 @Singleton
-class ClusterClientService @Inject()(roleIndexService: RoleIndexService)(implicit system: ActorSystem, ec: ExecutionContext) {
+class ClusterClientService @Inject()(roleIndexService: NodeSetService)(implicit system: ActorSystem, ec: ExecutionContext) {
 
   implicit val timeout = Timeout(2.seconds)
 

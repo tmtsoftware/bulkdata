@@ -1,5 +1,5 @@
 GET         /                                  controllers.StreamController.streams()
-GET         /mappings                          controllers.StreamController.mappings()
+GET         /nodes                             controllers.StreamController.nodes()
 GET         /connections                       controllers.StreamController.connections()
 
 POST        /:server/throttle/:delay           controllers.StreamController.throttle(server, delay: Long)

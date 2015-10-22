@@ -9,7 +9,7 @@ import akka.cluster.{Cluster, MemberStatus}
 import akka.pattern.ask
 import akka.util.Timeout
 import tmt.common.Keys
-import tmt.shared.models.Topology$
+import tmt.shared.models.NodeSet
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.DurationInt
@@ -28,10 +28,10 @@ class ClusterMetadataService@Inject()(implicit system: ActorSystem, ec: Executio
 
   def onlineRoles = onlineMembers.flatMap(_.roles)
 
-  def clusterNodes = (replicator ? Get(Keys.Nodes, ReadLocal)).map {
+  def nodeSet = (replicator ? Get(Keys.Nodes, ReadLocal)).map {
     case g@GetSuccess(Keys.Nodes, _) =>
       val roleMappings = g.get(Keys.Nodes).entries.values.toList
-      Topology(roleMappings.map(_.toRoleMapping))
-    case NotFound(Keys.Nodes, _)     => Topology.empty
+      NodeSet(roleMappings.map(_.node))
+    case NotFound(Keys.Nodes, _)     => NodeSet.empty
   }
 }

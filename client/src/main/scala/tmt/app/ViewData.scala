@@ -3,12 +3,12 @@ package tmt.app
 import rx._
 import tmt.shared.models._
 
-class ViewData(val roleIndex: Rx[Topology], val connectionSet: Rx[ConnectionSet]) {
-  val producers = Rx(roleIndex().producers)
-  def consumersOf(topicName: Rx[String]) = Rx(roleIndex().compatibleConsumers(topicName()))
+class ViewData(val nodeSet: Rx[NodeSet], val connectionSet: Rx[ConnectionSet]) {
+  val producers = Rx(nodeSet().producers)
+  def consumersOf(topicName: Rx[String]) = Rx(nodeSet().compatibleConsumers(topicName()))
 
-  val imageServers = Rx(roleIndex().outputTypeIndex.getNodeNames(ItemType.Image))
-  val frequencyServers = Rx(roleIndex().outputTypeIndex.getNodeNames(ItemType.Frequency))
+  val imageServers = Rx(nodeSet().getNames(ItemType.Image))
+  val frequencyServers = Rx(nodeSet().getNames(ItemType.Frequency))
 
   val allServers = Rx(imageServers() ++ frequencyServers())
 
@@ -22,8 +22,5 @@ class ViewData(val roleIndex: Rx[Topology], val connectionSet: Rx[ConnectionSet]
     result
   }
 
-  val imageWsUrls = Rx(imageServers().map(roleIndex().nodeNameIndex.getHost))
-  val frequencyWsUrls = Rx(frequencyServers().map(roleIndex().nodeNameIndex.getHost))
-
-  val sourceServers = Rx(roleIndex().getNodeNames(Role.Source))
+  val sourceServers = Rx(nodeSet().getNames(Role.Source))
 }
