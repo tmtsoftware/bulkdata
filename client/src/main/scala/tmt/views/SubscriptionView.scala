@@ -26,6 +26,7 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
   }
 
   val leftArrow = " \u2192 "
+  val downArrow = "\u2193"
 
   def frag = div(
     label("Make Connection"),
@@ -33,7 +34,7 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
     Rx {
       makeOptions("select output server", dataStore.producers(), topicName)
     },
-    label("Subscribed by")(Styles.normalFontWeight),
+    label(downArrow)(Styles.blockDisplay, Styles.centerAlign),
     Rx {
       makeOptions("select input server", consumers(), serverName)
     },
@@ -43,7 +44,7 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
       ul(`class` := "list-group")(
         connectionSet().connections.toSeq.map { c  =>
           li(`class` := "list-group-item")(
-            label(c.server + leftArrow + c.topic)(Styles.normalFontWeight),
+            label(c.topic + leftArrow + c.server)(Styles.normalFontWeight),
             br,
             a(onclick := {() => removeConnection(c)}, href := "#")("disconnect")
           )
