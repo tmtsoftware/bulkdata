@@ -8,12 +8,10 @@ class ClientAssembly {
 
   val dataStore = new DataStore
 
-  val mainView = new MainView(
-    new LeftColumn(
-      new ThrottleView(dataStore.data),
-      new FrequencyView(dataStore.data),
-      new SubscriptionView(dataStore.data)
-    ),
+  val body = new Body(
+    new ThrottleView(dataStore.data),
+    new FrequencyView(dataStore.data),
+    new SubscriptionView(dataStore.data),
     new ImageView(dataStore.data)
   )
 }

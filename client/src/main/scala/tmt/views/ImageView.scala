@@ -13,19 +13,12 @@ class ImageView(viewData: ViewData)(implicit scheduler: Scheduler) extends View 
   import tmt.common.Constants._
 
   def frag = {
-    div(cls := "col-lg-5")(
-      streamSelectionView(),
-      streamSelectionView()
-    )
-  }
-
-  private def streamSelectionView() = {
     val imageRendering = new ImageRendering(viewData)
     val cvs = canvas(widthA := CanvasWidth, heightA := CanvasHeight).render
     imageRendering.drawOn(cvs)
 
     div(
-      formGroup(cls := "row")(
+      formGroup(
         label("Select wavefront"),
         makeSelection(viewData.imageServers, imageRendering.wsServer),
         formControl(button)(onclick := { () => imageRendering.setUrl() })("Set")
