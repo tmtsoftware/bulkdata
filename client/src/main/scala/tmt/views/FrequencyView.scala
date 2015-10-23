@@ -11,13 +11,8 @@ import scalatags.JsDom.all._
 class FrequencyView(viewData: ViewData)(implicit scheduler: Scheduler) extends View {
   val metricsRendering = new MetricsRendering(viewData)
 
-  def frag = {
-    div(cls := "form-group")(
-      label("Select frequency computing node"),
-      makeSelection(viewData.frequencyServers, metricsRendering.wsServer),
-      button(onclick := { () => metricsRendering.setUrl() })("Set"),
-      br,
-      span(metricsRendering.frequency)
-    )
-  }
+  def frag = div(
+    makeForm("Select frequency computing node", viewData.frequencyServers, metricsRendering),
+    span(metricsRendering.frequency)
+  )
 }

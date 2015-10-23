@@ -6,6 +6,7 @@ import tmt.app.ViewData
 
 abstract class WebsocketRx(viewData: ViewData) {
   val wsServer = Var("")
+  val selectedServer = Var("")
   val wsUrl = Var("")
   val webSocket = Var(Option.empty[WebSocket])
 
@@ -19,6 +20,7 @@ abstract class WebsocketRx(viewData: ViewData) {
   def setUrl() = {
     val maybeUrl = viewData.nodeSet().getHost(wsServer())
     maybeUrl.foreach { url =>
+      selectedServer() = wsServer()
       wsUrl() = url
     }
   }

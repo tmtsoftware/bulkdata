@@ -24,20 +24,23 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
     connectionSet() = dataStore.connectionSet()
   }
 
-  def frag = div(cls := "form-group")(
+  def frag = formGroup(
     label("Make Connection"),
-    label("Select output server"),
-    makeSelection(dataStore.producers, topicName),
-    "====>",
-    label("Select input server"),
-    makeSelection(consumers, serverName),
-    button(onclick := {() => addConnection()})("Connect"),
+    div(cls := "form-inline")(
+      label("Select output server"),
+      makeSelection(dataStore.producers, topicName)
+    ),
+    div(cls := "form-inline")(
+      label("Select input server"),
+      makeSelection(consumers, serverName)
+    ),
+    formControl(button)(onclick := {() => addConnection()})("Connect"),
     Rx {
       ul(id := "connections")(
         connectionSet().connections.toSeq.map { c  =>
-          li(
+          li(cls := "form-inline")(
             s"${c.topic} ===> ${c.server}",
-            button(onclick := {() => removeConnection(c)})("unsubscribe")
+            formControl(button)(onclick := {() => removeConnection(c)})("unsubscribe")
           )
         }
       )

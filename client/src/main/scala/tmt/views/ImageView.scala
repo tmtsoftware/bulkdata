@@ -2,7 +2,6 @@ package tmt.views
 
 import monifu.concurrent.Scheduler
 import tmt.app.ViewData
-import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.images.ImageRendering
 
@@ -18,12 +17,8 @@ class ImageView(viewData: ViewData)(implicit scheduler: Scheduler) extends View 
     imageRendering.drawOn(cvs)
 
     div(
-      formGroup(
-        label("Select wavefront"),
-        makeSelection(viewData.imageServers, imageRendering.wsServer),
-        formControl(button)(onclick := { () => imageRendering.setUrl() })("Set")
-      ),
-      div(cls := "row")(cvs)
+      makeForm("Select wavefront", viewData.imageServers, imageRendering),
+      div(cvs)
     )
   }
 }
