@@ -10,6 +10,6 @@ class ConfigurationControlsView(dataStore: DataStore)(implicit ec: ExecutionCont
     div(`class` := "col-lg-2")(
       new ThrottleView(dataStore.data).frag,
       new SubscriptionView(dataStore.data).frag
-    )(Styles.controlsView)
+    )
   }
 }

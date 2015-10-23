@@ -2,6 +2,7 @@ package tmt.framework
 
 import org.scalajs.dom.html._
 import rx._
+import tmt.css.Styles
 
 import scala.scalajs.js
 import scalatags.JsDom.all._
@@ -30,7 +31,7 @@ object Helpers {
 
     div(`class` := "dropdown")(
       button1,
-      ul(`class` := "dropdown-menu")(width := "100%"){
+      ul(`class` := "dropdown-menu")(Styles.blockDisplay) {
         values.map { label =>
           li(
             a(href := "#", onclick := {() => selection() = label; button1.textContent = label + downArrow})(label))
@@ -38,4 +39,13 @@ object Helpers {
       }
     )(display := "inline-block", width := cssWidth)
   }
+  
+  private def createButton(text: String, onclickAction: Unit => Unit, cssClasses: String) =
+    button(`class` := cssClasses)(onclick := {() => onclickAction()})(text)
+
+  def defaultButton(text: String, onclickAction: Unit => Unit) =
+    createButton(text, onclickAction, "btn btn-default active")
+
+  def blockButton(text:String, onclickAction: Unit => Unit) =
+    createButton(text, onclickAction, "btn btn-block btn-default active")(Styles.topMargin)
 }

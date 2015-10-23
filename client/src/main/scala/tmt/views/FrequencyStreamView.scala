@@ -20,12 +20,10 @@ class FrequencyStreamView(viewData: ViewData)(implicit scheduler: Scheduler) ext
     Rx {
       makeOptions("select", viewData.frequencyServers(), metricsRendering.wsServer)
     },
-    button(`class` := "btn btn-block btn-default active")(
-      onclick := {() => setSource(metricsRendering, selectedServer)}
-    )("Set")(Styles.topMargin),
+    blockButton("Set", _ => setSource(metricsRendering, selectedServer)),
     br,
     selectedServer,
     br,
     span(metricsRendering.frequency)
-  )(Styles.frequencyStreamView)
+  )
 }

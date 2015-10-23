@@ -37,9 +37,7 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
     Rx {
       makeOptions("select input server", consumers(), serverName)
     },
-    button(`class` := "btn btn-block btn-default active")(
-      onclick := {() => addConnection()}
-    )("Connect")(Styles.topMargin),
+    blockButton("Connect", _ => addConnection()),
     br,
     Rx{
       ul(`class` := "list-group")(

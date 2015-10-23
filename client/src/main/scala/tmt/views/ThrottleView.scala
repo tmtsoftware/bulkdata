@@ -22,9 +22,7 @@ class ThrottleView(dataStore: ViewData) extends View {
     input(`class` := "form-control")(
       `type` := "text", placeholder := "new rate", onchange := setValue(rate)
     )(Styles.topMargin),
-    button(`class` := "btn btn-block btn-default active")(
-      onclick := {() => throttle(server(), rate())}
-    )("Change")(Styles.topMargin),
+    blockButton("Change", _ => throttle(server(), rate())),
     br, br
   )
 

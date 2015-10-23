@@ -12,17 +12,10 @@ object Styles {
   )
   val normalFontWeight = fontWeight := "400"
   val topMargin = marginTop := "10px"
-  val controlsView = Seq(
-    leftFloat,
-    width := "16%"
+  val centerAlign = textAlign := "center"
+  val canvas = Seq(
+    backgroundColor := "#f1f1f1",
+    topMargin
   )
-  val imageStreamView = Seq(
-    leftFloat,
-    margin := "13%",
-    marginTop:= "0px"
-  )
-  val frequencyStreamView = Seq(
-    rightFloat,
-    width := "16%"
-  )
+  val blockDisplay = width := "100%"
 }
