@@ -13,26 +13,13 @@ import scalatags.JsDom.all._
 class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View {
 
   import tmt.common.Constants._
+
   val metricsRendering = new MetricsRendering(viewData)
 
   def frag = {
-    div(
-      div(
-        "Frequency Computing Node",
-        Rx {
-            select(onchange := setValue(metricsRendering.wsServer))(
-            optionHint("select"),
-            makeOptions(viewData.frequencyServers(), metricsRendering.wsServer())
-          )
-        },
-        button(onclick := {() => metricsRendering.setUrl()})("Set"),
-        br,
-        span(metricsRendering.frequency)
-      ), br,
-      div(
-        streamSelectionView(),
-        streamSelectionView()
-      )
+    div(cls := "col-lg-10")(
+      streamSelectionView(),
+      streamSelectionView()
     )
   }
 
@@ -40,16 +27,19 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
     val imageRendering = new ImageRendering(viewData)
     val cvs = canvas(widthA := CanvasWidth, heightA := CanvasHeight).render
     imageRendering.drawOn(cvs)
+
     div(
-      "Wavefront",
-      Rx {
-        select(onchange := setValue(imageRendering.wsServer))(
-          optionHint("select"),
-          makeOptions(viewData.imageServers(), imageRendering.wsServer())
-        )
-      },
-      button(onclick := {() => imageRendering.setUrl()})("Set"),
-      cvs
-    )(float := "left", width := s"${CanvasWidth + 50}px", height := s"${CanvasHeight + 50}px")
+      div(
+        "Wavefront",
+        Rx {
+          select(onchange := setValue(imageRendering.wsServer))(
+            optionHint("select"),
+            makeOptions(viewData.imageServers(), imageRendering.wsServer())
+          )
+        },
+        button(onclick := { () => imageRendering.setUrl() })("Set")
+      ),
+      div(cvs)
+    )
   }
 }

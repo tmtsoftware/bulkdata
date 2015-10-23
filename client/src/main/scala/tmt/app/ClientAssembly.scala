@@ -1,6 +1,6 @@
 package tmt.app
 
-import tmt.views.{ThrottleView, StreamView, SubscriptionView, Body}
+import tmt.views._
 
 class ClientAssembly {
 
@@ -8,9 +8,12 @@ class ClientAssembly {
 
   val dataStore = new DataStore
 
-  val body = new Body(
-    new ThrottleView(dataStore.data),
-    new SubscriptionView(dataStore.data),
+  val mainView = new MainView(
+    new LeftColumn(
+      new ThrottleView(dataStore.data),
+      new FrequencyView(dataStore.data),
+      new SubscriptionView(dataStore.data)
+    ),
     new StreamView(dataStore.data)
   )
 }

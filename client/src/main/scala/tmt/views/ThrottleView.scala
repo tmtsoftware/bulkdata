@@ -13,10 +13,9 @@ class ThrottleView(dataStore: ViewData) extends View {
   val rate = Var("")
 
   def frag = div(
-    "Throttle",
+    "Select wavefront to throttle",
     Rx {
       select(id := "server-name", onchange := setValue(server))(
-        optionHint(s"select wavefront"),
         makeOptions(dataStore.wavefrontServers(), server())
       )
     },
