@@ -24,12 +24,12 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
     connectionSet() = dataStore.connectionSet()
   }
 
-  def frag = div(
-    "Make Connection",
-    "Select output server",
+  def frag = div(cls := "form-group")(
+    label("Make Connection"),
+    label("Select output server"),
     makeSelection(dataStore.producers, topicName),
     "====>",
-    "Select input server",
+    label("Select input server"),
     makeSelection(consumers, serverName),
     button(onclick := {() => addConnection()})("Connect"),
     Rx {

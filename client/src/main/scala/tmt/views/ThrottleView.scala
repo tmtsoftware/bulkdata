@@ -12,12 +12,11 @@ class ThrottleView(dataStore: ViewData) extends View {
   val server = Var("")
   val rate = Var("")
 
-  def frag = div(
-    "Select wavefront to throttle",
+  def frag = formGroup(
+    label("Select wavefront to throttle"),
     makeSelection(dataStore.wavefrontServers, server),
-    input(`type` := "text", placeholder := "new rate", onchange := setValue(rate)),
-    button(onclick := {() => throttle(server(), rate())})("Change"),
-    br, br
+    formControl(input)(`type` := "text", placeholder := "new rate", onchange := setValue(rate)),
+    formControl(button)(onclick := {() => throttle(server(), rate())})("Change")
   )
 
   def throttle(server: String, rate: String) = Ajax.post(s"$server/throttle/$rate")

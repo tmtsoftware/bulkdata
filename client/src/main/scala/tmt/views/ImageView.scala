@@ -1,23 +1,19 @@
 package tmt.views
 
 import monifu.concurrent.Scheduler
-import rx._
 import tmt.app.ViewData
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
 import tmt.images.ImageRendering
-import tmt.metrics.MetricsRendering
 
 import scalatags.JsDom.all._
 
-class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View {
+class ImageView(viewData: ViewData)(implicit scheduler: Scheduler) extends View {
 
   import tmt.common.Constants._
 
-  val metricsRendering = new MetricsRendering(viewData)
-
   def frag = {
-    div(cls := "col-lg-10")(
+    div(cls := "col-lg-5")(
       streamSelectionView(),
       streamSelectionView()
     )
@@ -29,12 +25,12 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
     imageRendering.drawOn(cvs)
 
     div(
-      div(
-        "Select wavefront",
+      formGroup(cls := "row")(
+        label("Select wavefront"),
         makeSelection(viewData.imageServers, imageRendering.wsServer),
-        button(onclick := { () => imageRendering.setUrl() })("Set")
+        formControl(button)(onclick := { () => imageRendering.setUrl() })("Set")
       ),
-      div(cvs)
+      div(cls := "row")(cvs)
     )
   }
 }

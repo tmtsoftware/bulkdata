@@ -14,6 +14,6 @@ class ClientAssembly {
       new FrequencyView(dataStore.data),
       new SubscriptionView(dataStore.data)
     ),
-    new StreamView(dataStore.data)
+    new ImageView(dataStore.data)
   )
 }

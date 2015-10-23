@@ -12,8 +12,8 @@ class FrequencyView(viewData: ViewData)(implicit scheduler: Scheduler) extends V
   val metricsRendering = new MetricsRendering(viewData)
 
   def frag = {
-    div(
-      "Select frequency computing node",
+    div(cls := "form-group")(
+      label("Select frequency computing node"),
       makeSelection(viewData.frequencyServers, metricsRendering.wsServer),
       button(onclick := { () => metricsRendering.setUrl() })("Set"),
       br,
