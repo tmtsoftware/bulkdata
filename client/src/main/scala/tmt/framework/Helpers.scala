@@ -19,29 +19,27 @@ object Helpers {
 
   def makeOptions(dropdownText: String, values: Seq[String], selection: Var[String], cssWidth: String = "100%") = {
     val selectedValue = selection()
-    val downArrow = " \u25BE"
     val validSelection = selectedValue != "" && values.contains(selectedValue)
     val _dropdownText  = (if(validSelection) selectedValue else dropdownText) + " "
-    val button1 = button(`class` := "btn btn-default dropdown-toggle btn-block")(
-      `type` := "button",
-      "data-toggle".attr := "dropdown",
-      _dropdownText,
-      span(`class` := "caret")
-    ).render
+    val button1 = createButton(_dropdownText, _ => (), "btn btn-default", Styles.selectionButton).render
 
-    div(`class` := "dropdown")(
+    div(`class` := "btn-group")(
       button1,
+      button(`class` := "btn btn-default dropdown-toggle")(
+        "data-toggle".attr := "dropdown",
+        span(`class` := "caret")
+      )(Styles.selectionCaret),
       ul(`class` := "dropdown-menu")(Styles.blockDisplay) {
         values.map { label =>
           li(
-            a(href := "#", onclick := {() => selection() = label; button1.textContent = label + downArrow})(label))
+            a(href := "#", onclick := {() => selection() = label; button1.textContent = label})(label))
         }
       }
     )(display := "inline-block", width := cssWidth)
   }
-  
-  private def createButton(text: String, onclickAction: Unit => Unit, cssClasses: String) =
-    button(`class` := cssClasses)(onclick := {() => onclickAction()})(text)
+
+  private def createButton(text: String, onclickAction: Unit => Unit, cssClasses: String, modifiers: Modifier*) =
+    button(`class` := cssClasses)(onclick := {() => onclickAction()})(text)(modifiers)
 
   def defaultButton(text: String, onclickAction: Unit => Unit) =
     createButton(text, onclickAction, "btn btn-default active")

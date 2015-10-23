@@ -7,6 +7,9 @@ import scalatags.Text.{tags2 => t}
 import controllers.routes
 
 class Page(titleValue: String) {
+
+  val docType = "<!DOCTYPE html>"
+
   def page = html(
     head(
       t.title(titleValue),
@@ -24,5 +27,5 @@ class Page(titleValue: String) {
     )
   )
   
-  def render = Html(page.render)
+  def render = Html(docType + page.render)
 }

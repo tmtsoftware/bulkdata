@@ -18,4 +18,6 @@ object Styles {
     topMargin
   )
   val blockDisplay = width := "100%"
+  val selectionButton = width := "80%"
+  val selectionCaret = width := "20%"
 }
