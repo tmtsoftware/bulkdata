@@ -5,7 +5,7 @@ import prickle.{PicklerPair, CompositePickler}
 sealed abstract class Role(val entryName: String, val input: ItemType, val output: ItemType)
 
 object Role {
-  case object ImageSource  extends Role("image-source", ItemType.Empty, ItemType.Image)
+  case object ImageSource  extends Role("image-source", ItemType.Empty, ItemType.Empty)
   
   case object Wavefront  extends Role("wavefront", ItemType.Empty, ItemType.Image)
   case object Copier  extends Role("copier", ItemType.Image, ItemType.Empty)
