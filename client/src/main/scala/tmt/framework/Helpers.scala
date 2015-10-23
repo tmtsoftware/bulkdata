@@ -24,7 +24,7 @@ object Helpers {
   }
 
   def makeForm(desc: String, options: Rx[Seq[String]], websocketRx: WebsocketRx) = {
-    formGroup(cls := "form-inline")(
+    formGroup(
       label(desc),
       makeSelection(options, websocketRx.wsServer),
       formControl(button)(onclick := { () => websocketRx.setUrl() })("Set"),

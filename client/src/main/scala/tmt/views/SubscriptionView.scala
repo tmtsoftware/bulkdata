@@ -26,14 +26,10 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
 
   def frag = formGroup(
     label("Make Connection"),
-    div(cls := "form-inline")(
-      label("Select output server"),
-      makeSelection(dataStore.producers, topicName)
-    ),
-    div(cls := "form-inline")(
-      label("Select input server"),
-      makeSelection(consumers, serverName)
-    ),
+    label("Select output server"),
+    makeSelection(dataStore.producers, topicName),
+    label("Select input server"),
+    makeSelection(consumers, serverName),
     formControl(button)(onclick := {() => addConnection()})("Connect"),
     Rx {
       ul(id := "connections")(
