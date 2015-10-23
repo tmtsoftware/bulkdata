@@ -30,13 +30,8 @@ class StreamView(viewData: ViewData)(implicit scheduler: Scheduler) extends View
 
     div(
       div(
-        "Wavefront",
-        Rx {
-          select(onchange := setValue(imageRendering.wsServer))(
-            optionHint("select"),
-            makeOptions(viewData.imageServers(), imageRendering.wsServer())
-          )
-        },
+        "Select wavefront",
+        makeSelection(viewData.imageServers, imageRendering.wsServer),
         button(onclick := { () => imageRendering.setUrl() })("Set")
       ),
       div(cvs)

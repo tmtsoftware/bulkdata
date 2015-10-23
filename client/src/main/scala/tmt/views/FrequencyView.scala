@@ -1,7 +1,6 @@
 package tmt.views
 
 import monifu.concurrent.Scheduler
-import rx._
 import tmt.app.ViewData
 import tmt.framework.Framework._
 import tmt.framework.Helpers._
@@ -14,13 +13,8 @@ class FrequencyView(viewData: ViewData)(implicit scheduler: Scheduler) extends V
 
   def frag = {
     div(
-      "Frequency Computing Node",
-      Rx {
-        select(onchange := setValue(metricsRendering.wsServer))(
-          optionHint("select"),
-          makeOptions(viewData.frequencyServers(), metricsRendering.wsServer())
-        )
-      },
+      "Select frequency computing node",
+      makeSelection(viewData.frequencyServers, metricsRendering.wsServer),
       button(onclick := { () => metricsRendering.setUrl() })("Set"),
       br,
       span(metricsRendering.frequency)

@@ -26,19 +26,11 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
 
   def frag = div(
     "Make Connection",
-    Rx {
-      select(onchange := setValue(topicName))(
-        optionHint(s"select output server"),
-        makeOptions(dataStore.producers(), topicName())
-      )
-    },
+    "Select output server",
+    makeSelection(dataStore.producers, topicName),
     "====>",
-    Rx {
-      select(onchange := setValue(serverName))(
-        optionHint(s"select input server"),
-        makeOptions(consumers(), serverName())
-      )
-    },
+    "Select input server",
+    makeSelection(consumers, serverName),
     button(onclick := {() => addConnection()})("Connect"),
     Rx {
       ul(id := "connections")(

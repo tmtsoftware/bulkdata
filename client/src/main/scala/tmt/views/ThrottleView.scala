@@ -14,15 +14,9 @@ class ThrottleView(dataStore: ViewData) extends View {
 
   def frag = div(
     "Select wavefront to throttle",
-    Rx {
-      select(id := "server-name", onchange := setValue(server))(
-        makeOptions(dataStore.wavefrontServers(), server())
-      )
-    },
-    input(`type` := "text", id := "new-rate", placeholder := "new rate", onchange := setValue(rate)),
-    button(id := "change-rate", `type` := "button", onclick := {() => throttle(server(), rate())})(
-      "Change"
-    ),
+    makeSelection(dataStore.wavefrontServers, server),
+    input(`type` := "text", placeholder := "new rate", onchange := setValue(rate)),
+    button(onclick := {() => throttle(server(), rate())})("Change"),
     br, br
   )
 
