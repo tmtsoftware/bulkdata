@@ -19,9 +19,9 @@ object Helpers {
 
   def makeOptions(dropdownText: String, values: Seq[String], selection: Var[String], cssWidth: String = "100%") = {
     val selectedValue = selection()
-    val validSelection = selectedValue != "" && values.contains(selectedValue)
-    val _dropdownText  = (if(validSelection) selectedValue else dropdownText) + " "
-    val button1 = createButton(_dropdownText, _ => (), "btn btn-default", Styles.selectionButton).render
+    val isSelectionValid = selectedValue != "" && values.contains(selectedValue)
+    val displayText  = if (isSelectionValid) selectedValue else dropdownText
+    val button1 = createButton(displayText, _ => (), "btn btn-default", Styles.selectionButton).render
 
     div(`class` := "btn-group")(
       button1,

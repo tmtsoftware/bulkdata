@@ -4,8 +4,6 @@ import scalatags.JsDom.all._
 
 object Styles {
 
-  val leftFloat = float := "left"
-  val rightFloat = float := "right"
   val hr = Seq(
     marginTop := "5px",
     marginBottom := "10px"
