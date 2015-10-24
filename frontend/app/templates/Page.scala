@@ -23,8 +23,10 @@ class Page(titleValue: String) {
       link(rel := "shortcut icon", `type` := "image/png", href := routes.Assets.at("images/favicon.png").url)
     ),
     body(
-      raw(playscalajs.html.scripts("client").toString()),
-      script(`type` := "text/javascript", src := routes.Assets.at("lib/materializecss/js/materialize.min.js").url)
+      raw(playscalajs.html.jsdeps("client").toString()),
+      script(`type` := "text/javascript", src := routes.Assets.at("lib/materializecss/js/materialize.min.js").url),
+      raw(playscalajs.html.selectScript("client").toString()),
+      raw(playscalajs.html.launcher("client").toString())
     )
   )
 

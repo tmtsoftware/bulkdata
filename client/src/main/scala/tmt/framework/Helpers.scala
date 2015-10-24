@@ -1,9 +1,12 @@
 package tmt.framework
 
+import org.scalajs.dom
 import org.scalajs.dom.html._
+import org.scalajs.jquery.jQuery
 import rx._
 import rx.core.Rx
 import tmt.framework.Framework._
+import tmt.framework.JQueryMaterialize.jq2Materialize
 
 import scala.scalajs.js
 import scalatags.JsDom.TypedTag
@@ -17,10 +20,8 @@ object Helpers {
   def formControl(element: TypedTag[Element]) = element(cls := "form-control")
 
   def makeSelection(options: Rx[Seq[String]], selection: Var[String]) = Rx {
-    select(onchange := setValue(selection))(
+    select(cls := "browser-default")(onchange := setValue(selection))(
       optionHint("select"),
-      option("a"),
-      option("b"),
       makeOptions(options(), selection())
     )
   }

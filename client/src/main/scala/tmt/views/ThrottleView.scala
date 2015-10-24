@@ -13,10 +13,8 @@ class ThrottleView(dataStore: ViewData) extends View {
   val rate = Var("")
 
   def frag = div(
-    div(cls := "input-field col s12")(
-      makeSelection(dataStore.wavefrontServers, server),
-      label("Select wavefront to throttle")
-    ),
+    label("Select wavefront to throttle"),
+    makeSelection(dataStore.wavefrontServers, server),
 
     div(cls := "input-field col s12")(
       input(`type` := "text", onchange := setValue(rate), cls := "validate"),
