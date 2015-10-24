@@ -10,15 +10,17 @@ import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 object Helpers {
 
-  val optionHint = option(selected := true, disabled, hidden := true, value := "")
+  val optionHint = option(selected := true, disabled, value := "")
 
   val formGroup = div(cls := "form-group")
 
   def formControl(element: TypedTag[Element]) = element(cls := "form-control")
 
   def makeSelection(options: Rx[Seq[String]], selection: Var[String]) = Rx {
-    formControl(select)(onchange := setValue(selection))(
+    select(onchange := setValue(selection))(
       optionHint("select"),
+      option("a"),
+      option("b"),
       makeOptions(options(), selection())
     )
   }

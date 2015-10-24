@@ -10,16 +10,34 @@ class Body(
 ) {
 
   def layout = {
-    div(cls := "container-fluid")(
+    div(cls := "container")(
       div(cls := "row")(
-        div(cls := "col-md-3")(
-          throttleView.frag,
-          subscriptionView.frag
+        div(cls := "col l4")(
+          div(cls := "section")(
+            h5("Throttle"),
+            throttleView.frag
+          ),
+          div(cls := "divider"),
+          div(cls := "section")(
+            h5("Connect"),
+            subscriptionView.frag
+          )
         ),
-        div(cls := "col-md-5")(
-          frequencyView.frag,
-          streamView.frag,
-          streamView.frag
+        div(cls := "col l8")(
+          div(cls := "section")(
+            h5("Frequency"),
+            frequencyView.frag
+          ),
+          div(cls := "divider"),
+          div(cls := "section")(
+            h5("Wavefront"),
+            streamView.frag
+          ),
+          div(cls := "divider"),
+          div(cls := "section")(
+            h5("Wavefront"),
+            streamView.frag
+          )
         )
       )
     )

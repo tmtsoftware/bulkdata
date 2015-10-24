@@ -17,6 +17,7 @@ object Dependencies {
       "com.lihaoyi" %%% "scalatags" % "0.5.2",
       "com.lihaoyi" %%% "scalarx" % "0.2.8",
       "org.scala-js" %%% "scalajs-dom" % "0.8.2",
+      "be.doeraene" %%% "scalajs-jquery" % "0.8.1",
       "org.monifu" %%% "monifu" % "1.0-M11"
     )
   }
@@ -37,7 +38,7 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-persistence" % Versions.Akka,
     "org.iq80.leveldb" % "leveldb" % "0.7",
     "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
-    "org.webjars" % "bootstrap" % "3.3.5"
+    "org.webjars"% "materializecss" % "0.97.0"
   )
 
   val backendLibs = Seq(
