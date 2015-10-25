@@ -23,7 +23,7 @@ class MetricsRendering(viewData: ViewData)(implicit scheduler: concurrent.Schedu
 
   Obs(stream) {
     import prickle._
-    stream().foreach(metric => frequency() = s"frequency: " + Pickle.intoString(metric))
+    stream().foreach(metric => frequency() = Pickle.intoString(metric))
   }
 
   def makeItem(messageEvent: MessageEvent) = {

@@ -4,42 +4,30 @@ import scalatags.JsDom.all._
 
 class Body(
   throttleView: ThrottleView,
-  frequencyView: FrequencyView,
   subscriptionView: SubscriptionView,
-  streamView: ImageView
+  frequencyViews: Seq[FrequencyView],
+  streamViews: Seq[ImageView]
 ) {
 
-  def layout = {
-    div(cls := "container")(
-      div(cls := "row")(
-        div(cls := "col l4")(
-          div(cls := "section")(
-            h5("Throttle"),
-            throttleView.frag
-          ),
-          div(cls := "divider"),
-          div(cls := "section")(
-            h5("Connect"),
-            subscriptionView.frag
-          )
-        ),
-        div(cls := "col l8")(
-          div(cls := "section")(
-            h5("Frequency"),
-            frequencyView.frag
-          ),
-          div(cls := "divider"),
-          div(cls := "section")(
-            h5("Wavefront"),
-            streamView.frag
-          ),
-          div(cls := "divider"),
-          div(cls := "section")(
-            h5("Wavefront"),
-            streamView.frag
-          )
-        )
+  def layout = div(cls := "container")(
+    div(cls := "row")(
+      div(cls := "col l4")(
+        makeCard(throttleView),
+        makeCard(subscriptionView)
+      ),
+      div(cls := "col l8")(
+        (frequencyViews ++ streamViews).map(makeCard)
       )
     )
-  }
+  )
+
+  def makeCard(view: View) = div(cls := "card")(
+    div(cls := "card-content")(
+      view.viewTitle,
+      view.viewContent
+    ),
+    div(cls := "card-action")(
+      view.viewAction
+    )
+  )
 }

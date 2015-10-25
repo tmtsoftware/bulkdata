@@ -24,9 +24,7 @@ object Helpers {
 
       button(cls := "waves-effect waves-light btn col l3")(
         onclick := { () => websocketRx.setUrl() }
-      )("Set"),
-
-      Rx(label(cls := "col l3")(s"Current value: ${websocketRx.selectedServer()}"))
+      )("Set")
     )
   }
   def setValue(selection: Var[String]): js.ThisFunction = { e: Select =>

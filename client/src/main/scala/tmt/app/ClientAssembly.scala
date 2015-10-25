@@ -10,8 +10,13 @@ class ClientAssembly {
 
   val body = new Body(
     new ThrottleView(dataStore.data),
-    new FrequencyView(dataStore.data),
     new SubscriptionView(dataStore.data),
-    new ImageView(dataStore.data)
+    Seq(
+      new FrequencyView(dataStore.data)
+    ),
+    Seq(
+      new ImageView(dataStore.data),
+      new ImageView(dataStore.data)
+    )
   )
 }

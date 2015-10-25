@@ -26,13 +26,17 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
 
   val i = "i".tag
 
-  def frag = div(
+  def viewTitle = h5("Connect")
+
+  def viewContent = div(
     label("Select output server"),
     makeSelection(dataStore.producers, topicName),
 
     label("Select input server"),
-    makeSelection(consumers, serverName),
+    makeSelection(consumers, serverName)
+  )
 
+  def viewAction = div(
     a(cls := "btn-floating waves-effect waves-light")(
       onclick := {() => addConnection()},
       i(cls := "material-icons")("add")
