@@ -16,9 +16,9 @@ class ThrottleView(dataStore: ViewData) extends View {
     label("Select wavefront to throttle"),
     makeSelection(dataStore.wavefrontServers, server),
 
-    div(cls := "input-field col s12")(
-      input(`type` := "text", onchange := setValue(rate), cls := "validate"),
-      label("Select new rate")
+    label("Select new rate"),
+    p(cls := "range-field")(
+      input(`type` := "range", min := 3, max := 100, onchange := { setValue(rate) })
     ),
 
     button(cls := "waves-effect waves-light btn")(
@@ -26,6 +26,7 @@ class ThrottleView(dataStore: ViewData) extends View {
       onclick := {() => throttle(server(), rate())}
     )("Change")
   )
+
 
   def throttle(server: String, rate: String) = Ajax.post(s"$server/throttle/$rate")
 
