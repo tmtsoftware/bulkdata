@@ -18,10 +18,9 @@ object Helpers {
     )
   }
 
-  def makeForm(desc: String, options: Rx[Seq[String]], websocketRx: WebsocketRx) = {
+  def makeForm(options: Rx[Seq[String]], websocketRx: WebsocketRx) = {
     div(cls := "row")(
-      label(cls := "col l2")(desc),
-      div(cls := "col l3")(makeSelection(options, websocketRx.wsServer)),
+      div(cls := "col l4")(makeSelection(options, websocketRx.wsServer)),
 
       button(cls := "waves-effect waves-light btn col l3")(
         onclick := { () => websocketRx.setUrl() }

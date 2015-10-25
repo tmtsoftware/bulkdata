@@ -12,7 +12,7 @@ class FrequencyView(viewData: ViewData)(implicit scheduler: Scheduler) extends V
   val metricsRendering = new MetricsRendering(viewData)
 
   def frag = div(
-    makeForm("Select frequency computing node", viewData.frequencyServers, metricsRendering),
+    makeForm(viewData.frequencyServers, metricsRendering),
     span(metricsRendering.frequency)
   )
 }

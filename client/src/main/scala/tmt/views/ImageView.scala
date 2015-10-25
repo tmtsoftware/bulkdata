@@ -17,7 +17,7 @@ class ImageView(viewData: ViewData)(implicit scheduler: Scheduler) extends View 
     imageRendering.drawOn(cvs)
 
     div(
-      makeForm("Select wavefront", viewData.imageServers, imageRendering),
+      makeForm(viewData.imageServers, imageRendering),
       div(cvs)
     )
   }

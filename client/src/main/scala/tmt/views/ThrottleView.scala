@@ -13,10 +13,10 @@ class ThrottleView(dataStore: ViewData) extends View {
   val rate = Var("")
 
   def frag = div(
-    label("Select wavefront to throttle"),
+    label("Wavefront to throttle"),
     makeSelection(dataStore.wavefrontServers, server),
 
-    label("Select new rate"),
+    label("New rate"),
     p(cls := "range-field")(
       input(`type` := "range", min := 3, max := 100, onchange := { setValue(rate) })
     ),
