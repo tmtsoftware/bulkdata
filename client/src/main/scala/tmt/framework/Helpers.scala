@@ -1,23 +1,15 @@
 package tmt.framework
 
-import org.scalajs.dom
 import org.scalajs.dom.html._
-import org.scalajs.jquery.jQuery
 import rx._
 import rx.core.Rx
 import tmt.framework.Framework._
-import tmt.framework.JQueryMaterialize.jq2Materialize
 
 import scala.scalajs.js
-import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 object Helpers {
 
   val optionHint = option(selected := true, disabled, value := "")
-
-  val formGroup = div(cls := "form-group")
-
-  def formControl(element: TypedTag[Element]) = element(cls := "form-control")
 
   def makeSelection(options: Rx[Seq[String]], selection: Var[String]) = Rx {
     select(cls := "browser-default")(onchange := setValue(selection))(
@@ -27,11 +19,15 @@ object Helpers {
   }
 
   def makeForm(desc: String, options: Rx[Seq[String]], websocketRx: WebsocketRx) = {
-    formGroup(
-      label(desc),
-      makeSelection(options, websocketRx.wsServer),
-      formControl(button)(onclick := { () => websocketRx.setUrl() })("Set"),
-      Rx(label(s"Current value: ${websocketRx.selectedServer()}"))
+    div(cls := "row")(
+      label(cls := "col l2")(desc),
+      div(cls := "col l3")(makeSelection(options, websocketRx.wsServer)),
+
+      button(cls := "waves-effect waves-light btn col l3")(
+        onclick := { () => websocketRx.setUrl() }
+      )("Set"),
+
+      Rx(label(cls := "col l3")(s"Current value: ${websocketRx.selectedServer()}"))
     )
   }
   def setValue(selection: Var[String]): js.ThisFunction = { e: Select =>
