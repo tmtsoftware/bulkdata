@@ -24,6 +24,16 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
     connectionSet() = dataStore.connectionSet()
   }
 
+  val noData = Rx(
+    topicName().isEmpty
+      || serverName().isEmpty
+      || consumers().isEmpty
+      || dataStore.producers().isEmpty
+      || !consumers().contains(serverName())
+  )
+
+  val disabledStyle = Rx(if(noData()) "disabled" else "")
+
   val i = "i".tag
 
   def viewTitle = h5("Connect")
@@ -37,7 +47,7 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
   )
 
   def viewAction = div(
-    a(cls := "btn-floating waves-effect waves-light")(
+    a(cls := Rx(s"btn-floating waves-effect waves-light ${disabledStyle()}"))(
       onclick := { () => addConnection() },
       i(cls := "material-icons")("add")
     ),

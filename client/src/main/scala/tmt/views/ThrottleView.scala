@@ -12,6 +12,10 @@ class ThrottleView(dataStore: ViewData) extends View {
   val server = Var("")
   val rate   = Var("")
 
+  val noData = Rx(server().isEmpty || dataStore.wavefrontServers().isEmpty)
+
+  val disabledStyle = Rx(if(noData()) "disabled" else "")
+
   def viewTitle = h5("Throttle")
 
   def viewContent = div(
@@ -20,14 +24,18 @@ class ThrottleView(dataStore: ViewData) extends View {
 
     label("New rate"),
     p(cls := "range-field")(
-      input(`type` := "range", min := 3, max := 100, onchange := { setValue(rate) })
+      input(`type` := "range", min := 3, max := 100)(
+        onchange := { setValue(rate) }
+      )
     )
   )
 
-  def viewAction = button(cls := "waves-effect waves-light btn")(
-    `type` := "submit",
-    onclick := { () => throttle(server(), rate()) }
-  )("Change")
+  def viewAction = {
+    button(cls := Rx(s"waves-effect waves-light btn ${disabledStyle()}"))(
+      `type` := "submit",
+      onclick := { () => throttle(server(), rate()) }
+    )("Change")
+  }
 
   def throttle(server: String, rate: String) = Ajax.post(s"$server/throttle/$rate")
 
