@@ -32,13 +32,12 @@ object Dependencies {
 
   val frontendLibs = Seq(
     "com.vmunier" %% "play-scalajs-scripts" % "0.3.0",
-    "org.webjars" % "jquery" % "1.11.1",
     "com.typesafe.akka" % "akka-slf4j_2.11" % Versions.Akka,
     "com.lihaoyi" %% "scalatags" % "0.5.2",
     "com.typesafe.akka" %% "akka-persistence" % Versions.Akka,
     "org.iq80.leveldb" % "leveldb" % "0.7",
     "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
-    "org.webjars"% "materializecss" % "0.97.0"
+    "org.webjars" % "materializecss" % "0.97.0"
   )
 
   val backendLibs = Seq(
