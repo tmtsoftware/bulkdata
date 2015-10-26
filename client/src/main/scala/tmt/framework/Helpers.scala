@@ -23,9 +23,9 @@ object Helpers {
     val disabledStyle = Rx(if(noData()) "disabled" else "")
 
     div(cls := "row")(
-      div(cls := "col l4")(makeSelection(options, formRx.server)),
+      div(cls := "col l8")(makeSelection(options, formRx.server)),
 
-      button(cls := Rx(s"waves-effect waves-light btn col l3 ${disabledStyle()}"))(
+      button(cls := Rx(s"waves-effect waves-light btn col l4 ${disabledStyle()}"))(
         onclick := { () => formRx.action() }
       )("Set")
     )

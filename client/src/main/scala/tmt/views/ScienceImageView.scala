@@ -16,7 +16,13 @@ class ScienceImageView(viewData: ViewData)(implicit scheduler: Scheduler) extend
   
   def viewTitle = Rx(h5(scienceImageRx.selectedServer().capitalize))
 
-  def viewContent = div(scienceImageRx.imageNames)
+  def viewContent = Rx {
+    div(cls := "collection")(
+      scienceImageRx.imageNames().map { name =>
+        a(cls := "collection-item")(href := s"${scienceImageRx.currentUrl()}/$name")(name)
+      }
+    )
+  }
 
   def viewAction = makeForm(viewData.scienceImageServers, scienceImageRx)
 }

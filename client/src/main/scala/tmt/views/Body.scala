@@ -14,10 +14,11 @@ class Body(
     div(cls := "row")(
       div(cls := "col l4")(
         makeCard(throttleView),
-        makeCard(subscriptionView)
+        makeCard(subscriptionView),
+        scienceImageViews.map(makeCard)
       ),
       div(cls := "col l8")(
-        (frequencyViews ++ streamViews ++ scienceImageViews).map(makeCard)
+        (frequencyViews ++ streamViews).map(makeCard)
       )
     )
   )
