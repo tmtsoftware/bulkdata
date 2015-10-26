@@ -1,31 +1,35 @@
 package tmt.shared.models
 
-case class NodeSet(nodes: Seq[Node]) {
-  val pipelineNodes = nodes.filterNot(_.role == Role.ImageSource)
+import tmt.shared.Topics
 
-  def compatibleConsumers(producer: String) = pipelineNodes.collectFirst {
-    case Node(producerRole, `producer`, _, _) => pipelineNodes.collect {
+case class NodeSet(nodes: Seq[Node]) {
+  def compatibleConsumers(producer: String) = nodes.collectFirst {
+    case Node(producerRole, `producer`, _, _) => nodes.collect {
       case Node(role, name, _, _) if producerRole.output == role.input && name != producer => name
     }
   }.toSeq.flatten
 
-  def getRole(name: String) = pipelineNodes.collectFirst {
+  def getRole(name: String) = nodes.collectFirst {
     case Node(role, `name`, _, _) => role
   }.getOrElse(Role.Empty)
 
-  def getNames(role: Role) = pipelineNodes.collect {
+  def getNames(role: Role) = nodes.collect {
     case Node(`role`, name, _, _) => name
   }
 
-  def getNames(outputType: ItemType) = pipelineNodes.collect {
+  def getNames(outputType: ItemType) = nodes.collect {
     case Node(role, name, _, _) if role.output == outputType => name 
   }
 
-  def getHost(name: String) = pipelineNodes.collectFirst {
+  def getWsUrl(name: String) = nodes.collectFirst {
     case n@Node(_, `name`, externalIp, httpPort) => s"ws://$externalIp:$httpPort/$name"  
   }
 
-  def producers = pipelineNodes.collect {
+  def getScienceImageUrl(name: String) = nodes.collectFirst {
+    case n@Node(_, `name`, externalIp, httpPort) => s"http://$externalIp:$httpPort/${Topics.ScienceImages}"
+  }
+
+  def producers = nodes.collect {
     case Node(role, server, _, _) if role.output.nonEmpty => server
   }
 

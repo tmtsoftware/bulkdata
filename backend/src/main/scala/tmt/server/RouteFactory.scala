@@ -8,11 +8,11 @@ import akka.util.ByteString
 import prickle.Pickle
 import tmt.app.{ActorConfigs, AppSettings, CustomDirectives, Types}
 import tmt.io.ScienceImageReadService
+import tmt.library.Cors
 import tmt.library.SourceExtensions.RichSource
 import tmt.marshalling.{BinaryMarshallers, BFormat}
 import tmt.shared.Topics
 import tmt.shared.models.Image
-//import prickle._
 
 class RouteFactory(
   scienceImageReadService: ScienceImageReadService,
@@ -24,7 +24,7 @@ class RouteFactory(
 
   def scienceImages: Route = get {
     path(Topics.ScienceImages) {
-      complete(Pickle.intoString(scienceImageReadService.movies))
+      Cors.cors(complete(Pickle.intoString(scienceImageReadService.movies)))
     } ~
     pathPrefix(Topics.ScienceImages) {
       path(Rest) { name =>

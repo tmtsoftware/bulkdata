@@ -5,7 +5,7 @@ import prickle.{PicklerPair, CompositePickler}
 sealed abstract class Role(val entryName: String, val input: ItemType, val output: ItemType)
 
 object Role {
-  case object ImageSource  extends Role("image-source", ItemType.Empty, ItemType.Image)
+  case object ScienceImageSource  extends Role("science-image-source", ItemType.Empty, ItemType.Empty)
   
   case object Wavefront  extends Role("wavefront", ItemType.Empty, ItemType.Image)
   case object Copier  extends Role("copier", ItemType.Image, ItemType.Empty)
@@ -17,12 +17,12 @@ object Role {
 
   case object Empty extends Role("empty", ItemType.Empty, ItemType.Empty)
 
-  val values: Seq[Role] = Seq(ImageSource, Wavefront, Copier, Filter, Metric, Frequency, Rotator, Empty)
+  val values: Seq[Role] = Seq(ScienceImageSource, Wavefront, Copier, Filter, Metric, Frequency, Rotator, Empty)
 
   def withName(name: String) = values.find(_.entryName == name).getOrElse(Empty)
 
   implicit val rolePickler: PicklerPair[Role] = CompositePickler[Role]
-    .concreteType[ImageSource.type]
+    .concreteType[ScienceImageSource.type]
     .concreteType[Wavefront.type]
     .concreteType[Copier.type]
     .concreteType[Filter.type]

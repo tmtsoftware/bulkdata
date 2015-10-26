@@ -4,31 +4,16 @@ import org.scalajs.dom.raw.WebSocket
 import rx._
 import tmt.app.ViewData
 
-abstract class WebsocketRx(viewData: ViewData) {
-  val wsServer = Var("")
-  val selectedServer = Var("")
-  val wsUrl = Var("")
+class WebsocketRx(viewData: ViewData) extends FormRx(viewData) {
+
+  def getUrl = viewData.nodeSet().getWsUrl(server())
+
   val webSocket = Var(Option.empty[WebSocket])
 
-  Obs(wsUrl, skipInitial = true) {
+  Obs(currentUrl, skipInitial = true) {
     webSocket().foreach(_.close())
-    val newSocket = new WebSocket(wsUrl())
+    val newSocket = new WebSocket(currentUrl())
     newSocket.binaryType = "arraybuffer"
     webSocket() = Some(newSocket)
   }
-
-  def setUrl() = {
-    val maybeUrl = viewData.nodeSet().getHost(wsServer())
-    maybeUrl.foreach { url =>
-      selectedServer() = wsServer()
-      wsUrl() = url
-    }
-  }
-
-  Obs(viewData.diffs) {
-    if (viewData.diffs() contains wsServer()) {
-      setUrl()
-    }
-  }
-
 }

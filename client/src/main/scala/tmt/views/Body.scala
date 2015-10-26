@@ -6,7 +6,8 @@ class Body(
   throttleView: ThrottleView,
   subscriptionView: SubscriptionView,
   frequencyViews: Seq[FrequencyView],
-  streamViews: Seq[ImageView]
+  streamViews: Seq[ImageView],
+  scienceImageViews: Seq[ScienceImageView]
 ) {
 
   def layout = div(cls := "container")(
@@ -16,7 +17,7 @@ class Body(
         makeCard(subscriptionView)
       ),
       div(cls := "col l8")(
-        (frequencyViews ++ streamViews).map(makeCard)
+        (frequencyViews ++ streamViews ++ scienceImageViews).map(makeCard)
       )
     )
   )

@@ -17,6 +17,9 @@ class ClientAssembly {
     Seq(
       new ImageView(dataStore.data),
       new ImageView(dataStore.data)
+    ),
+    Seq(
+      new ScienceImageView(dataStore.data)
     )
   )
 }

@@ -18,15 +18,15 @@ object Helpers {
     )
   }
 
-  def makeForm(options: Rx[Seq[String]], websocketRx: WebsocketRx) = {
-    val noData = Rx(websocketRx.wsServer().isEmpty || options().isEmpty)
+  def makeForm(options: Rx[Seq[String]], formRx: FormRx) = {
+    val noData = Rx(formRx.server().isEmpty || options().isEmpty)
     val disabledStyle = Rx(if(noData()) "disabled" else "")
 
     div(cls := "row")(
-      div(cls := "col l4")(makeSelection(options, websocketRx.wsServer)),
+      div(cls := "col l4")(makeSelection(options, formRx.server)),
 
       button(cls := Rx(s"waves-effect waves-light btn col l3 ${disabledStyle()}"))(
-        onclick := { () => websocketRx.setUrl() }
+        onclick := { () => formRx.action() }
       )("Set")
     )
   }

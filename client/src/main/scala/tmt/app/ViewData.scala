@@ -23,4 +23,5 @@ class ViewData(val nodeSet: Rx[NodeSet], val connectionSet: Rx[ConnectionSet]) {
   }
 
   val wavefrontServers = Rx(nodeSet().getNames(Role.Wavefront))
+  val scienceImageServers = Rx(nodeSet().getNames(Role.ScienceImageSource))
 }
