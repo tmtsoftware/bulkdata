@@ -2,7 +2,7 @@ package tmt.transformations
 
 import java.awt.image.BufferedImage
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File}
-import java.nio.ByteBuffer
+import java.nio.{Buffer, ByteBuffer}
 import java.nio.file.Files
 import java.util.concurrent.Executors
 import javax.imageio.ImageIO
@@ -48,13 +48,13 @@ object A {
   def dd = {
     Loader.load(classOf[opencv_core])
     val bytes = Files.readAllBytes(new File("/usr/local/data/tmt/frames/input/image-10003.jpeg").toPath)
-    println(bytes.toList)
     val bytePointer = new BytePointer(bytes: _*)
     val image = opencv_imgcodecs.cvDecodeImage(opencv_core.cvMat(1, bytes.length, opencv_core.CV_8UC1, bytePointer))
 
     val encodeImage: CvMat = opencv_imgcodecs.cvEncodeImage(".jpeg", rotate(image, 90))
-    val bytes1 = encodeImage.asByteBuffer().array()
-    Files.write(new File("/usr/local/data/tmt/frames/output/000.jpeg").toPath, bytes1)
+    val array = new Array[Byte](encodeImage.total() * encodeImage.channels())
+    encodeImage.data_ptr().get(array)
+    Files.write(new File("/usr/local/data/tmt/frames/output/000.jpeg").toPath, array)
   }
 
   def rotate(src: IplImage, angle: Int): IplImage = {
