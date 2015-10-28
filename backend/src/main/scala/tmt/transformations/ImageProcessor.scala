@@ -1,18 +1,23 @@
 package tmt.transformations
 
 import java.awt.image.BufferedImage
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File}
+import java.nio.ByteBuffer
+import java.nio.file.Files
 import java.util.concurrent.Executors
 import javax.imageio.ImageIO
 import javax.inject.Singleton
 
+import org.bytedeco.javacpp.helper.opencv_core.AbstractIplImage
+import org.bytedeco.javacpp.opencv_core.{CvMat, IplImage}
+import org.bytedeco.javacpp.{Loader, BytePointer, opencv_core, opencv_imgcodecs}
 import org.imgscalr.Scalr
 import org.imgscalr.Scalr.Rotation
 import tmt.app.AppSettings
 import tmt.shared.models.Image
 
+import scala.async.Async._
 import scala.concurrent.ExecutionContext
-import async.Async._
 
 @Singleton
 class ImageProcessor(appSettings: AppSettings) {
@@ -34,5 +39,29 @@ class ImageProcessor(appSettings: AppSettings) {
     val rotatedImage = Image(name, baos.toByteArray)
     baos.close()
     rotatedImage
+  }
+
+
+}
+
+object A {
+  def dd = {
+    Loader.load(classOf[opencv_core])
+    val bytes = Files.readAllBytes(new File("/usr/local/data/tmt/frames/input/image-10003.jpeg").toPath)
+    println(bytes.toList)
+    val bytePointer = new BytePointer(bytes: _*)
+    val image = opencv_imgcodecs.cvDecodeImage(opencv_core.cvMat(1, bytes.length, opencv_core.CV_8UC1, bytePointer))
+
+    val encodeImage: CvMat = opencv_imgcodecs.cvEncodeImage(".jpeg", rotate(image, 90))
+    val bytes1 = encodeImage.asByteBuffer().array()
+    Files.write(new File("/usr/local/data/tmt/frames/output/000.jpeg").toPath, bytes1)
+  }
+
+  def rotate(src: IplImage, angle: Int): IplImage = {
+    val newImg = AbstractIplImage.create(src.height, src.width, src.depth, src.nChannels)
+    opencv_core.cvTranspose(src, newImg)
+    opencv_core.cvFlip(newImg, newImg, angle)
+    newImg
+    //    opencv_core.cvSave("/usr/local/data/tmt/frames/output/000.jpeg", newImg)
   }
 }

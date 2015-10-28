@@ -11,3 +11,10 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.5")
 addSbtPlugin("com.orrsella" % "sbt-stats" % "1.0.5")
 
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.7.5")
+
+// `javacpp` are packaged with maven-plugin packaging, we need to make SBT aware that it should be added to class path.
+classpathTypes += "maven-plugin"
+
+// javacpp `Loader` is used to determine `platform` classifier in the project`s `build.sbt`
+// We define dependency here (in folder `project`) since it is used by the build itself.
+libraryDependencies += "org.bytedeco" % "javacpp" % "1.1"

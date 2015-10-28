@@ -53,6 +53,7 @@ lazy val backend = project
   .dependsOn(common)
   .settings(sharedSettings: _*)
   .settings(
+    classpathTypes += "maven-plugin",
     fork := true,
     libraryDependencies ++= Dependencies.backendLibs
   )

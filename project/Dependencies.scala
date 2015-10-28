@@ -40,6 +40,10 @@ object Dependencies {
     "org.webjars" % "materializecss" % "0.97.0"
   )
 
+  lazy val platform = org.bytedeco.javacpp.Loader.getPlatform
+
+  lazy val javacppVersion = "1.1"
+
   val backendLibs = Seq(
     "com.typesafe.akka" %% "akka-stream-experimental" % Versions.Streams,
     "com.typesafe.akka" %% "akka-http-core-experimental" % Versions.Streams,
@@ -47,6 +51,12 @@ object Dependencies {
     "net.codingwell" %% "scala-guice" % "4.0.0",
     "org.scala-lang.modules" %% "scala-async" % "0.9.5",
     "org.imgscalr" % "imgscalr-lib" % "4.2",
+
+    "org.bytedeco" % "javacv" % "1.1",
+    "org.bytedeco"                 % "javacpp"         % javacppVersion,
+    "org.bytedeco"                 % "javacv"          % javacppVersion,
+    "org.bytedeco.javacpp-presets" % "opencv" % ("3.0.0-" + javacppVersion) classifier "",
+    "org.bytedeco.javacpp-presets" % "opencv" % ("3.0.0-" + javacppVersion) classifier platform,
 
     //test
     "org.scalatest" %% "scalatest" % "2.2.5" % "test",
