@@ -33,7 +33,7 @@ class ThrottleView(dataStore: ViewData) extends View {
   def viewAction = {
     button(cls := Rx(s"waves-effect waves-light btn ${disabledStyle()}"))(
       `type` := "submit",
-      onclick := { () => throttle(server(), rate()) }
+      onclick := { () => if(!noData()) throttle(server(), rate()) }
     )("Change")
   }
 

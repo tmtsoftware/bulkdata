@@ -46,7 +46,7 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
 
   def viewAction = div(
     a(cls := Rx(s"btn-floating waves-effect waves-light ${disabledStyle()}"))(
-      onclick := { () => addConnection() },
+      onclick := { () => if(!noData()) addConnection() },
       i(cls := "material-icons")("add")
     ),
     Rx {

@@ -26,7 +26,7 @@ object Helpers {
       div(cls := "col l8")(makeSelection(options, formRx.server)),
 
       button(cls := Rx(s"waves-effect waves-light btn col l4 ${disabledStyle()}"))(
-        onclick := { () => formRx.action() }
+        onclick := { () => if(!noData()) formRx.action() }
       )("Set")
     )
   }
