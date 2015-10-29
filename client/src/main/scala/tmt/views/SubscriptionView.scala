@@ -34,8 +34,6 @@ class SubscriptionView(dataStore: ViewData)(implicit ec: ExecutionContext) exten
 
   val disabledStyle = Rx(if(noData()) "disabled" else "")
 
-  val i = "i".tag
-
   def viewTitle = h5("Connect")
 
   def viewContent = div(

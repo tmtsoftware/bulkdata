@@ -8,7 +8,7 @@ import tmt.app.ViewData
 
 import scala.async.Async._
 
-class ScienceImageRx(viewData: ViewData)(implicit scheduler: Scheduler) extends FormRx(viewData) {
+class ScienceImageRx(viewData: ViewData)(implicit scheduler: Scheduler) extends FormRx("Science Images", viewData) {
   
   def getUrl = viewData.nodeSet().getScienceImageUrl(server())
 

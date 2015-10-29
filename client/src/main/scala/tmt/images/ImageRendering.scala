@@ -13,17 +13,22 @@ import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.typedarray.ArrayBuffer
 
-class ImageRendering(viewData: ViewData)(implicit scheduler: Scheduler) extends WebsocketRx(viewData) {
+class ImageRendering(cvs: Canvas, viewData: ViewData)(implicit scheduler: Scheduler) extends WebsocketRx("Wavefront", viewData) {
 
-  def drawOn(cvs: Canvas) = Obs(webSocket) {
-    webSocket().foreach(socket => drain(socket, cvs))
+
+  def cleanup() = {
+    ctx.clearRect(0, 0, Constants.CanvasWidth, Constants.CanvasHeight)
   }
-  
-  def drain(socket: WebSocket, canvas: Canvas) = Stream.socket(socket)
+
+  Rx(webSocket().foreach(drain))
+
+  val ctx = cvs.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
+
+  def drain(socket: WebSocket) = Stream.socket(socket)
     .map(makeUrl)
     .map(new Rendering(_))
     .flatMap(_.loaded)
-    .map(_.render(canvas))
+    .map(_.render(ctx))
     .buffer(1.second).map(_.size).foreach(println)
 
   def makeUrl(messageEvent: MessageEvent) = {

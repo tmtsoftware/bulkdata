@@ -37,7 +37,7 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-persistence" % Versions.Akka,
     "org.iq80.leveldb" % "leveldb" % "0.7",
     "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
-    "org.webjars" % "materializecss" % "0.97.0"
+    "org.webjars.bower" % "materialize" % "0.97.0"
   )
 
   val backendLibs = Seq(

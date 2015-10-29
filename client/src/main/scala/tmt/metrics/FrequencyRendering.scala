@@ -13,7 +13,12 @@ import tmt.shared.models.PerSecMetric
 
 import scala.scalajs.js.typedarray.{ArrayBuffer, TypedArrayBuffer}
 
-class MetricsRendering(viewData: ViewData)(implicit scheduler: concurrent.Scheduler) extends WebsocketRx(viewData) {
+class FrequencyRendering(viewData: ViewData)(implicit scheduler: concurrent.Scheduler) extends WebsocketRx("Frequency", viewData) {
+
+  def cleanup() = {
+    frequency() = ""
+  }
+
   val frequency = Var("")
 
   val stream = webSocket.map {

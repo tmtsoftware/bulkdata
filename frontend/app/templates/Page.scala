@@ -18,13 +18,13 @@ class Page(titleValue: String) {
 
       t.title(titleValue),
 
-      link(rel := "stylesheet", `type` := "text/css", media := "screen,projection", href := routes.Assets.at("lib/materializecss/css/materialize.min.css").url),
+      link(rel := "stylesheet", `type` := "text/css", media := "screen,projection", href := routes.Assets.at("lib/materialize/dist/css/materialize.min.css").url),
       link(rel := "stylesheet", `type` := "text/css", href := routes.Assets.at("stylesheets/main.css").url),
       link(rel := "shortcut icon", `type` := "image/png", href := routes.Assets.at("images/favicon.png").url)
     ),
     body(
       raw(playscalajs.html.jsdeps("client").toString()),
-      script(`type` := "text/javascript", src := routes.Assets.at("lib/materializecss/js/materialize.min.js").url),
+      script(`type` := "text/javascript", src := routes.Assets.at("lib/materialize/dist/js/materialize.min.js").url),
       raw(playscalajs.html.selectScript("client").toString()),
       raw(playscalajs.html.launcher("client").toString())
     )

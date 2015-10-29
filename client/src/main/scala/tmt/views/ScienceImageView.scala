@@ -12,8 +12,7 @@ import scalatags.JsDom.all._
 class ScienceImageView(viewData: ViewData)(implicit scheduler: Scheduler) extends View {
 
   val scienceImageRx = new ScienceImageRx(viewData)
-  scienceImageRx.selectedServer() = "Science Images"
-  
+
   def viewTitle = Rx(h5(scienceImageRx.selectedServer().capitalize))
 
   def viewContent = Rx {
