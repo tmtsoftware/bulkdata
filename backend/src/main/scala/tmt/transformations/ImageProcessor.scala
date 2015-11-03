@@ -6,6 +6,7 @@ import java.util.concurrent.Executors
 import javax.imageio.ImageIO
 import javax.inject.Singleton
 
+import akka.http.scaladsl.model.DateTime
 import org.imgscalr.Scalr
 import org.imgscalr.Scalr.Rotation
 import tmt.app.AppSettings
@@ -31,7 +32,7 @@ class ImageProcessor(appSettings: AppSettings) {
     val baos = new ByteArrayOutputStream()
     ImageIO.write(rotatedBufferedImage, "jpeg", baos)
     baos.flush()
-    val rotatedImage = Image(name, baos.toByteArray)
+    val rotatedImage = Image(name, baos.toByteArray, DateTime.now.clicks)
     baos.close()
     rotatedImage
   }
