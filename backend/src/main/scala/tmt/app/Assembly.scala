@@ -6,7 +6,7 @@ import tmt.actors.{SubscriptionService, TickerService}
 import tmt.clients._
 import tmt.io._
 import tmt.server._
-import tmt.shared.models.{Image, ImageMetric}
+import tmt.shared.models.{Image, ImageMetadata}
 import tmt.transformations.{ImageProcessor, ImageTransformations, MetricsTransformations}
 
 class Assembly(role: String, serverName: String, env: String, seedName: Option[String]) {
@@ -39,7 +39,7 @@ class Assembly(role: String, serverName: String, env: String, seedName: Option[S
 
   lazy val publisher              = wire[Publisher]
   lazy val imageSubscriber        = wire[SubscriptionService[Image]]
-  lazy val metricSubscriber       = wire[SubscriptionService[ImageMetric]]
+  lazy val metricSubscriber       = wire[SubscriptionService[ImageMetadata]]
 
   lazy val imageTransformations   = wire[ImageTransformations]
   lazy val metricsTransformations = wire[MetricsTransformations]

@@ -2,7 +2,7 @@ package tmt.shared.models
 
 import boopickle.Default._
 
-case class Image(name: String, bytes: Array[Byte], timestamp: Long) {
+case class Image(name: String, bytes: Array[Byte], createdAt: Long) {
   def size = bytes.length
 }
 

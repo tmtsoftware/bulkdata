@@ -1,11 +1,10 @@
 package tmt.transformations
 
-import akka.http.scaladsl.model.DateTime
 import akka.stream.scaladsl.Source
 import tmt.actors.SubscriptionService
 import tmt.app.{AppSettings, ActorConfigs}
 import tmt.io.WavefrontWriteService
-import tmt.shared.models.{Image, ImageMetric}
+import tmt.shared.models.{Image, ImageMetadata}
 
 class ImageTransformations(
   wavefrontWriteService: WavefrontWriteService,
@@ -24,7 +23,7 @@ class ImageTransformations(
     wavefrontWriteService.copyImage(image).map(_ => image)
   }
 
-  lazy val imageMetrics = images.map(image => ImageMetric(image.name, image.size, DateTime.now.clicks))
+  lazy val imageMetadata = images.map(image => ImageMetadata(image.name, image.size, image.createdAt))
 
   lazy val rotatedImages = images.mapAsync(appSettings.imageProcessingParallelism)(imageRotationUtility.rotate)
 }

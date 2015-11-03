@@ -11,13 +11,13 @@ object Role {
   case object Copier  extends Role("copier", ItemType.Image, ItemType.Empty)
   case object Filter  extends Role("filter", ItemType.Image, ItemType.Image)
 
-  case object Metric  extends Role("metric", ItemType.Image, ItemType.Metric)
+  case object Metadata  extends Role("metadata", ItemType.Image, ItemType.Metric)
   case object Frequency  extends Role("frequency", ItemType.Metric, ItemType.Frequency)
   case object Rotator  extends Role("rotator", ItemType.Image, ItemType.Image)
 
   case object Empty extends Role("empty", ItemType.Empty, ItemType.Empty)
 
-  val values: Seq[Role] = Seq(ScienceImageSource, Wavefront, Copier, Filter, Metric, Frequency, Rotator, Empty)
+  val values: Seq[Role] = Seq(ScienceImageSource, Wavefront, Copier, Filter, Metadata, Frequency, Rotator, Empty)
 
   def withName(name: String) = values.find(_.entryName == name).getOrElse(Empty)
 
@@ -26,7 +26,7 @@ object Role {
     .concreteType[Wavefront.type]
     .concreteType[Copier.type]
     .concreteType[Filter.type]
-    .concreteType[Metric.type]
+    .concreteType[Metadata.type]
     .concreteType[Frequency.type]
     .concreteType[Rotator.type]
     .concreteType[Empty.type]
