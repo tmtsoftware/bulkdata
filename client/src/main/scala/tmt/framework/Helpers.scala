@@ -9,15 +9,6 @@ import scala.scalajs.js
 import scalatags.JsDom.all._
 object Helpers {
 
-  val optionHint = option(selected := true, disabled, value := "")
-
-  def makeSelection(options: Rx[Seq[String]], selection: Var[String]) = Rx {
-    select(cls := "browser-default")(onchange := setValue(selection))(
-      optionHint("select"),
-      makeOptions(options(), selection())
-    )
-  }
-
   def makeForm(options: Rx[Seq[String]], formRx: FormRx) = {
     val noData = Rx(formRx.server().isEmpty || options().isEmpty)
     val disabledStyle = Rx(if(noData()) "disabled" else "")
@@ -30,12 +21,24 @@ object Helpers {
       )("Set")
     )
   }
+
+  def makeSelection(options: Rx[Seq[String]], selection: Var[String]) = Rx {
+    select(cls := "browser-default")(onchange := setValue(selection))(
+      optionHint("select"),
+      makeOptions(options(), selection())
+    )
+  }
+
   def setValue(selection: Var[String]): js.ThisFunction = { e: Select =>
     selection() = e.value
   }
+
+  lazy val optionHint = option(selected := true, disabled, value := "")
 
   private def makeOptions(values: Seq[String], selectedValue: String) = values.map {
     case v@`selectedValue` => option(value := v, selected := true)(v)
     case v                 => option(value := v)(v)
   }
 }
+
+

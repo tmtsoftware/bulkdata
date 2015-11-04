@@ -5,9 +5,9 @@ import scalatags.JsDom.all._
 class Body(
   throttleView: ThrottleView,
   subscriptionView: SubscriptionView,
+  scienceImageView: ScienceImageView,
   frequencyViews: Seq[FrequencyView],
-  streamViews: Seq[ImageView],
-  scienceImageViews: Seq[ScienceImageView]
+  streamViews: Seq[ImageView]
 ) {
 
   def layout = div(cls := "container")(
@@ -15,7 +15,7 @@ class Body(
       div(cls := "col l4")(
         makeCard(throttleView),
         makeCard(subscriptionView),
-        scienceImageViews.map(makeCard)
+        makeCard(scienceImageView)
       ),
       div(cls := "col l8")(
         (frequencyViews ++ streamViews).map(makeCard)
@@ -33,3 +33,5 @@ class Body(
     )
   )
 }
+
+
