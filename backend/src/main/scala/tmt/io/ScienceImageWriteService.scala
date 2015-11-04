@@ -12,7 +12,7 @@ class ScienceImageWriteService(actorConfigs: ActorConfigs, settings: AppSettings
   import actorConfigs._
 
   def copy(name: String, byteArrays: Source[ByteString, Any]) = {
-    val file = new File(s"${settings.moviesOutputDir}/$name")
+    val file = new File(s"${settings.scienceImagesOutputDir}/$name")
     println(s"writing to $file")
     byteArrays.runWith(SynchronousFileSink(file)).map(_ => ())
   }

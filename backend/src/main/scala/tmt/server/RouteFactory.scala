@@ -24,7 +24,7 @@ class RouteFactory(
 
   def scienceImages: Route = get {
     path(Topics.ScienceImages) {
-      Cors.cors(complete(Pickle.intoString(scienceImageReadService.movies)))
+      Cors.cors(complete(Pickle.intoString(scienceImageReadService.scienceImages)))
     } ~
     pathPrefix(Topics.ScienceImages) {
       path(Rest) { name =>

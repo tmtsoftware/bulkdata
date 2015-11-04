@@ -19,12 +19,12 @@ class MediaRoute(
   val route = movieRoute ~ imageRoute
 
   lazy val movieRoute: Route = {
-    path("movies" / "list") {
+    path("science-images" / "list") {
       get {
-        complete(scienceImageReadService.listMovies)
+        complete(scienceImageReadService.listScienceImages)
       }
     } ~
-      pathPrefix("movies") {
+      pathPrefix("science-images") {
         path(Rest) { name =>
           get {
             complete(scienceImageReadService.send(name))

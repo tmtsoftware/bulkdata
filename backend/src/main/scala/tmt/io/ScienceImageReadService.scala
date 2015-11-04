@@ -8,12 +8,12 @@ import tmt.app.AppSettings
 
 class ScienceImageReadService(settings: AppSettings) {
   def send(name: String) = {
-    val file = new File(s"${settings.moviesInputDir}/$name")
+    val file = new File(s"${settings.scienceImagesInputDir}/$name")
     println(s"reading from $file")
     SynchronousFileSource(file)
   }
 
-  def movies = new File(settings.moviesInputDir).list().toList
+  def scienceImages = new File(settings.scienceImagesInputDir).list().toList
 
-  def listMovies = Source(() => movies.iterator)
+  def listScienceImages = Source(() => scienceImages.iterator)
 }

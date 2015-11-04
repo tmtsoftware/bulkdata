@@ -22,8 +22,8 @@ class AppSettings(actorConfigs: ActorConfigs) {
   val framesInputDir = config.getString("data-location.frames.input")
   val framesOutputDir = config.getString("data-location.frames.output")
 
-  val moviesInputDir = config.getString("data-location.movies.input")
-  val moviesOutputDir = config.getString("data-location.movies.output")
+  val scienceImagesInputDir = config.getString("data-location.science-images.input")
+  val scienceImagesOutputDir = config.getString("data-location.science-images.output")
 
   val imageReadThrottle = config.getDuration("image-read-throttle").toMillis.millis
 
