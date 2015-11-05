@@ -5,9 +5,11 @@ import boopickle.Default._
 case class ImageMetadata(name: String, size: Int, createdAt: Long) {
   def latency = {
     val millis = System.nanoTime()
+    val diff = millis - createdAt
     println(s"current time is: $millis")
     println(s"CREATED TIME IS: $createdAt")
-    millis - createdAt
+    println(s"DIFF IS: ${diff/1000000000}")
+    diff
   }
 }
 
