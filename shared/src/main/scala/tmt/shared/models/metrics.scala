@@ -3,14 +3,7 @@ package tmt.shared.models
 import boopickle.Default._
 
 case class ImageMetadata(name: String, size: Int, createdAt: Long) {
-  def latency = {
-    val millis = System.currentTimeMillis()
-    val diff = millis - createdAt
-    println(s"current time is: $millis")
-    println(s"CREATED TIME IS: $createdAt")
-    println(s"DIFF IS: $diff")
-    diff
-  }
+  def latency = System.currentTimeMillis() - createdAt
 }
 
 case class ImageMetric(size: Int, latency: Long)
@@ -27,12 +20,11 @@ case class PerSecMetric(size: Int, count: Int, latency: Double)
 
 object PerSecMetric {
   def from(imageMetrics: Seq[ImageMetric]) = {
-    val dd = imageMetrics.map(_.latency).sum
-    println(s"sum is $dd")
+    val totalLatency = imageMetrics.map(_.latency).sum
     PerSecMetric(
       imageMetrics.map(_.size).sum,
       imageMetrics.length,
-      dd.toDouble / imageMetrics.length
+      totalLatency.toDouble / imageMetrics.length
     )
   }
 
