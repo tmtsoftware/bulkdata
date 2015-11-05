@@ -3,7 +3,12 @@ package tmt.shared.models
 import boopickle.Default._
 
 case class ImageMetadata(name: String, size: Int, createdAt: Long) {
-  def latency = (System.currentTimeMillis() - createdAt).toDouble
+  def latency = {
+    val millis = System.currentTimeMillis()
+    println(s"current time is: $millis")
+    println(s"CREATED TIME IS: $createdAt")
+    (millis - createdAt).toDouble
+  }
 }
 
 case class ImageMetric(size: Int, latency: Double)
