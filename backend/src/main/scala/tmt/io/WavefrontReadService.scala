@@ -26,7 +26,7 @@ class WavefrontReadService(actorConfigs: ActorConfigs, settings: AppSettings, pr
   def sendBytes = files.mapAsync(parallelism)(readFile).map(ByteString.apply)
   def sendImages = files.mapAsync(parallelism)(readImage)
     .throttleBy(ticks)
-    .map(img => img.copy(createdAt = System.currentTimeMillis()))
+    .map(img => img.copy(createdAt = System.nanoTime()))
   def sendMessages = files.map(SynchronousFileSource(_)).map(BinaryMessage.apply)
 
   private def readImage(file: File) = readFile(file).map(data => Image(file.getName, data, 0))(actorConfigs.ec)
