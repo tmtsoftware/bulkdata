@@ -1,6 +1,6 @@
 @startuml
-(*) --> [Connect two servers\nTopic: "subscription"] "Cluster Mediator"
-"Cluster Mediator" --> [Connect to the specified\n node only if the message\n is intended for that subscriber] "Subscriber 1"
+(*) --> [Connect/disconnect two servers\nTopic: "subscription"] "Cluster Mediator"
+"Cluster Mediator" --> [Connects/disconnects from the\n specified node only if the message\n is intended for that subscriber] "Subscriber 1"
 "Cluster Mediator" --> "Subscriber N"
-"Cluster Mediator" --> [Store the connection\n in persistent storage]"Connection Store"
+"Cluster Mediator" --> [Store/remove the connection\n from persistent storage]"Connection Store"
 @enduml
