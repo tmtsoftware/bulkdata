@@ -3,11 +3,16 @@ participant User
 box "Cluster" #LightBlue
 	participant Frontend
 	participant "Cluster mediator"
-	participant Subscribers
+	participant "Subscriber 1"
+	participant "Subscriber N"
+	participant "Connection Store"
 end box
 User -> Frontend: Connect two servers
 Frontend -> "Cluster mediator": Connect two servers\nTopic: "subscription"
 Frontend -> User: ok
-"Cluster mediator" --> Subscribers: Connect
+"Cluster mediator" --> "Subscriber 1": Connect
+"Cluster mediator" --> "Subscriber N": Connect
 note right: Connects to the specified node only if\n the message is intended for that subscriber
+"Cluster mediator" --> "Connection Store": Connect
+note right: Stores the connection\n in persistent storage
 @enduml
