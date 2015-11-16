@@ -1,0 +1,10 @@
+@startuml
+participant User
+box "Cluster" #LightBlue
+	participant Frontend
+	participant "Cluster mediator"
+end box
+User -> Frontend: Connect two servers
+Frontend -> "Cluster mediator": Connect two servers\nTopic: "subscription"
+Frontend -> User: ok
+@enduml

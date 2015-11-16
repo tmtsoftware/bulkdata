@@ -1,0 +1,6 @@
+@startuml
+(*) --> [Throttle server\nTopic: "throttle"] "Cluster Mediator"
+"Cluster Mediator" --> "Subscriber 1"
+"Cluster Mediator" --> "Subscriber 2"
+"Cluster Mediator" --> [Throttle only if the message is for you] "Subscriber N"
+@enduml

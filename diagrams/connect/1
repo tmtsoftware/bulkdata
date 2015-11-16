@@ -1,0 +1,13 @@
+@startuml
+participant User
+box "Cluster" #LightBlue
+	participant Frontend
+	participant "Cluster mediator"
+	participant Subscribers
+end box
+User -> Frontend: Connect two servers
+Frontend -> "Cluster mediator": Connect two servers\nTopic: "subscription"
+Frontend -> User: ok
+"Cluster mediator" --> Subscribers: Connect
+note right: Connects to the specified node only if\n the message is intended for that subscriber
+@enduml

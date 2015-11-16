@@ -1,0 +1,9 @@
+@startuml
+(*) --> User
+User --> [Connect two servers] Frontend
+Frontend --> [Connect two servers\nTopic: "subscription"] "cluster mediator"
+Frontend --> [ok] User
+"Cluster Mediator" --> "Subscriber 1"
+"Cluster Mediator" --> "Subscriber 2"
+"Cluster Mediator" --> [Connects to the specified node only if\n the message is intended for that subscriber] "Subscriber N"
+@enduml
