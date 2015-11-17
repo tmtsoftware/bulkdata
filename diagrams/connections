@@ -1,0 +1,23 @@
+@startuml
+
+participant Client
+
+box "Frontend" #LightBlue
+    participant StreamController
+    participant ClusterClientService
+    participant ConnectionStore
+    participant ConnectionSetService
+    participant ClusterMetadataService
+end box
+
+Client -> StreamController: /connections
+StreamController -> ConnectionSetService: connectionSet()
+ConnectionSetService -> ClusterClientService: allConnections()
+ClusterClientService -> ConnectionStore: GetConnections
+ConnectionStore -> ClusterClientService: Connections
+ClusterClientService -> ConnectionSetService: Connections
+ConnectionSetService -> ClusterMetadataService: onlineRoles()
+ClusterMetadataService ->ConnectionSetService: OnlineRoles
+ConnectionSetService -> StreamController: OnlineConnections
+StreamController -> Client: OnlineConnections
+@enduml

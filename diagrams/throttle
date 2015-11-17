@@ -1,0 +1,24 @@
+@startuml
+
+participant Client
+
+box "Frontend" #LightBlue
+    participant StreamController
+    participant ClusterClientService
+end box
+
+participant DistributedPubSub
+
+box "Backend" #LightBlue
+    participant "Ticker(s)"
+end box
+
+"Ticker(s)" -> DistributedPubSub: Subscribe("throttle", self)
+Client -> StreamController: wavefront1/throttle/10
+StreamController -> ClusterClientService: throttle(wavefront1, 10)
+ClusterClientService --> DistributedPubSub: Publish("throttle", UpdateDelay(wavefront1, 10))
+StreamController -> Client: Accepted
+DistributedPubSub --> "Ticker(s)": UpdateDelay(wavefront1, 10)
+
+
+@enduml

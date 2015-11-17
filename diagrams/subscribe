@@ -1,0 +1,25 @@
+@startuml
+
+participant Client
+
+box "Frontend" #LightBlue
+    participant StreamController
+    participant ClusterClientService
+    participant ConnectionStore
+end box
+
+participant DistributedPubSub
+
+box "Backend" #LightBlue
+    participant "Subscription(s)"
+end box
+
+"Subscription(s)" -> DistributedPubSub: Subscribe("subscription", self)
+Client -> StreamController: server1/subscribe/topic1
+StreamController -> ClusterClientService: subscribe(server1, topic1)
+ClusterClientService --> DistributedPubSub: Publish(\n"subscription", \nMessages.Subscribe(server1, topic1)\n)
+StreamController -> Client: Accepted
+DistributedPubSub --> "Subscription(s)": Messages.Subscribe(server1, topic1)
+DistributedPubSub --> ConnectionStore: Messages.Subscribe(server1, topic1)
+
+@enduml

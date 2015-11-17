@@ -1,9 +1,0 @@
-@startuml
-(*) --> User
-User --> [Connect/disconnect\n two servers] Frontend
-Frontend --> [Connect/disconnect two servers\nTopic: "subscription"] "cluster mediator"
-Frontend --> [ok] User
-"Cluster Mediator" --> [Connect/disconnect from the\n specified node only if the message\n is intended for that subscriber] "Subscriber 1"
-"Cluster Mediator" --> "Subscriber N"
-"Cluster Mediator" --> [Store/remove the connection\n from persistent storage]"Connection Store"
-@enduml

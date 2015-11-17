@@ -1,6 +1,0 @@
-@startuml
-UI -> Frontend: Give me all connections
-Frontend -> "Connection Store": Give me all connections
-"Connection Store" -> Frontend: response: connections
-Frontend -> UI: response: connections
-@enduml
