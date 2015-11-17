@@ -1,0 +1,29 @@
+@startuml
+
+participant Client
+
+box "Frontend" #LightBlue
+    participant StreamController
+    participant NodeSetService
+    participant ClusterMetadataService
+end box
+
+participant DistributedDataReplicator
+
+box "Backend" #LightBlue
+    participant NodeInfoPublisher
+end box
+
+NodeInfoPublisher -> DistributedDataReplicator: Update(\n"nodes", \n"node-name"-> "node-details"\n)
+Client -> StreamController: /nodes
+StreamController -> NodeSetService: onlineNodeSet()
+NodeSetService -> ClusterMetadataService: nodeSet()
+ClusterMetadataService -> DistributedDataReplicator: Get("nodes")
+DistributedDataReplicator-> ClusterMetadataService: NodeSet
+ClusterMetadataService -> NodeSetService: NodeSet
+NodeSetService -> ClusterMetadataService: onlineRoles()
+ClusterMetadataService -> NodeSetService: OnlineRoles
+NodeSetService -> StreamController: OnlineNodeSet
+StreamController -> Client: OnlineNodeSet
+
+@enduml
