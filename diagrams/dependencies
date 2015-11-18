@@ -1,0 +1,10 @@
+@startuml
+
+(*) --> "Shared"
+"Shared" --> "Common"
+"Shared" --> "Client"
+
+"Common" --> "Backend"
+"Common" --> "Frontend"
+
+@enduml
