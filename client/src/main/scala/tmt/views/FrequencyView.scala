@@ -16,5 +16,5 @@ class FrequencyView(viewData: ViewData)(implicit scheduler: Scheduler) extends V
 
   def viewContent = div(frequencyRendering.frequency)
 
-  def viewAction = makeForm(viewData.frequencyServers, frequencyRendering)
+  def viewAction = makeForm(viewData.metricServers, frequencyRendering)
 }

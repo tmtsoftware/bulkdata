@@ -11,13 +11,13 @@ object Role {
   case object Copier  extends Role("copier", ItemType.Image, ItemType.Empty)
   case object Filter  extends Role("filter", ItemType.Image, ItemType.Image)
 
-  case object Metadata  extends Role("metadata", ItemType.Image, ItemType.Metric)
-  case object Frequency  extends Role("frequency", ItemType.Metric, ItemType.Frequency)
+  case object Metadata  extends Role("metadata", ItemType.Image, ItemType.Metadata)
+  case object Metric  extends Role("metric", ItemType.Metadata, ItemType.Metric)
   case object Rotator  extends Role("rotator", ItemType.Image, ItemType.Image)
 
   case object Empty extends Role("empty", ItemType.Empty, ItemType.Empty)
 
-  val values: Seq[Role] = Seq(ScienceImageSource, Wavefront, Copier, Filter, Metadata, Frequency, Rotator, Empty)
+  val values: Seq[Role] = Seq(ScienceImageSource, Wavefront, Copier, Filter, Metadata, Metric, Rotator, Empty)
 
   def withName(name: String) = values.find(_.entryName == name).getOrElse(Empty)
 
@@ -27,7 +27,7 @@ object Role {
     .concreteType[Copier.type]
     .concreteType[Filter.type]
     .concreteType[Metadata.type]
-    .concreteType[Frequency.type]
+    .concreteType[Metric.type]
     .concreteType[Rotator.type]
     .concreteType[Empty.type]
 
@@ -39,17 +39,17 @@ sealed abstract class ItemType(val entryName: String) {
 
 object ItemType {
   case object Image extends ItemType("image")
+  case object Metadata extends ItemType("metadata")
   case object Metric extends ItemType("metric")
-  case object Frequency extends ItemType("frequency")
   case object Empty extends ItemType("empty")
 
-  val values: Seq[ItemType] = Seq(Image, Metric, Frequency, Empty)
+  val values: Seq[ItemType] = Seq(Image, Metadata, Metric, Empty)
 
   def withName(name: String) = values.find(_.entryName == name).getOrElse(Empty)
 
   implicit val itemTypePickler = CompositePickler[ItemType]
     .concreteType[Image.type]
+    .concreteType[Metadata.type]
     .concreteType[Metric.type]
-    .concreteType[Frequency.type]
     .concreteType[Empty.type]
 }

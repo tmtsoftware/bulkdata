@@ -8,9 +8,9 @@ class ViewData(val nodeSet: Rx[NodeSet], val connectionSet: Rx[ConnectionSet]) {
   def consumersOf(topicName: Rx[String]) = Rx(nodeSet().compatibleConsumers(topicName()))
 
   val imageServers = Rx(nodeSet().getNames(ItemType.Image))
-  val frequencyServers = Rx(nodeSet().getNames(ItemType.Frequency))
+  val metricServers = Rx(nodeSet().getNames(ItemType.Metric))
 
-  val allServers = Rx(imageServers() ++ frequencyServers())
+  val allServers = Rx(imageServers() ++ metricServers())
 
   val diffs = {
     val result = Var(Seq.empty[String])

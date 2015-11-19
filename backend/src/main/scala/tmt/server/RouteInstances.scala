@@ -30,6 +30,6 @@ class RouteInstances(
     case Role.Filter => routeFactory.generic(serverName, imageTransformations.filteredImages)
 
     case Role.Metadata    => routeFactory.generic(serverName, imageTransformations.imageMetadata)
-    case Role.Frequency => routeFactory.generic(serverName, metricsTransformations.perSecMetrics)
+    case Role.Metric => routeFactory.generic(serverName, metricsTransformations.perSecMetrics)
   }
 }
