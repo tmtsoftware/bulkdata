@@ -1,20 +1,21 @@
 @startuml
 
-Wavefront1 --> [ Image] Metadata1
-Wavefront2 --> [ Image] Metadata1
+Wavefront1 --> [ Image] Rotator1
+Rotator1 --> [ Image] Metadata1
 Metadata1 --> [ Metadata] Metric1
 Metric1 --> [ Metric] Browser1
+Wavefront1 --> [ Image] Browser4
+Rotator1 --> Browser4
 
-Wavefront2 --> [ Image] Rotator2
-Rotator2 --> [ Image] Metadata2
+Wavefront1 --> [ Image]Metadata2
 Metadata2 --> [ Metadata] Metric2
 Metric2 --> [ Metric] Browser2
-Wavefront2 --> [ Image] Browser4
-Rotator2 --> Browser4
 
-Wavefront2 --> [ Image]Metadata3
+Wavefront1 --> [ Image] Metadata3
+Wavefront2 --> [ Image] Metadata3
 Metadata3 --> [ Metadata] Metric3
 Metric3 --> [ Metric] Browser3
+
 
 
 @enduml
