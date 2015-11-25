@@ -1,0 +1,5 @@
+@startuml
+
+Wavefront1 -> [ Images ] Browser1
+
+@enduml

@@ -2,6 +2,5 @@
 
 Wavefront1 -> [ Images] Metadata1
 Metadata1 -> [ Metadata] Metric1
-Metric1 -> [ Metric] Browser1
 
 @enduml

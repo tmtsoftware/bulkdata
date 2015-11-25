@@ -1,0 +1,8 @@
+@startuml
+
+Camera1 --> [ ] Client1
+Camera1 --> [ ] Client2
+Camera1 --> [ ] Client3
+Camera1 --> [  Science Images ] ClientN
+
+@enduml

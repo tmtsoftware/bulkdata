@@ -1,7 +1,6 @@
 @startuml
 
-(*) --> "Shared"
-"Shared" --> "Common"
+"Shared" --> [ ] "Common"
 "Shared" --> "Client"
 
 "Common" --> "Backend"
