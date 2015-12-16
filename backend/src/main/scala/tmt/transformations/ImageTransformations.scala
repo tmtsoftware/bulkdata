@@ -25,5 +25,7 @@ class ImageTransformations(
 
   lazy val imageMetadata = images.map(image => ImageMetadata(image.name, image.size, image.createdAt))
 
-  lazy val rotatedImages = images.mapAsync(appSettings.imageProcessingParallelism)(imageRotationUtility.rotate)
+  lazy val rotatedImages = images.mapAsync(
+    appSettings.imageProcessingParallelism
+  )(imageRotationUtility.rotate)
 }

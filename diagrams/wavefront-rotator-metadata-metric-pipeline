@@ -1,7 +1,7 @@
 @startuml
 
-Wavefront1 -> [ Images] Rotator1
-Rotator1 -> [ Images] Metadata1
+Wavefront1 -> [ Images] "Rotator1 (16 cores)"
+"Rotator1 (16 cores)" -> [ Images] Metadata1
 Metadata1 -> [Metadata] Metric1
 
 @enduml
