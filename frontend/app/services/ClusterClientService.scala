@@ -42,4 +42,8 @@ class ClusterClientService @Inject()(roleIndexService: NodeSetService)(implicit 
   }
 
   def allConnections = (connectionStore ? ConnectionStore.GetConnections).mapTo[ConnectionSet]
+
+  def resetConnections() = {
+    mediator ! Publish(Topics.Subscription, Messages.ResetConnections())
+  }
 }

@@ -5,6 +5,7 @@ GET         /connections                       controllers.StreamController.conn
 POST        /:server/throttle/:delay           controllers.StreamController.throttle(server, delay: Long)
 POST        /:server/subscribe/:topic          controllers.StreamController.subscribe(server, topic)
 POST        /:server/unsubscribe/:topic        controllers.StreamController.unsubscribe(server, topic)
+POST        /reset-connections                 controllers.StreamController.resetConnections
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                      controllers.Assets.at(path="/public", file)

@@ -54,4 +54,9 @@ class StreamController @Inject()(
     clusterClientService.unsubscribe(Connection(serverName, topic))
     Accepted("ok")
   }
+
+  def resetConnections() = Action {
+    clusterClientService.resetConnections()
+    Accepted("ok")
+  }
 }
