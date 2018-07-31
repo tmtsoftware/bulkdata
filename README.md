@@ -25,3 +25,14 @@ How to run
 
 ./activator "backend/runMain tmt.app.Main science-image-source camera1 dev"
 ```
+
+Data Setup
+----------
+
+- Download [video](http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4)
+- Install [ffmpeg](https://www.ffmpeg.org/)
+- `mkdir input`
+- `cd input`
+- Split the video at 20 fps: `ffmpeg -i ../bbb_sunflower_1080p_60fps_normal.mp4  -r 20 image-%05d.jpg`
+- `cd ..`
+- `mv input /usr/local/data/tmt/frames`
